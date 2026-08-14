@@ -15,7 +15,11 @@ var ErrNotFound = errors.New("user: not found")
 
 type Repository interface {
 	Create(ctx context.Context, user entity.User) (entity.User, error)
+	FindByID(ctx context.Context, id string) (entity.User, error)
 	FindByInstagramUserID(ctx context.Context, instagramUserID string) (entity.User, error)
+	// Search returns users whose display name, ID, or Instagram user ID
+	// match query, capped at searchResultLimit results.
+	Search(ctx context.Context, query string) ([]entity.User, error)
 }
 
 type repositoryImpl struct {

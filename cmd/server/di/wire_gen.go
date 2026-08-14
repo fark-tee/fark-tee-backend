@@ -11,15 +11,23 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/config"
 	"github.com/fark-tee/fark-tee-backend/internal/handler"
 	instagramoauth2 "github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
+	party3 "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
+	user3 "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/instagramoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
+	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
+	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	"github.com/fark-tee/fark-tee-backend/internal/service/auth"
+	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
+	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 )
 
 // Injectors from wire.go:
@@ -44,7 +52,8 @@ func Initialize() (*server.Server, func(), error) {
 		return nil, nil, err
 	}
 	verifier := instagramoauth.NewVerifier(configConfig)
-	service := auth.New(repository, verifier)
+	manager := token.NewManager(configConfig)
+	service := auth.New(repository, verifier, manager)
 	instagramoauthHandler := instagramoauth2.New(service)
 	savedlocationRepository, err := savedlocation.New(contextContext, mongoDatabase)
 	if err != nil {
@@ -54,8 +63,25 @@ func Initialize() (*server.Server, func(), error) {
 	}
 	savedlocationService := savedlocation2.New(savedlocationRepository)
 	savedlocationHandler := savedlocation3.New(savedlocationService)
-	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler)
-	serverServer := server.New(configConfig, handlers)
+	partyRepository, err := party.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	partymemberRepository, err := partymember.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	partyService := party2.New(partyRepository, partymemberRepository, repository)
+	partyHandler := party3.New(partyService)
+	userService := user2.New(repository)
+	userHandler := user3.New(userService)
+	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler, partyHandler, userHandler)
+	middleware := authmw.New(manager)
+	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {
 		cleanup2()
 		cleanup()

@@ -1,0 +1,132 @@
+package party
+
+import (
+	"context"
+
+	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
+	"github.com/fark-tee/fark-tee-backend/pkg/dto"
+)
+
+func (h *handlerImpl) Create(ctx context.Context, req *dto.CreatePartyRequest) (*dto.PartyResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	created, err := h.service.Create(
+		ctx,
+		actorID,
+		req.Body.Name,
+		req.Body.DestinationName,
+		req.Body.DestinationLat,
+		req.Body.DestinationLng,
+		req.Body.TargetTime,
+	)
+	if err != nil {
+		return nil, err
+	}
+
+	return toPartyResponse(created), nil
+}
+
+func (h *handlerImpl) Invite(ctx context.Context, req *dto.InviteToPartyRequest) (*dto.PartyMemberResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	member, err := h.service.Invite(ctx, actorID, req.PartyID, req.Body.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toPartyMemberResponse(member), nil
+}
+
+func (h *handlerImpl) MyInvites(ctx context.Context, _ *dto.MyInvitesRequest) (*dto.PartyInvitesResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	invites, err := h.service.MyInvites(ctx, actorID)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &dto.PartyInvitesResponse{
+		Invites: make([]dto.PartyInviteResponse, 0, len(invites)),
+	}
+	for _, invite := range invites {
+		resp.Invites = append(resp.Invites, dto.PartyInviteResponse{
+			Party:  *toPartyResponse(invite.Party),
+			Member: *toPartyMemberResponse(invite.Member),
+		})
+	}
+
+	return resp, nil
+}
+
+func (h *handlerImpl) AcceptInvite(ctx context.Context, req *dto.AcceptInviteRequest) (*dto.PartyMemberResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	member, err := h.service.AcceptInvite(ctx, actorID, req.PartyID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toPartyMemberResponse(member), nil
+}
+
+func (h *handlerImpl) DeclineInvite(ctx context.Context, req *dto.DeclineInviteRequest) (*dto.DeclineInviteResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.service.DeclineInvite(ctx, actorID, req.PartyID); err != nil {
+		return nil, err
+	}
+
+	return &dto.DeclineInviteResponse{}, nil
+}
+
+func (h *handlerImpl) RemoveMember(ctx context.Context, req *dto.RemovePartyMemberRequest) (*dto.RemovePartyMemberResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.service.RemoveMember(ctx, actorID, req.PartyID, req.UserID); err != nil {
+		return nil, err
+	}
+
+	return &dto.RemovePartyMemberResponse{}, nil
+}
+
+func toPartyResponse(p entity.Party) *dto.PartyResponse {
+	return &dto.PartyResponse{
+		ID:              p.ID,
+		Name:            p.Name,
+		DestinationName: p.DestinationName,
+		DestinationLat:  p.DestinationLat,
+		DestinationLng:  p.DestinationLng,
+		TargetTime:      p.TargetTime,
+		CreatedByID:     p.CreatedByID,
+		CreatedByName:   p.CreatedByName,
+	}
+}
+
+func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
+	return &dto.PartyMemberResponse{
+		ID:              m.ID,
+		PartyID:         m.PartyID,
+		UserID:          m.UserID,
+		UserDisplayName: m.UserDisplayName,
+		Status:          string(m.Status),
+	}
+}

@@ -5,13 +5,20 @@ import (
 	"github.com/fark-tee/go-kit/humax"
 
 	"github.com/fark-tee/fark-tee-backend/internal/handler"
+	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
 )
 
-func RegisterRoutes(api huma.API, handlers *handler.Handlers) {
+func RegisterRoutes(api huma.API, handlers *handler.Handlers, authMW *authmw.Middleware) {
 	humax.RegisterHealthCheckHandler(api)
 
 	v1 := huma.NewGroup(api, "/v1")
 
 	registerInstagramOAuthRoutes(v1, handlers)
 	registerSavedLocationRoutes(v1, handlers)
+
+	protected := huma.NewGroup(v1, "")
+	protected.UseMiddleware(authMW.RequireAuth(protected))
+
+	registerUserRoutes(protected, handlers)
+	registerPartyRoutes(protected, handlers)
 }

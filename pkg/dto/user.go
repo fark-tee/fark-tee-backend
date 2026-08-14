@@ -9,4 +9,13 @@ type UserResponse struct {
 	RatingCount     int     `json:"ratingCount"`
 	OnTimeCount     int     `json:"onTimeCount"`
 	LateCount       int     `json:"lateCount"`
+	AccessToken     string  `json:"accessToken,omitempty"`
+}
+
+type UsersResponse struct {
+	Users []UserResponse `json:"users"`
+}
+
+type SearchUsersRequest struct {
+	Query string `query:"q" required:"true"`
 }

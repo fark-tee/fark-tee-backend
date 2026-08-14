@@ -15,24 +15,32 @@ func (s *serviceImpl) InstagramAuthCodeURL(state string) string {
 	return s.verifier.AuthCodeURL(state)
 }
 
-func (s *serviceImpl) LoginWithInstagram(ctx context.Context, code string) (entity.User, error) {
+func (s *serviceImpl) LoginWithInstagram(ctx context.Context, code string) (entity.User, string, error) {
 	profile, err := s.verifier.Exchange(ctx, code)
 	if err != nil {
-		return entity.User{}, apperror.NewUnauthorizedError("INSTAGRAM_AUTH_FAILED", "failed to authenticate with Instagram", err)
+		return entity.User{}, "", apperror.NewUnauthorizedError("INSTAGRAM_AUTH_FAILED", "failed to authenticate with Instagram", err)
 	}
 
-	existing, err := s.userRepo.FindByInstagramUserID(ctx, profile.InstagramUserID)
-	if err == nil {
-		return existing, nil
+	loggedInUser, err := s.userRepo.FindByInstagramUserID(ctx, profile.InstagramUserID)
+	if err != nil {
+		if !errors.Is(err, user.ErrNotFound) {
+			return entity.User{}, "", err
+		}
+
+		loggedInUser, err = s.userRepo.Create(ctx, entity.User{
+			ID:              idx.NewUUID(),
+			DisplayName:     profile.Username,
+			InstagramUserID: profile.InstagramUserID,
+		})
+		if err != nil {
+			return entity.User{}, "", err
+		}
 	}
 
-	if !errors.Is(err, user.ErrNotFound) {
-		return entity.User{}, err
+	accessToken, err := s.tokenManager.Issue(loggedInUser.ID)
+	if err != nil {
+		return entity.User{}, "", err
 	}
 
-	return s.userRepo.Create(ctx, entity.User{
-		ID:              idx.NewUUID(),
-		DisplayName:     profile.Username,
-		InstagramUserID: profile.InstagramUserID,
-	})
+	return loggedInUser, accessToken, nil
 }

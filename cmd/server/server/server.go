@@ -16,6 +16,7 @@ import (
 
 	"github.com/fark-tee/fark-tee-backend/internal/config"
 	"github.com/fark-tee/fark-tee-backend/internal/handler"
+	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
 	"github.com/fark-tee/fark-tee-backend/internal/router"
 	"github.com/fark-tee/go-kit/echox"
 	"github.com/fark-tee/go-kit/humax"
@@ -24,16 +25,18 @@ import (
 type Server struct {
 	cfg      *config.Config
 	handlers *handler.Handlers
+	authMW   *authmw.Middleware
 }
 
 // Options is intentionally empty: configuration is already loaded via
 // internal/config, not through humacli's flag/env parsing.
 type Options struct{}
 
-func New(cfg *config.Config, handlers *handler.Handlers) *Server {
+func New(cfg *config.Config, handlers *handler.Handlers, authMW *authmw.Middleware) *Server {
 	return &Server{
 		cfg:      cfg,
 		handlers: handlers,
+		authMW:   authMW,
 	}
 }
 
@@ -54,12 +57,13 @@ func (s *Server) Start() {
 
 		humaConfig := huma.DefaultConfig("fark-tee-backend", "v1.0.0")
 		humaConfig.CreateHooks = nil // skip the default $schema/Link response transformer to keep the response envelope unchanged
+		humaConfig.Components.SecuritySchemes = humax.BearerAuthSecuritySchemes()
 
 		humaAPI := humaecho.New(e, humaConfig)
 
 		humax.UseAppErrors()
 
-		router.RegisterRoutes(humaAPI, s.handlers)
+		router.RegisterRoutes(humaAPI, s.handlers, s.authMW)
 
 		server := &http.Server{
 			Addr:    ":" + s.cfg.Server.Port,

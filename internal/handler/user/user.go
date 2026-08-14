@@ -1,28 +1,24 @@
-package instagramoauth
+package user
 
 import (
 	"context"
-	"net/http"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
 	"github.com/fark-tee/fark-tee-backend/pkg/dto"
 )
 
-func (h *handlerImpl) Start(_ context.Context, _ *dto.InstagramStartRequest) (*dto.RedirectResponse, error) {
-	return &dto.RedirectResponse{
-		Status:   http.StatusFound,
-		Location: h.service.InstagramAuthCodeURL(""),
-	}, nil
-}
-
-func (h *handlerImpl) Callback(ctx context.Context, req *dto.InstagramCallbackRequest) (*dto.UserResponse, error) {
-	user, accessToken, err := h.service.LoginWithInstagram(ctx, req.Code)
+func (h *handlerImpl) Search(ctx context.Context, req *dto.SearchUsersRequest) (*dto.UsersResponse, error) {
+	users, err := h.service.Search(ctx, req.Query)
 	if err != nil {
 		return nil, err
 	}
 
-	resp := toUserResponse(user)
-	resp.AccessToken = accessToken
+	resp := &dto.UsersResponse{
+		Users: make([]dto.UserResponse, 0, len(users)),
+	}
+	for _, u := range users {
+		resp.Users = append(resp.Users, *toUserResponse(u))
+	}
 
 	return resp, nil
 }

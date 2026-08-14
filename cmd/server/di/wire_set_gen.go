@@ -6,15 +6,23 @@ import (
 	config "github.com/fark-tee/fark-tee-backend/internal/config"
 	handler "github.com/fark-tee/fark-tee-backend/internal/handler"
 	instagramoauth "github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
+	party "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
+	user "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	context "github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	database "github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
 	instagramoauth2 "github.com/fark-tee/fark-tee-backend/internal/infrastructure/instagramoauth"
 	logger "github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
+	token "github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
+	authmw "github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
+	party3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
+	partymember "github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
-	user "github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
+	user3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	auth "github.com/fark-tee/fark-tee-backend/internal/service/auth"
+	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
+	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 
 	"github.com/google/wire"
 )
@@ -26,7 +34,9 @@ var ConfigSet = wire.NewSet(
 var HandlerSet = wire.NewSet(
 	handler.NewHandlers,
 	instagramoauth.New,
+	party.New,
 	savedlocation.New,
+	user.New,
 )
 
 var InfrastructureSet = wire.NewSet(
@@ -35,14 +45,20 @@ var InfrastructureSet = wire.NewSet(
 	database.NewMongoDatabase,
 	instagramoauth2.NewVerifier,
 	logger.NewLogger,
+	token.NewManager,
+	authmw.New,
 )
 
 var RepositorySet = wire.NewSet(
+	party3.New,
+	partymember.New,
 	savedlocation3.New,
-	user.New,
+	user3.New,
 )
 
 var ServiceSet = wire.NewSet(
 	auth.New,
+	party2.New,
 	savedlocation2.New,
+	user2.New,
 )
