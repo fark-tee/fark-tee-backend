@@ -6,12 +6,15 @@ import (
 	config "github.com/fark-tee/fark-tee-backend/internal/config"
 	handler "github.com/fark-tee/fark-tee-backend/internal/handler"
 	instagramoauth "github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
+	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	context "github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	database "github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
 	instagramoauth2 "github.com/fark-tee/fark-tee-backend/internal/infrastructure/instagramoauth"
 	logger "github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
+	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 	user "github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	auth "github.com/fark-tee/fark-tee-backend/internal/service/auth"
+	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 
 	"github.com/google/wire"
 )
@@ -23,6 +26,7 @@ var ConfigSet = wire.NewSet(
 var HandlerSet = wire.NewSet(
 	handler.NewHandlers,
 	instagramoauth.New,
+	savedlocation.New,
 )
 
 var InfrastructureSet = wire.NewSet(
@@ -34,9 +38,11 @@ var InfrastructureSet = wire.NewSet(
 )
 
 var RepositorySet = wire.NewSet(
+	savedlocation3.New,
 	user.New,
 )
 
 var ServiceSet = wire.NewSet(
 	auth.New,
+	savedlocation2.New,
 )

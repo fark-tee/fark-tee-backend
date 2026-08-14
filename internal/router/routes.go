@@ -13,4 +13,5 @@ func RegisterRoutes(api huma.API, handlers *handler.Handlers) {
 	v1 := huma.NewGroup(api, "/v1")
 
 	registerInstagramOAuthRoutes(v1, handlers)
+	registerSavedLocationRoutes(v1, handlers)
 }
