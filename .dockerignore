@@ -1,0 +1,9 @@
+.git
+.claude
+.vscode
+tmp
+bin
+*.md
+.env
+.env.example
+docker-compose.yml

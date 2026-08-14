@@ -1,0 +1,19 @@
+spec:
+  inputs:
+    target_env:
+      default: "dev"
+      options:
+        - "dev"
+        - "uat"
+---
+
+variables:
+  TARGET_ENV: $[[ inputs.target_env ]
+  
+stages:
+  - build
+
+include:
+  - project: 'stepp-fun/stepp-ci-lib'
+    ref: main
+    file: 'jobs/build/docker-build.yml'
