@@ -13,17 +13,14 @@ type SavedLocationsResponse struct {
 }
 
 type CreateSavedLocationRequest struct {
-	UserID string `path:"userId" required:"true"`
-	Body   struct {
+	Body struct {
 		Name string  `json:"name" required:"true"`
 		Lat  float64 `json:"lat" required:"true"`
 		Lng  float64 `json:"lng" required:"true"`
 	}
 }
 
-type ListSavedLocationsRequest struct {
-	UserID string `path:"userId" required:"true"`
-}
+type ListSavedLocationsRequest struct{}
 
 type GetSavedLocationRequest struct {
 	ID string `path:"id" required:"true"`

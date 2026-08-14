@@ -9,10 +9,13 @@ import (
 
 type Service interface {
 	Create(ctx context.Context, userID, name string, lat, lng float64) (entity.SavedLocation, error)
-	Get(ctx context.Context, id string) (entity.SavedLocation, error)
+	// Get returns the saved location if it belongs to userID.
+	Get(ctx context.Context, userID, id string) (entity.SavedLocation, error)
 	ListByUserID(ctx context.Context, userID string) ([]entity.SavedLocation, error)
-	Update(ctx context.Context, id, name string, lat, lng float64) (entity.SavedLocation, error)
-	Delete(ctx context.Context, id string) error
+	// Update updates the saved location if it belongs to userID.
+	Update(ctx context.Context, userID, id, name string, lat, lng float64) (entity.SavedLocation, error)
+	// Delete deletes the saved location if it belongs to userID.
+	Delete(ctx context.Context, userID, id string) error
 }
 
 type serviceImpl struct {

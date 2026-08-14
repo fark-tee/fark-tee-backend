@@ -4,11 +4,17 @@ import (
 	"context"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
 	"github.com/fark-tee/fark-tee-backend/pkg/dto"
 )
 
 func (h *handlerImpl) Create(ctx context.Context, req *dto.CreateSavedLocationRequest) (*dto.SavedLocationResponse, error) {
-	location, err := h.service.Create(ctx, req.UserID, req.Body.Name, req.Body.Lat, req.Body.Lng)
+	userID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	location, err := h.service.Create(ctx, userID, req.Body.Name, req.Body.Lat, req.Body.Lng)
 	if err != nil {
 		return nil, err
 	}
@@ -17,7 +23,12 @@ func (h *handlerImpl) Create(ctx context.Context, req *dto.CreateSavedLocationRe
 }
 
 func (h *handlerImpl) Get(ctx context.Context, req *dto.GetSavedLocationRequest) (*dto.SavedLocationResponse, error) {
-	location, err := h.service.Get(ctx, req.ID)
+	userID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	location, err := h.service.Get(ctx, userID, req.ID)
 	if err != nil {
 		return nil, err
 	}
@@ -25,8 +36,13 @@ func (h *handlerImpl) Get(ctx context.Context, req *dto.GetSavedLocationRequest)
 	return toSavedLocationResponse(location), nil
 }
 
-func (h *handlerImpl) List(ctx context.Context, req *dto.ListSavedLocationsRequest) (*dto.SavedLocationsResponse, error) {
-	locations, err := h.service.ListByUserID(ctx, req.UserID)
+func (h *handlerImpl) List(ctx context.Context, _ *dto.ListSavedLocationsRequest) (*dto.SavedLocationsResponse, error) {
+	userID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	locations, err := h.service.ListByUserID(ctx, userID)
 	if err != nil {
 		return nil, err
 	}
@@ -42,7 +58,12 @@ func (h *handlerImpl) List(ctx context.Context, req *dto.ListSavedLocationsReque
 }
 
 func (h *handlerImpl) Update(ctx context.Context, req *dto.UpdateSavedLocationRequest) (*dto.SavedLocationResponse, error) {
-	location, err := h.service.Update(ctx, req.ID, req.Body.Name, req.Body.Lat, req.Body.Lng)
+	userID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	location, err := h.service.Update(ctx, userID, req.ID, req.Body.Name, req.Body.Lat, req.Body.Lng)
 	if err != nil {
 		return nil, err
 	}
@@ -51,7 +72,12 @@ func (h *handlerImpl) Update(ctx context.Context, req *dto.UpdateSavedLocationRe
 }
 
 func (h *handlerImpl) Delete(ctx context.Context, req *dto.DeleteSavedLocationRequest) (*dto.DeleteSavedLocationResponse, error) {
-	if err := h.service.Delete(ctx, req.ID); err != nil {
+	userID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.service.Delete(ctx, userID, req.ID); err != nil {
 		return nil, err
 	}
 

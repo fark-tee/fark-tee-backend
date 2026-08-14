@@ -123,16 +123,16 @@ func (_c *MockService_Create_Call) RunAndReturn(run func(ctx context.Context, us
 }
 
 // Delete provides a mock function for the type MockService
-func (_mock *MockService) Delete(ctx context.Context, id string) error {
-	ret := _mock.Called(ctx, id)
+func (_mock *MockService) Delete(ctx context.Context, userID string, id string) error {
+	ret := _mock.Called(ctx, userID, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Delete")
 	}
 
 	var r0 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) error); ok {
-		r0 = returnFunc(ctx, id)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) error); ok {
+		r0 = returnFunc(ctx, userID, id)
 	} else {
 		r0 = ret.Error(0)
 	}
@@ -146,12 +146,13 @@ type MockService_Delete_Call struct {
 
 // Delete is a helper method to define mock.On call
 //   - ctx context.Context
+//   - userID string
 //   - id string
-func (_e *MockService_Expecter) Delete(ctx any, id any) *MockService_Delete_Call {
-	return &MockService_Delete_Call{Call: _e.mock.On("Delete", ctx, id)}
+func (_e *MockService_Expecter) Delete(ctx any, userID any, id any) *MockService_Delete_Call {
+	return &MockService_Delete_Call{Call: _e.mock.On("Delete", ctx, userID, id)}
 }
 
-func (_c *MockService_Delete_Call) Run(run func(ctx context.Context, id string)) *MockService_Delete_Call {
+func (_c *MockService_Delete_Call) Run(run func(ctx context.Context, userID string, id string)) *MockService_Delete_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -161,9 +162,14 @@ func (_c *MockService_Delete_Call) Run(run func(ctx context.Context, id string))
 		if args[1] != nil {
 			arg1 = args[1].(string)
 		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
 		run(
 			arg0,
 			arg1,
+			arg2,
 		)
 	})
 	return _c
@@ -174,14 +180,14 @@ func (_c *MockService_Delete_Call) Return(err error) *MockService_Delete_Call {
 	return _c
 }
 
-func (_c *MockService_Delete_Call) RunAndReturn(run func(ctx context.Context, id string) error) *MockService_Delete_Call {
+func (_c *MockService_Delete_Call) RunAndReturn(run func(ctx context.Context, userID string, id string) error) *MockService_Delete_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
 // Get provides a mock function for the type MockService
-func (_mock *MockService) Get(ctx context.Context, id string) (entity.SavedLocation, error) {
-	ret := _mock.Called(ctx, id)
+func (_mock *MockService) Get(ctx context.Context, userID string, id string) (entity.SavedLocation, error) {
+	ret := _mock.Called(ctx, userID, id)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Get")
@@ -189,16 +195,16 @@ func (_mock *MockService) Get(ctx context.Context, id string) (entity.SavedLocat
 
 	var r0 entity.SavedLocation
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.SavedLocation, error)); ok {
-		return returnFunc(ctx, id)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) (entity.SavedLocation, error)); ok {
+		return returnFunc(ctx, userID, id)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.SavedLocation); ok {
-		r0 = returnFunc(ctx, id)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) entity.SavedLocation); ok {
+		r0 = returnFunc(ctx, userID, id)
 	} else {
 		r0 = ret.Get(0).(entity.SavedLocation)
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = returnFunc(ctx, id)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = returnFunc(ctx, userID, id)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -212,12 +218,13 @@ type MockService_Get_Call struct {
 
 // Get is a helper method to define mock.On call
 //   - ctx context.Context
+//   - userID string
 //   - id string
-func (_e *MockService_Expecter) Get(ctx any, id any) *MockService_Get_Call {
-	return &MockService_Get_Call{Call: _e.mock.On("Get", ctx, id)}
+func (_e *MockService_Expecter) Get(ctx any, userID any, id any) *MockService_Get_Call {
+	return &MockService_Get_Call{Call: _e.mock.On("Get", ctx, userID, id)}
 }
 
-func (_c *MockService_Get_Call) Run(run func(ctx context.Context, id string)) *MockService_Get_Call {
+func (_c *MockService_Get_Call) Run(run func(ctx context.Context, userID string, id string)) *MockService_Get_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -227,9 +234,14 @@ func (_c *MockService_Get_Call) Run(run func(ctx context.Context, id string)) *M
 		if args[1] != nil {
 			arg1 = args[1].(string)
 		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
 		run(
 			arg0,
 			arg1,
+			arg2,
 		)
 	})
 	return _c
@@ -240,7 +252,7 @@ func (_c *MockService_Get_Call) Return(savedLocation entity.SavedLocation, err e
 	return _c
 }
 
-func (_c *MockService_Get_Call) RunAndReturn(run func(ctx context.Context, id string) (entity.SavedLocation, error)) *MockService_Get_Call {
+func (_c *MockService_Get_Call) RunAndReturn(run func(ctx context.Context, userID string, id string) (entity.SavedLocation, error)) *MockService_Get_Call {
 	_c.Call.Return(run)
 	return _c
 }
@@ -314,8 +326,8 @@ func (_c *MockService_ListByUserID_Call) RunAndReturn(run func(ctx context.Conte
 }
 
 // Update provides a mock function for the type MockService
-func (_mock *MockService) Update(ctx context.Context, id string, name string, lat float64, lng float64) (entity.SavedLocation, error) {
-	ret := _mock.Called(ctx, id, name, lat, lng)
+func (_mock *MockService) Update(ctx context.Context, userID string, id string, name string, lat float64, lng float64) (entity.SavedLocation, error) {
+	ret := _mock.Called(ctx, userID, id, name, lat, lng)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Update")
@@ -323,16 +335,16 @@ func (_mock *MockService) Update(ctx context.Context, id string, name string, la
 
 	var r0 entity.SavedLocation
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, float64, float64) (entity.SavedLocation, error)); ok {
-		return returnFunc(ctx, id, name, lat, lng)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, float64, float64) (entity.SavedLocation, error)); ok {
+		return returnFunc(ctx, userID, id, name, lat, lng)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, float64, float64) entity.SavedLocation); ok {
-		r0 = returnFunc(ctx, id, name, lat, lng)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, float64, float64) entity.SavedLocation); ok {
+		r0 = returnFunc(ctx, userID, id, name, lat, lng)
 	} else {
 		r0 = ret.Get(0).(entity.SavedLocation)
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, float64, float64) error); ok {
-		r1 = returnFunc(ctx, id, name, lat, lng)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string, float64, float64) error); ok {
+		r1 = returnFunc(ctx, userID, id, name, lat, lng)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -346,15 +358,16 @@ type MockService_Update_Call struct {
 
 // Update is a helper method to define mock.On call
 //   - ctx context.Context
+//   - userID string
 //   - id string
 //   - name string
 //   - lat float64
 //   - lng float64
-func (_e *MockService_Expecter) Update(ctx any, id any, name any, lat any, lng any) *MockService_Update_Call {
-	return &MockService_Update_Call{Call: _e.mock.On("Update", ctx, id, name, lat, lng)}
+func (_e *MockService_Expecter) Update(ctx any, userID any, id any, name any, lat any, lng any) *MockService_Update_Call {
+	return &MockService_Update_Call{Call: _e.mock.On("Update", ctx, userID, id, name, lat, lng)}
 }
 
-func (_c *MockService_Update_Call) Run(run func(ctx context.Context, id string, name string, lat float64, lng float64)) *MockService_Update_Call {
+func (_c *MockService_Update_Call) Run(run func(ctx context.Context, userID string, id string, name string, lat float64, lng float64)) *MockService_Update_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -368,13 +381,17 @@ func (_c *MockService_Update_Call) Run(run func(ctx context.Context, id string, 
 		if args[2] != nil {
 			arg2 = args[2].(string)
 		}
-		var arg3 float64
+		var arg3 string
 		if args[3] != nil {
-			arg3 = args[3].(float64)
+			arg3 = args[3].(string)
 		}
 		var arg4 float64
 		if args[4] != nil {
 			arg4 = args[4].(float64)
+		}
+		var arg5 float64
+		if args[5] != nil {
+			arg5 = args[5].(float64)
 		}
 		run(
 			arg0,
@@ -382,6 +399,7 @@ func (_c *MockService_Update_Call) Run(run func(ctx context.Context, id string, 
 			arg2,
 			arg3,
 			arg4,
+			arg5,
 		)
 	})
 	return _c
@@ -392,7 +410,7 @@ func (_c *MockService_Update_Call) Return(savedLocation entity.SavedLocation, er
 	return _c
 }
 
-func (_c *MockService_Update_Call) RunAndReturn(run func(ctx context.Context, id string, name string, lat float64, lng float64) (entity.SavedLocation, error)) *MockService_Update_Call {
+func (_c *MockService_Update_Call) RunAndReturn(run func(ctx context.Context, userID string, id string, name string, lat float64, lng float64) (entity.SavedLocation, error)) *MockService_Update_Call {
 	_c.Call.Return(run)
 	return _c
 }

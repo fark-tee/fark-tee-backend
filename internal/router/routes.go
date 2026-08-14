@@ -14,11 +14,11 @@ func RegisterRoutes(api huma.API, handlers *handler.Handlers, authMW *authmw.Mid
 	v1 := huma.NewGroup(api, "/v1")
 
 	registerInstagramOAuthRoutes(v1, handlers)
-	registerSavedLocationRoutes(v1, handlers)
 
 	protected := huma.NewGroup(v1, "")
 	protected.UseMiddleware(authMW.RequireAuth(protected))
 
+	registerSavedLocationRoutes(protected, handlers)
 	registerUserRoutes(protected, handlers)
 	registerPartyRoutes(protected, handlers)
 }

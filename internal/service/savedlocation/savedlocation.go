@@ -21,10 +21,14 @@ func (s *serviceImpl) Create(ctx context.Context, userID, name string, lat, lng 
 	})
 }
 
-func (s *serviceImpl) Get(ctx context.Context, id string) (entity.SavedLocation, error) {
+func (s *serviceImpl) Get(ctx context.Context, userID, id string) (entity.SavedLocation, error) {
 	location, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return entity.SavedLocation{}, toAppError(err)
+	}
+
+	if location.UserID != userID {
+		return entity.SavedLocation{}, apperror.NewForbiddenError("NOT_OWNER", "saved location does not belong to this user")
 	}
 
 	return location, nil
@@ -34,10 +38,14 @@ func (s *serviceImpl) ListByUserID(ctx context.Context, userID string) ([]entity
 	return s.repo.FindByUserID(ctx, userID)
 }
 
-func (s *serviceImpl) Update(ctx context.Context, id, name string, lat, lng float64) (entity.SavedLocation, error) {
+func (s *serviceImpl) Update(ctx context.Context, userID, id, name string, lat, lng float64) (entity.SavedLocation, error) {
 	existing, err := s.repo.FindByID(ctx, id)
 	if err != nil {
 		return entity.SavedLocation{}, toAppError(err)
+	}
+
+	if existing.UserID != userID {
+		return entity.SavedLocation{}, apperror.NewForbiddenError("NOT_OWNER", "saved location does not belong to this user")
 	}
 
 	existing.Name = name
@@ -52,7 +60,16 @@ func (s *serviceImpl) Update(ctx context.Context, id, name string, lat, lng floa
 	return updated, nil
 }
 
-func (s *serviceImpl) Delete(ctx context.Context, id string) error {
+func (s *serviceImpl) Delete(ctx context.Context, userID, id string) error {
+	existing, err := s.repo.FindByID(ctx, id)
+	if err != nil {
+		return toAppError(err)
+	}
+
+	if existing.UserID != userID {
+		return apperror.NewForbiddenError("NOT_OWNER", "saved location does not belong to this user")
+	}
+
 	if err := s.repo.Delete(ctx, id); err != nil {
 		return toAppError(err)
 	}
