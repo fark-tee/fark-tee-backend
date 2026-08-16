@@ -9,6 +9,7 @@ import (
 	party "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story "github.com/fark-tee/fark-tee-backend/internal/handler/story"
+	trip "github.com/fark-tee/fark-tee-backend/internal/handler/trip"
 	user "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	context "github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	database "github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
@@ -19,13 +20,16 @@ import (
 	authmw "github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
 	party3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	partymember "github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
+	position "github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 	story3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/story"
+	trip3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
 	user3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	auth "github.com/fark-tee/fark-tee-backend/internal/service/auth"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
+	trip2 "github.com/fark-tee/fark-tee-backend/internal/service/trip"
 	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 
 	"github.com/google/wire"
@@ -41,6 +45,7 @@ var HandlerSet = wire.NewSet(
 	party.New,
 	savedlocation.New,
 	story.New,
+	trip.New,
 	user.New,
 )
 
@@ -58,8 +63,10 @@ var InfrastructureSet = wire.NewSet(
 var RepositorySet = wire.NewSet(
 	party3.New,
 	partymember.New,
+	position.New,
 	savedlocation3.New,
 	story3.New,
+	trip3.New,
 	user3.New,
 )
 
@@ -68,5 +75,6 @@ var ServiceSet = wire.NewSet(
 	party2.New,
 	savedlocation2.New,
 	story2.New,
+	trip2.New,
 	user2.New,
 )

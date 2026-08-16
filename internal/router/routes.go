@@ -22,4 +22,5 @@ func RegisterRoutes(api huma.API, handlers *handler.Handlers, authMW *authmw.Mid
 	registerUserRoutes(protected, handlers)
 	registerPartyRoutes(protected, handlers)
 	registerStoryRoutes(protected, handlers)
+	registerTripRoutes(protected, handlers)
 }

@@ -14,6 +14,7 @@ import (
 	party3 "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story3 "github.com/fark-tee/fark-tee-backend/internal/handler/story"
+	trip3 "github.com/fark-tee/fark-tee-backend/internal/handler/trip"
 	user3 "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
@@ -24,13 +25,16 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/story"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	"github.com/fark-tee/fark-tee-backend/internal/service/auth"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
+	trip2 "github.com/fark-tee/fark-tee-backend/internal/service/trip"
 	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 )
 
@@ -95,9 +99,23 @@ func Initialize() (*server.Server, func(), error) {
 	}
 	storyService := story2.New(storyRepository, partymemberRepository, uploader)
 	storyHandler := story3.New(storyService)
+	tripRepository, err := trip.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	positionRepository, err := position.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	tripService := trip2.New(partyRepository, partymemberRepository, tripRepository, positionRepository)
+	tripHandler := trip3.New(tripService)
 	userService := user2.New(repository)
 	userHandler := user3.New(userService)
-	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler, partyHandler, storyHandler, userHandler)
+	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, userHandler)
 	middleware := authmw.New(manager)
 	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {
