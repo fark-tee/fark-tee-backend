@@ -13,20 +13,24 @@ import (
 	instagramoauth2 "github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
 	party3 "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
+	story3 "github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	user3 "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/instagramoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
+	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
 	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/story"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	"github.com/fark-tee/fark-tee-backend/internal/service/auth"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
+	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
 	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 )
 
@@ -77,9 +81,23 @@ func Initialize() (*server.Server, func(), error) {
 	}
 	partyService := party2.New(partyRepository, partymemberRepository, repository)
 	partyHandler := party3.New(partyService)
+	storyRepository, err := story.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	uploader, err := storage.NewUploader(contextContext, configConfig)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	storyService := story2.New(storyRepository, partymemberRepository, uploader)
+	storyHandler := story3.New(storyService)
 	userService := user2.New(repository)
 	userHandler := user3.New(userService)
-	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler, partyHandler, userHandler)
+	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler, partyHandler, storyHandler, userHandler)
 	middleware := authmw.New(manager)
 	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {

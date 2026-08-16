@@ -14,6 +14,7 @@ type Config struct {
 	CORS           CORSConfig
 	InstagramOAuth InstagramOAuthConfig
 	JWT            JWTConfig
+	Storage        StorageConfig
 }
 
 // @WireSet("Config")
