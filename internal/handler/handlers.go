@@ -1,7 +1,7 @@
 package handler
 
 import (
-	"github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
+	"github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/story"
@@ -10,17 +10,17 @@ import (
 )
 
 type Handlers struct {
-	InstagramOAuth instagramoauth.Handler
-	SavedLocation  savedlocation.Handler
-	Party          party.Handler
-	Story          story.Handler
-	Trip           trip.Handler
-	User           user.Handler
+	GoogleOAuth   googleoauth.Handler
+	SavedLocation savedlocation.Handler
+	Party         party.Handler
+	Story         story.Handler
+	Trip          trip.Handler
+	User          user.Handler
 }
 
 // @WireSet("Handler")
 func NewHandlers(
-	instagramOAuthHandler instagramoauth.Handler,
+	googleOAuthHandler googleoauth.Handler,
 	savedLocationHandler savedlocation.Handler,
 	partyHandler party.Handler,
 	storyHandler story.Handler,
@@ -28,11 +28,11 @@ func NewHandlers(
 	userHandler user.Handler,
 ) *Handlers {
 	return &Handlers{
-		InstagramOAuth: instagramOAuthHandler,
-		SavedLocation:  savedLocationHandler,
-		Party:          partyHandler,
-		Story:          storyHandler,
-		Trip:           tripHandler,
-		User:           userHandler,
+		GoogleOAuth:   googleOAuthHandler,
+		SavedLocation: savedLocationHandler,
+		Party:         partyHandler,
+		Story:         storyHandler,
+		Trip:          tripHandler,
+		User:          userHandler,
 	}
 }

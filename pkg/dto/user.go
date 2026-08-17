@@ -4,7 +4,7 @@ type UserResponse struct {
 	ID              string  `json:"id"`
 	ProfileImageURL string  `json:"profileImageUrl"`
 	DisplayName     string  `json:"displayName"`
-	InstagramUserID string  `json:"instagramUserId"`
+	GoogleUserID    string  `json:"googleUserId"`
 	Rating          float64 `json:"rating"`
 	RatingCount     int     `json:"ratingCount"`
 	OnTimeCount     int     `json:"onTimeCount"`

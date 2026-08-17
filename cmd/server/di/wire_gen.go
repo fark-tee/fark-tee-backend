@@ -10,7 +10,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/cmd/server/server"
 	"github.com/fark-tee/fark-tee-backend/internal/config"
 	"github.com/fark-tee/fark-tee-backend/internal/handler"
-	instagramoauth2 "github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
+	googleoauth2 "github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	party3 "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story3 "github.com/fark-tee/fark-tee-backend/internal/handler/story"
@@ -18,7 +18,7 @@ import (
 	user3 "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
-	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/instagramoauth"
+	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/googleoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
@@ -59,10 +59,10 @@ func Initialize() (*server.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	verifier := instagramoauth.NewVerifier(configConfig)
+	verifier := googleoauth.NewVerifier(configConfig)
 	manager := token.NewManager(configConfig)
-	service := auth.New(repository, verifier, manager)
-	instagramoauthHandler := instagramoauth2.New(service)
+	service := auth.New(configConfig, repository, verifier, manager)
+	googleoauthHandler := googleoauth2.New(service)
 	savedlocationRepository, err := savedlocation.New(contextContext, mongoDatabase)
 	if err != nil {
 		cleanup2()
@@ -115,7 +115,7 @@ func Initialize() (*server.Server, func(), error) {
 	tripHandler := trip3.New(tripService)
 	userService := user2.New(repository)
 	userHandler := user3.New(userService)
-	handlers := handler.NewHandlers(instagramoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, userHandler)
+	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, userHandler)
 	middleware := authmw.New(manager)
 	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {

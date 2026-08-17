@@ -16,9 +16,9 @@ var ErrNotFound = errors.New("user: not found")
 type Repository interface {
 	Create(ctx context.Context, user entity.User) (entity.User, error)
 	FindByID(ctx context.Context, id string) (entity.User, error)
-	FindByInstagramUserID(ctx context.Context, instagramUserID string) (entity.User, error)
-	// Search returns users whose display name, ID, or Instagram user ID
-	// match query, capped at searchResultLimit results.
+	FindByGoogleUserID(ctx context.Context, googleUserID string) (entity.User, error)
+	// Search returns users whose display name, ID, or Google user ID match
+	// query, capped at searchResultLimit results.
 	Search(ctx context.Context, query string) ([]entity.User, error)
 }
 
@@ -31,7 +31,7 @@ func New(ctx context.Context, db *mongo.Database) (Repository, error) {
 	collection := db.Collection("users")
 
 	_, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
-		Keys:    bson.D{{Key: "instagram_user_id", Value: 1}},
+		Keys:    bson.D{{Key: "google_user_id", Value: 1}},
 		Options: options.Index().SetUnique(true),
 	})
 	if err != nil {

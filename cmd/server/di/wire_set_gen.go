@@ -5,7 +5,7 @@ package di
 import (
 	config "github.com/fark-tee/fark-tee-backend/internal/config"
 	handler "github.com/fark-tee/fark-tee-backend/internal/handler"
-	instagramoauth "github.com/fark-tee/fark-tee-backend/internal/handler/instagramoauth"
+	googleoauth "github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	party "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story "github.com/fark-tee/fark-tee-backend/internal/handler/story"
@@ -13,7 +13,7 @@ import (
 	user "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	context "github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	database "github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
-	instagramoauth2 "github.com/fark-tee/fark-tee-backend/internal/infrastructure/instagramoauth"
+	googleoauth2 "github.com/fark-tee/fark-tee-backend/internal/infrastructure/googleoauth"
 	logger "github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
 	storage "github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	token "github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
@@ -41,7 +41,7 @@ var ConfigSet = wire.NewSet(
 
 var HandlerSet = wire.NewSet(
 	handler.NewHandlers,
-	instagramoauth.New,
+	googleoauth.New,
 	party.New,
 	savedlocation.New,
 	story.New,
@@ -53,7 +53,7 @@ var InfrastructureSet = wire.NewSet(
 	context.NewContext,
 	database.NewMongoClient,
 	database.NewMongoDatabase,
-	instagramoauth2.NewVerifier,
+	googleoauth2.NewVerifier,
 	logger.NewLogger,
 	storage.NewUploader,
 	token.NewManager,

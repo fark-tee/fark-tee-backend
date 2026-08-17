@@ -40,10 +40,10 @@ func (r *repositoryImpl) FindByID(ctx context.Context, id string) (entity.User, 
 	return doc.toEntity(), nil
 }
 
-func (r *repositoryImpl) FindByInstagramUserID(ctx context.Context, instagramUserID string) (entity.User, error) {
+func (r *repositoryImpl) FindByGoogleUserID(ctx context.Context, googleUserID string) (entity.User, error) {
 	var doc model
 
-	err := r.collection.FindOne(ctx, bson.M{"instagram_user_id": instagramUserID}).Decode(&doc)
+	err := r.collection.FindOne(ctx, bson.M{"google_user_id": googleUserID}).Decode(&doc)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return entity.User{}, ErrNotFound
@@ -59,7 +59,7 @@ func (r *repositoryImpl) Search(ctx context.Context, query string) ([]entity.Use
 	filter := bson.M{
 		"$or": []bson.M{
 			{"display_name": bson.M{"$regex": regexp.QuoteMeta(query), "$options": "i"}},
-			{"instagram_user_id": query},
+			{"google_user_id": query},
 			{"_id": query},
 		},
 	}

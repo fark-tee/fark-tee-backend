@@ -13,7 +13,7 @@ func registerUserRoutes(api huma.API, handlers *handler.Handlers) {
 	huma.Register(api, huma.Operation{
 		Method:  http.MethodGet,
 		Path:    "/users/search",
-		Summary: "Search users by display name, ID, or Instagram user ID",
+		Summary: "Search users by display name, ID, or Google user ID",
 		Security: []map[string][]string{
 			{humax.BearerAuthSecurityScheme: {}},
 		},

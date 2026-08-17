@@ -28,7 +28,7 @@ func toUserResponse(u entity.User) *dto.UserResponse {
 		ID:              u.ID,
 		ProfileImageURL: u.ProfileImageURL,
 		DisplayName:     u.DisplayName,
-		InstagramUserID: u.InstagramUserID,
+		GoogleUserID:    u.GoogleUserID,
 		Rating:          u.Rating,
 		RatingCount:     u.RatingCount,
 		OnTimeCount:     u.OnTimeCount,

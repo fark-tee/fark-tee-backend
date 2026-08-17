@@ -1,0 +1,979 @@
+components:
+  schemas:
+    CreatePartyRequestBody:
+      additionalProperties: false
+      properties:
+        destinationLat:
+          format: double
+          type: number
+        destinationLng:
+          format: double
+          type: number
+        destinationName:
+          type: string
+        name:
+          type: string
+        targetTime:
+          format: date-time
+          type: string
+      required:
+        - name
+        - destinationName
+        - destinationLat
+        - destinationLng
+        - targetTime
+      type: object
+    CreateSavedLocationRequestBody:
+      additionalProperties: false
+      properties:
+        lat:
+          format: double
+          type: number
+        lng:
+          format: double
+          type: number
+        name:
+          type: string
+      required:
+        - name
+        - lat
+        - lng
+      type: object
+    Error:
+      additionalProperties: false
+      properties:
+        code:
+          type: string
+        debug:
+          type: string
+        details: {}
+        message:
+          type: string
+        requestId:
+          type: string
+        stack:
+          contentEncoding: base64
+          type: string
+      required:
+        - code
+        - message
+      type: object
+    InviteToPartyRequestBody:
+      additionalProperties: false
+      properties:
+        userId:
+          type: string
+      required:
+        - userId
+      type: object
+    PartyInviteResponse:
+      additionalProperties: false
+      properties:
+        member:
+          $ref: "#/components/schemas/PartyMemberResponse"
+        party:
+          $ref: "#/components/schemas/PartyResponse"
+      required:
+        - party
+        - member
+      type: object
+    PartyInvitesResponse:
+      additionalProperties: false
+      properties:
+        invites:
+          items:
+            $ref: "#/components/schemas/PartyInviteResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - invites
+      type: object
+    PartyMemberResponse:
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+        partyId:
+          type: string
+        status:
+          type: string
+        userDisplayName:
+          type: string
+        userId:
+          type: string
+      required:
+        - id
+        - partyId
+        - userId
+        - userDisplayName
+        - status
+      type: object
+    PartyResponse:
+      additionalProperties: false
+      properties:
+        createdById:
+          type: string
+        createdByName:
+          type: string
+        destinationLat:
+          format: double
+          type: number
+        destinationLng:
+          format: double
+          type: number
+        destinationName:
+          type: string
+        id:
+          type: string
+        name:
+          type: string
+        targetTime:
+          format: date-time
+          type: string
+      required:
+        - id
+        - name
+        - destinationName
+        - destinationLat
+        - destinationLng
+        - targetTime
+        - createdById
+        - createdByName
+      type: object
+    PositionResponse:
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+        lat:
+          format: double
+          type: number
+        lng:
+          format: double
+          type: number
+        partyId:
+          type: string
+        recordedAt:
+          format: date-time
+          type: string
+        tripId:
+          type: string
+        userId:
+          type: string
+      required:
+        - id
+        - tripId
+        - partyId
+        - userId
+        - lat
+        - lng
+        - recordedAt
+      type: object
+    PositionsResponse:
+      additionalProperties: false
+      properties:
+        positions:
+          items:
+            $ref: "#/components/schemas/PositionResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - positions
+      type: object
+    RefreshTokenRequestBody:
+      additionalProperties: false
+      properties:
+        refreshToken:
+          type: string
+      required:
+        - refreshToken
+      type: object
+    SavedLocationResponse:
+      additionalProperties: false
+      properties:
+        id:
+          type: string
+        lat:
+          format: double
+          type: number
+        lng:
+          format: double
+          type: number
+        name:
+          type: string
+        userId:
+          type: string
+      required:
+        - id
+        - userId
+        - name
+        - lat
+        - lng
+      type: object
+    SavedLocationsResponse:
+      additionalProperties: false
+      properties:
+        savedLocations:
+          items:
+            $ref: "#/components/schemas/SavedLocationResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - savedLocations
+      type: object
+    StartTripRequestBody:
+      additionalProperties: false
+      properties:
+        direction:
+          enum:
+            - DEPART
+            - RETURN
+          type: string
+        lat:
+          format: double
+          type: number
+        lng:
+          format: double
+          type: number
+      required:
+        - direction
+        - lat
+        - lng
+      type: object
+    StartTripResponse:
+      additionalProperties: false
+      properties:
+        position:
+          $ref: "#/components/schemas/PositionResponse"
+        trip:
+          $ref: "#/components/schemas/TripResponse"
+      required:
+        - trip
+        - position
+      type: object
+    StoriesResponse:
+      additionalProperties: false
+      properties:
+        stories:
+          items:
+            $ref: "#/components/schemas/StoryResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - stories
+      type: object
+    StoryResponse:
+      additionalProperties: false
+      properties:
+        createdAt:
+          format: date-time
+          type: string
+        id:
+          type: string
+        image:
+          type: string
+        partyId:
+          type: string
+        userId:
+          type: string
+      required:
+        - id
+        - partyId
+        - userId
+        - image
+        - createdAt
+      type: object
+    TokenPairResponse:
+      additionalProperties: false
+      properties:
+        accessToken:
+          type: string
+        refreshToken:
+          type: string
+      required:
+        - accessToken
+        - refreshToken
+      type: object
+    TripResponse:
+      additionalProperties: false
+      properties:
+        direction:
+          type: string
+        id:
+          type: string
+        partyId:
+          type: string
+        startedAt:
+          format: date-time
+          type: string
+        userId:
+          type: string
+      required:
+        - id
+        - partyId
+        - userId
+        - direction
+        - startedAt
+      type: object
+    UpdatePositionRequestBody:
+      additionalProperties: false
+      properties:
+        lat:
+          format: double
+          type: number
+        lng:
+          format: double
+          type: number
+      required:
+        - lat
+        - lng
+      type: object
+    UpdateSavedLocationRequestBody:
+      additionalProperties: false
+      properties:
+        lat:
+          format: double
+          type: number
+        lng:
+          format: double
+          type: number
+        name:
+          type: string
+      required:
+        - name
+        - lat
+        - lng
+      type: object
+    UserResponse:
+      additionalProperties: false
+      properties:
+        accessToken:
+          type: string
+        displayName:
+          type: string
+        googleUserId:
+          type: string
+        id:
+          type: string
+        lateCount:
+          format: int64
+          type: integer
+        onTimeCount:
+          format: int64
+          type: integer
+        profileImageUrl:
+          type: string
+        rating:
+          format: double
+          type: number
+        ratingCount:
+          format: int64
+          type: integer
+      required:
+        - id
+        - profileImageUrl
+        - displayName
+        - googleUserId
+        - rating
+        - ratingCount
+        - onTimeCount
+        - lateCount
+      type: object
+    UsersResponse:
+      additionalProperties: false
+      properties:
+        users:
+          items:
+            $ref: "#/components/schemas/UserResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - users
+      type: object
+  securitySchemes:
+    bearerAuth:
+      bearerFormat: JWT
+      scheme: bearer
+      type: http
+info:
+  title: fark-tee-backend
+  version: v1.0.0
+openapi: 3.1.0
+paths:
+  /healthz:
+    get:
+      operationId: get-healthz
+      responses:
+        "204":
+          description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      summary: Get healthz
+  /v1/auth/google/callback:
+    get:
+      parameters:
+        - explode: false
+          in: query
+          name: code
+          required: true
+          schema:
+            type: string
+        - explode: false
+          in: query
+          name: state
+          required: true
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Found
+          headers:
+            Location:
+              schema:
+                type: string
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      summary: Complete Google OAuth login, creating the user if needed, then redirect to the mobile app deeplink
+  /v1/auth/google/start:
+    get:
+      parameters:
+        - explode: false
+          in: query
+          name: redirect_uri
+          required: true
+          schema:
+            type: string
+      responses:
+        "302":
+          description: Found
+          headers:
+            Location:
+              schema:
+                type: string
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      summary: Redirect to Google's OAuth consent screen
+  /v1/auth/refresh:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/RefreshTokenRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenPairResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      summary: Exchange a refresh token for a new access/refresh token pair
+  /v1/me/invites:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyInvitesResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: List the current user's pending party invites
+  /v1/parties:
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreatePartyRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Create a party
+  /v1/parties/{partyId}/members:
+    post:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/InviteToPartyRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyMemberResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Invite a user to a party (owner only)
+  /v1/parties/{partyId}/members/accept:
+    post:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyMemberResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Accept a pending party invite
+  /v1/parties/{partyId}/members/decline:
+    post:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Decline a pending party invite, removing yourself from the party
+  /v1/parties/{partyId}/members/{userId}:
+    delete:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Remove a member from a party (owner only)
+  /v1/parties/{partyId}/members/{userId}/position:
+    get:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PositionResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Get the latest recorded position of a party member
+  /v1/parties/{partyId}/members/{userId}/stories:
+    get:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: userId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoriesResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: List a party member's stories
+  /v1/parties/{partyId}/positions:
+    get:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PositionsResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Get the latest recorded position of every party member
+    post:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdatePositionRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PositionResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Record a new position for the current user's active trip
+  /v1/parties/{partyId}/stories:
+    post:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding:
+              image:
+                contentType: image/*
+            schema:
+              properties:
+                image:
+                  contentEncoding: binary
+                  contentMediaType: application/octet-stream
+                  format: binary
+                  type: string
+              required:
+                - image
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StoryResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Create a story in a party (party members only)
+  /v1/parties/{partyId}/stories/{storyId}:
+    delete:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+        - in: path
+          name: storyId
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Delete a story
+  /v1/parties/{partyId}/trips:
+    post:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/StartTripRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/StartTripResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Start a depart or return trip and record its first position
+  /v1/saved-locations:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedLocationsResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: List the current user's saved locations
+    post:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CreateSavedLocationRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedLocationResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Create a saved location for the current user
+  /v1/saved-locations/{id}:
+    delete:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "204":
+          description: No Content
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Delete a saved location
+    get:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedLocationResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Get a saved location by ID
+    put:
+      parameters:
+        - in: path
+          name: id
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateSavedLocationRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SavedLocationResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Update a saved location
+  /v1/users/search:
+    get:
+      parameters:
+        - explode: false
+          in: query
+          name: q
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UsersResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Search users by display name, ID, or Google user ID

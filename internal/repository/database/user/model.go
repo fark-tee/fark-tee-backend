@@ -8,7 +8,7 @@ type model struct {
 	ID              string  `bson:"_id"`
 	ProfileImageURL string  `bson:"profile_image_url"`
 	DisplayName     string  `bson:"display_name"`
-	InstagramUserID string  `bson:"instagram_user_id"`
+	GoogleUserID    string  `bson:"google_user_id"`
 	Rating          float64 `bson:"rating"`
 	RatingCount     int     `bson:"rating_count"`
 	OnTimeCount     int     `bson:"on_time_count"`
@@ -20,7 +20,7 @@ func fromEntity(u entity.User) model {
 		ID:              u.ID,
 		ProfileImageURL: u.ProfileImageURL,
 		DisplayName:     u.DisplayName,
-		InstagramUserID: u.InstagramUserID,
+		GoogleUserID:    u.GoogleUserID,
 		Rating:          u.Rating,
 		RatingCount:     u.RatingCount,
 		OnTimeCount:     u.OnTimeCount,
@@ -33,7 +33,7 @@ func (m model) toEntity() entity.User {
 		ID:              m.ID,
 		ProfileImageURL: m.ProfileImageURL,
 		DisplayName:     m.DisplayName,
-		InstagramUserID: m.InstagramUserID,
+		GoogleUserID:    m.GoogleUserID,
 		Rating:          m.Rating,
 		RatingCount:     m.RatingCount,
 		OnTimeCount:     m.OnTimeCount,

@@ -7,7 +7,7 @@ package mock_auth
 import (
 	"context"
 
-	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/service/auth"
 	mock "github.com/stretchr/testify/mock"
 )
 
@@ -38,35 +38,44 @@ func (_m *MockService) EXPECT() *MockService_Expecter {
 	return &MockService_Expecter{mock: &_m.Mock}
 }
 
-// InstagramAuthCodeURL provides a mock function for the type MockService
-func (_mock *MockService) InstagramAuthCodeURL(state string) string {
-	ret := _mock.Called(state)
+// GoogleAuthCodeURL provides a mock function for the type MockService
+func (_mock *MockService) GoogleAuthCodeURL(redirectURI string) (string, error) {
+	ret := _mock.Called(redirectURI)
 
 	if len(ret) == 0 {
-		panic("no return value specified for InstagramAuthCodeURL")
+		panic("no return value specified for GoogleAuthCodeURL")
 	}
 
 	var r0 string
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(string) (string, error)); ok {
+		return returnFunc(redirectURI)
+	}
 	if returnFunc, ok := ret.Get(0).(func(string) string); ok {
-		r0 = returnFunc(state)
+		r0 = returnFunc(redirectURI)
 	} else {
 		r0 = ret.Get(0).(string)
 	}
-	return r0
+	if returnFunc, ok := ret.Get(1).(func(string) error); ok {
+		r1 = returnFunc(redirectURI)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
 }
 
-// MockService_InstagramAuthCodeURL_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'InstagramAuthCodeURL'
-type MockService_InstagramAuthCodeURL_Call struct {
+// MockService_GoogleAuthCodeURL_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GoogleAuthCodeURL'
+type MockService_GoogleAuthCodeURL_Call struct {
 	*mock.Call
 }
 
-// InstagramAuthCodeURL is a helper method to define mock.On call
-//   - state string
-func (_e *MockService_Expecter) InstagramAuthCodeURL(state any) *MockService_InstagramAuthCodeURL_Call {
-	return &MockService_InstagramAuthCodeURL_Call{Call: _e.mock.On("InstagramAuthCodeURL", state)}
+// GoogleAuthCodeURL is a helper method to define mock.On call
+//   - redirectURI string
+func (_e *MockService_Expecter) GoogleAuthCodeURL(redirectURI any) *MockService_GoogleAuthCodeURL_Call {
+	return &MockService_GoogleAuthCodeURL_Call{Call: _e.mock.On("GoogleAuthCodeURL", redirectURI)}
 }
 
-func (_c *MockService_InstagramAuthCodeURL_Call) Run(run func(state string)) *MockService_InstagramAuthCodeURL_Call {
+func (_c *MockService_GoogleAuthCodeURL_Call) Run(run func(redirectURI string)) *MockService_GoogleAuthCodeURL_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 string
 		if args[0] != nil {
@@ -79,61 +88,133 @@ func (_c *MockService_InstagramAuthCodeURL_Call) Run(run func(state string)) *Mo
 	return _c
 }
 
-func (_c *MockService_InstagramAuthCodeURL_Call) Return(s string) *MockService_InstagramAuthCodeURL_Call {
-	_c.Call.Return(s)
+func (_c *MockService_GoogleAuthCodeURL_Call) Return(s string, err error) *MockService_GoogleAuthCodeURL_Call {
+	_c.Call.Return(s, err)
 	return _c
 }
 
-func (_c *MockService_InstagramAuthCodeURL_Call) RunAndReturn(run func(state string) string) *MockService_InstagramAuthCodeURL_Call {
+func (_c *MockService_GoogleAuthCodeURL_Call) RunAndReturn(run func(redirectURI string) (string, error)) *MockService_GoogleAuthCodeURL_Call {
 	_c.Call.Return(run)
 	return _c
 }
 
-// LoginWithInstagram provides a mock function for the type MockService
-func (_mock *MockService) LoginWithInstagram(ctx context.Context, code string) (entity.User, string, error) {
-	ret := _mock.Called(ctx, code)
+// LoginWithGoogle provides a mock function for the type MockService
+func (_mock *MockService) LoginWithGoogle(ctx context.Context, code string, state string) (auth.GoogleLoginResult, error) {
+	ret := _mock.Called(ctx, code, state)
 
 	if len(ret) == 0 {
-		panic("no return value specified for LoginWithInstagram")
+		panic("no return value specified for LoginWithGoogle")
 	}
 
-	var r0 entity.User
+	var r0 auth.GoogleLoginResult
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) (auth.GoogleLoginResult, error)); ok {
+		return returnFunc(ctx, code, state)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) auth.GoogleLoginResult); ok {
+		r0 = returnFunc(ctx, code, state)
+	} else {
+		r0 = ret.Get(0).(auth.GoogleLoginResult)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = returnFunc(ctx, code, state)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_LoginWithGoogle_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'LoginWithGoogle'
+type MockService_LoginWithGoogle_Call struct {
+	*mock.Call
+}
+
+// LoginWithGoogle is a helper method to define mock.On call
+//   - ctx context.Context
+//   - code string
+//   - state string
+func (_e *MockService_Expecter) LoginWithGoogle(ctx any, code any, state any) *MockService_LoginWithGoogle_Call {
+	return &MockService_LoginWithGoogle_Call{Call: _e.mock.On("LoginWithGoogle", ctx, code, state)}
+}
+
+func (_c *MockService_LoginWithGoogle_Call) Run(run func(ctx context.Context, code string, state string)) *MockService_LoginWithGoogle_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_LoginWithGoogle_Call) Return(googleLoginResult auth.GoogleLoginResult, err error) *MockService_LoginWithGoogle_Call {
+	_c.Call.Return(googleLoginResult, err)
+	return _c
+}
+
+func (_c *MockService_LoginWithGoogle_Call) RunAndReturn(run func(ctx context.Context, code string, state string) (auth.GoogleLoginResult, error)) *MockService_LoginWithGoogle_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// RefreshAccessToken provides a mock function for the type MockService
+func (_mock *MockService) RefreshAccessToken(ctx context.Context, refreshToken string) (string, string, error) {
+	ret := _mock.Called(ctx, refreshToken)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RefreshAccessToken")
+	}
+
+	var r0 string
 	var r1 string
 	var r2 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, string, error)); ok {
-		return returnFunc(ctx, code)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (string, string, error)); ok {
+		return returnFunc(ctx, refreshToken)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
-		r0 = returnFunc(ctx, code)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) string); ok {
+		r0 = returnFunc(ctx, refreshToken)
 	} else {
-		r0 = ret.Get(0).(entity.User)
+		r0 = ret.Get(0).(string)
 	}
 	if returnFunc, ok := ret.Get(1).(func(context.Context, string) string); ok {
-		r1 = returnFunc(ctx, code)
+		r1 = returnFunc(ctx, refreshToken)
 	} else {
 		r1 = ret.Get(1).(string)
 	}
 	if returnFunc, ok := ret.Get(2).(func(context.Context, string) error); ok {
-		r2 = returnFunc(ctx, code)
+		r2 = returnFunc(ctx, refreshToken)
 	} else {
 		r2 = ret.Error(2)
 	}
 	return r0, r1, r2
 }
 
-// MockService_LoginWithInstagram_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'LoginWithInstagram'
-type MockService_LoginWithInstagram_Call struct {
+// MockService_RefreshAccessToken_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RefreshAccessToken'
+type MockService_RefreshAccessToken_Call struct {
 	*mock.Call
 }
 
-// LoginWithInstagram is a helper method to define mock.On call
+// RefreshAccessToken is a helper method to define mock.On call
 //   - ctx context.Context
-//   - code string
-func (_e *MockService_Expecter) LoginWithInstagram(ctx any, code any) *MockService_LoginWithInstagram_Call {
-	return &MockService_LoginWithInstagram_Call{Call: _e.mock.On("LoginWithInstagram", ctx, code)}
+//   - refreshToken string
+func (_e *MockService_Expecter) RefreshAccessToken(ctx any, refreshToken any) *MockService_RefreshAccessToken_Call {
+	return &MockService_RefreshAccessToken_Call{Call: _e.mock.On("RefreshAccessToken", ctx, refreshToken)}
 }
 
-func (_c *MockService_LoginWithInstagram_Call) Run(run func(ctx context.Context, code string)) *MockService_LoginWithInstagram_Call {
+func (_c *MockService_RefreshAccessToken_Call) Run(run func(ctx context.Context, refreshToken string)) *MockService_RefreshAccessToken_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -151,12 +232,12 @@ func (_c *MockService_LoginWithInstagram_Call) Run(run func(ctx context.Context,
 	return _c
 }
 
-func (_c *MockService_LoginWithInstagram_Call) Return(user entity.User, s string, err error) *MockService_LoginWithInstagram_Call {
-	_c.Call.Return(user, s, err)
+func (_c *MockService_RefreshAccessToken_Call) Return(accessToken string, newRefreshToken string, err error) *MockService_RefreshAccessToken_Call {
+	_c.Call.Return(accessToken, newRefreshToken, err)
 	return _c
 }
 
-func (_c *MockService_LoginWithInstagram_Call) RunAndReturn(run func(ctx context.Context, code string) (entity.User, string, error)) *MockService_LoginWithInstagram_Call {
+func (_c *MockService_RefreshAccessToken_Call) RunAndReturn(run func(ctx context.Context, refreshToken string) (string, string, error)) *MockService_RefreshAccessToken_Call {
 	_c.Call.Return(run)
 	return _c
 }

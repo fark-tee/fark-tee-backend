@@ -104,6 +104,72 @@ func (_c *MockRepository_Create_Call) RunAndReturn(run func(ctx context.Context,
 	return _c
 }
 
+// FindByGoogleUserID provides a mock function for the type MockRepository
+func (_mock *MockRepository) FindByGoogleUserID(ctx context.Context, googleUserID string) (entity.User, error) {
+	ret := _mock.Called(ctx, googleUserID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindByGoogleUserID")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, error)); ok {
+		return returnFunc(ctx, googleUserID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
+		r0 = returnFunc(ctx, googleUserID)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, googleUserID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_FindByGoogleUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByGoogleUserID'
+type MockRepository_FindByGoogleUserID_Call struct {
+	*mock.Call
+}
+
+// FindByGoogleUserID is a helper method to define mock.On call
+//   - ctx context.Context
+//   - googleUserID string
+func (_e *MockRepository_Expecter) FindByGoogleUserID(ctx any, googleUserID any) *MockRepository_FindByGoogleUserID_Call {
+	return &MockRepository_FindByGoogleUserID_Call{Call: _e.mock.On("FindByGoogleUserID", ctx, googleUserID)}
+}
+
+func (_c *MockRepository_FindByGoogleUserID_Call) Run(run func(ctx context.Context, googleUserID string)) *MockRepository_FindByGoogleUserID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_FindByGoogleUserID_Call) Return(user entity.User, err error) *MockRepository_FindByGoogleUserID_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockRepository_FindByGoogleUserID_Call) RunAndReturn(run func(ctx context.Context, googleUserID string) (entity.User, error)) *MockRepository_FindByGoogleUserID_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // FindByID provides a mock function for the type MockRepository
 func (_mock *MockRepository) FindByID(ctx context.Context, id string) (entity.User, error) {
 	ret := _mock.Called(ctx, id)
@@ -166,72 +232,6 @@ func (_c *MockRepository_FindByID_Call) Return(user entity.User, err error) *Moc
 }
 
 func (_c *MockRepository_FindByID_Call) RunAndReturn(run func(ctx context.Context, id string) (entity.User, error)) *MockRepository_FindByID_Call {
-	_c.Call.Return(run)
-	return _c
-}
-
-// FindByInstagramUserID provides a mock function for the type MockRepository
-func (_mock *MockRepository) FindByInstagramUserID(ctx context.Context, instagramUserID string) (entity.User, error) {
-	ret := _mock.Called(ctx, instagramUserID)
-
-	if len(ret) == 0 {
-		panic("no return value specified for FindByInstagramUserID")
-	}
-
-	var r0 entity.User
-	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, error)); ok {
-		return returnFunc(ctx, instagramUserID)
-	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
-		r0 = returnFunc(ctx, instagramUserID)
-	} else {
-		r0 = ret.Get(0).(entity.User)
-	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
-		r1 = returnFunc(ctx, instagramUserID)
-	} else {
-		r1 = ret.Error(1)
-	}
-	return r0, r1
-}
-
-// MockRepository_FindByInstagramUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByInstagramUserID'
-type MockRepository_FindByInstagramUserID_Call struct {
-	*mock.Call
-}
-
-// FindByInstagramUserID is a helper method to define mock.On call
-//   - ctx context.Context
-//   - instagramUserID string
-func (_e *MockRepository_Expecter) FindByInstagramUserID(ctx any, instagramUserID any) *MockRepository_FindByInstagramUserID_Call {
-	return &MockRepository_FindByInstagramUserID_Call{Call: _e.mock.On("FindByInstagramUserID", ctx, instagramUserID)}
-}
-
-func (_c *MockRepository_FindByInstagramUserID_Call) Run(run func(ctx context.Context, instagramUserID string)) *MockRepository_FindByInstagramUserID_Call {
-	_c.Call.Run(func(args mock.Arguments) {
-		var arg0 context.Context
-		if args[0] != nil {
-			arg0 = args[0].(context.Context)
-		}
-		var arg1 string
-		if args[1] != nil {
-			arg1 = args[1].(string)
-		}
-		run(
-			arg0,
-			arg1,
-		)
-	})
-	return _c
-}
-
-func (_c *MockRepository_FindByInstagramUserID_Call) Return(user entity.User, err error) *MockRepository_FindByInstagramUserID_Call {
-	_c.Call.Return(user, err)
-	return _c
-}
-
-func (_c *MockRepository_FindByInstagramUserID_Call) RunAndReturn(run func(ctx context.Context, instagramUserID string) (entity.User, error)) *MockRepository_FindByInstagramUserID_Call {
 	_c.Call.Return(run)
 	return _c
 }

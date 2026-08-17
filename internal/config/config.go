@@ -9,12 +9,13 @@ import (
 )
 
 type Config struct {
-	Server         ServerConfig
-	Database       DatabaseConfig
-	CORS           CORSConfig
-	InstagramOAuth InstagramOAuthConfig
-	JWT            JWTConfig
-	Storage        StorageConfig
+	Server      ServerConfig
+	Database    DatabaseConfig
+	CORS        CORSConfig
+	GoogleOAuth GoogleOAuthConfig
+	JWT         JWTConfig
+	Storage     StorageConfig
+	Redirect    RedirectConfig
 }
 
 // @WireSet("Config")
