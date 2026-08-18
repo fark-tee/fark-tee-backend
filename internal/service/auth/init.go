@@ -13,12 +13,18 @@ import (
 // GoogleLoginResult is the outcome of a completed Google OAuth login: the
 // (possibly newly created) user, a fresh access/refresh token pair, and the
 // mobile app deeplink the caller asked to be sent back to when it started
-// the flow.
+// the flow. For a new user, the account is created without a display name,
+// username, or profile image - GoogleDisplayName and GoogleProfileImageURL
+// carry Google's values so the app can prefill its profile-creation form
+// without them being persisted automatically.
 type GoogleLoginResult struct {
-	User         entity.User
-	AccessToken  string
-	RefreshToken string
-	RedirectURI  string
+	User                  entity.User
+	AccessToken           string
+	RefreshToken          string
+	RedirectURI           string
+	IsNewUser             bool
+	GoogleDisplayName     string
+	GoogleProfileImageURL string
 }
 
 type Service interface {

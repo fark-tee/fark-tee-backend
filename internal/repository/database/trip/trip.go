@@ -11,7 +11,10 @@ import (
 )
 
 func (r *repositoryImpl) Create(ctx context.Context, trip entity.Trip) (entity.Trip, error) {
-	doc := fromEntity(trip)
+	doc, err := fromEntity(trip)
+	if err != nil {
+		return entity.Trip{}, err
+	}
 
 	if _, err := r.collection.InsertOne(ctx, doc); err != nil {
 		return entity.Trip{}, err

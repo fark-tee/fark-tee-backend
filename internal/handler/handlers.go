@@ -6,6 +6,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/trip"
+	"github.com/fark-tee/fark-tee-backend/internal/handler/upload"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/user"
 )
 
@@ -15,6 +16,7 @@ type Handlers struct {
 	Party         party.Handler
 	Story         story.Handler
 	Trip          trip.Handler
+	Upload        upload.Handler
 	User          user.Handler
 }
 
@@ -25,6 +27,7 @@ func NewHandlers(
 	partyHandler party.Handler,
 	storyHandler story.Handler,
 	tripHandler trip.Handler,
+	uploadHandler upload.Handler,
 	userHandler user.Handler,
 ) *Handlers {
 	return &Handlers{
@@ -33,6 +36,7 @@ func NewHandlers(
 		Party:         partyHandler,
 		Story:         storyHandler,
 		Trip:          tripHandler,
+		Upload:        uploadHandler,
 		User:          userHandler,
 	}
 }

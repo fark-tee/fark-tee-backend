@@ -4,24 +4,31 @@ import (
 	"time"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
+	"go.mongodb.org/mongo-driver/v2/bson"
 )
 
 // model is the MongoDB document shape for the parties collection. It stays
 // private to this package - callers only ever see entity.Party.
 type model struct {
-	ID              string    `bson:"_id"`
-	Name            string    `bson:"name"`
-	DestinationName string    `bson:"destination_name"`
-	DestinationLat  float64   `bson:"destination_lat"`
-	DestinationLng  float64   `bson:"destination_lng"`
-	TargetTime      time.Time `bson:"target_time"`
-	CreatedByID     string    `bson:"created_by_id"`
-	CreatedByName   string    `bson:"created_by_name"`
+	ID              bson.ObjectID `bson:"_id"`
+	Name            string        `bson:"name"`
+	DestinationName string        `bson:"destination_name"`
+	DestinationLat  float64       `bson:"destination_lat"`
+	DestinationLng  float64       `bson:"destination_lng"`
+	TargetTime      time.Time     `bson:"target_time"`
+	CreatedByID     string        `bson:"created_by_id"`
+	CreatedByName   string        `bson:"created_by_name"`
 }
 
-func fromEntity(p entity.Party) model {
+func fromEntity(p entity.Party) (model, error) {
+	id, err := mongoid.ToObjectID(p.ID)
+	if err != nil {
+		return model{}, err
+	}
+
 	return model{
-		ID:              p.ID,
+		ID:              id,
 		Name:            p.Name,
 		DestinationName: p.DestinationName,
 		DestinationLat:  p.DestinationLat,
@@ -29,12 +36,12 @@ func fromEntity(p entity.Party) model {
 		TargetTime:      p.TargetTime,
 		CreatedByID:     p.CreatedByID,
 		CreatedByName:   p.CreatedByName,
-	}
+	}, nil
 }
 
 func (m model) toEntity() entity.Party {
 	return entity.Party{
-		ID:              m.ID,
+		ID:              mongoid.FromObjectID(m.ID),
 		Name:            m.Name,
 		DestinationName: m.DestinationName,
 		DestinationLat:  m.DestinationLat,

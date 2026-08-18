@@ -10,6 +10,7 @@ import (
 	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story "github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	trip "github.com/fark-tee/fark-tee-backend/internal/handler/trip"
+	upload "github.com/fark-tee/fark-tee-backend/internal/handler/upload"
 	user "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	context "github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	database "github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
@@ -30,6 +31,7 @@ import (
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
 	trip2 "github.com/fark-tee/fark-tee-backend/internal/service/trip"
+	upload2 "github.com/fark-tee/fark-tee-backend/internal/service/upload"
 	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 
 	"github.com/google/wire"
@@ -46,6 +48,7 @@ var HandlerSet = wire.NewSet(
 	savedlocation.New,
 	story.New,
 	trip.New,
+	upload.New,
 	user.New,
 )
 
@@ -76,5 +79,6 @@ var ServiceSet = wire.NewSet(
 	savedlocation2.New,
 	story2.New,
 	trip2.New,
+	upload2.New,
 	user2.New,
 )

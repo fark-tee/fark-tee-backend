@@ -5,15 +5,15 @@ import (
 	"errors"
 
 	"github.com/fark-tee/go-kit/apperror"
-	"github.com/fark-tee/go-kit/idx"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 )
 
 func (s *serviceImpl) Create(ctx context.Context, userID, name string, lat, lng float64) (entity.SavedLocation, error) {
 	return s.repo.Create(ctx, entity.SavedLocation{
-		ID:     idx.NewUUID(),
+		ID:     mongoid.New(),
 		UserID: userID,
 		Name:   name,
 		Lat:    lat,

@@ -66,6 +66,18 @@ components:
       required:
         - userId
       type: object
+    PartiesResponse:
+      additionalProperties: false
+      properties:
+        parties:
+          items:
+            $ref: "#/components/schemas/PartyResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - parties
+      type: object
     PartyInviteResponse:
       additionalProperties: false
       properties:
@@ -102,12 +114,27 @@ components:
           type: string
         userId:
           type: string
+        userProfileImage:
+          type: string
       required:
         - id
         - partyId
         - userId
         - userDisplayName
+        - userProfileImage
         - status
+      type: object
+    PartyMembersResponse:
+      additionalProperties: false
+      properties:
+        members:
+          items:
+            $ref: "#/components/schemas/PartyMemberResponse"
+          type:
+            - array
+            - "null"
+      required:
+        - members
       type: object
     PartyResponse:
       additionalProperties: false
@@ -319,6 +346,20 @@ components:
         - direction
         - startedAt
       type: object
+    UpdateMeRequestBody:
+      additionalProperties: false
+      properties:
+        displayName:
+          type: string
+        username:
+          maxLength: 20
+          minLength: 3
+          pattern: ^[a-zA-Z0-9_]+$
+          type: string
+      required:
+        - displayName
+        - username
+      type: object
     UpdatePositionRequestBody:
       additionalProperties: false
       properties:
@@ -348,6 +389,14 @@ components:
         - lat
         - lng
       type: object
+    UploadImageResponse:
+      additionalProperties: false
+      properties:
+        url:
+          type: string
+      required:
+        - url
+      type: object
     UserResponse:
       additionalProperties: false
       properties:
@@ -373,10 +422,13 @@ components:
         ratingCount:
           format: int64
           type: integer
+        username:
+          type: string
       required:
         - id
         - profileImageUrl
         - displayName
+        - username
         - googleUserId
         - rating
         - ratingCount
@@ -492,6 +544,47 @@ paths:
                 $ref: "#/components/schemas/Error"
           description: Error
       summary: Exchange a refresh token for a new access/refresh token pair
+  /v1/me:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Get the current user's profile
+    patch:
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateMeRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Update the current user's display name
   /v1/me/invites:
     get:
       responses:
@@ -510,6 +603,58 @@ paths:
       security:
         - bearerAuth: []
       summary: List the current user's pending party invites
+  /v1/me/parties:
+    get:
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartiesResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: List the current user's parties
+  /v1/me/profile-image:
+    post:
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding:
+              image:
+                contentType: image/*
+            schema:
+              properties:
+                image:
+                  contentEncoding: binary
+                  contentMediaType: application/octet-stream
+                  format: binary
+                  type: string
+              required:
+                - image
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Upload the current user's profile image
   /v1/parties:
     post:
       requestBody:
@@ -534,7 +679,54 @@ paths:
       security:
         - bearerAuth: []
       summary: Create a party
+  /v1/parties/{partyId}:
+    get:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Get a party by ID (members only)
   /v1/parties/{partyId}/members:
+    get:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyMembersResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: List a party's members
     post:
       parameters:
         - in: path
@@ -952,6 +1144,38 @@ paths:
       security:
         - bearerAuth: []
       summary: Update a saved location
+  /v1/upload:
+    post:
+      requestBody:
+        content:
+          multipart/form-data:
+            encoding:
+              image:
+                contentType: image/*
+            schema:
+              properties:
+                image:
+                  contentEncoding: binary
+                  contentMediaType: application/octet-stream
+                  format: binary
+                  type: string
+              required:
+                - image
+              type: object
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UploadImageResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      summary: Upload an image and get back its public URL
   /v1/users/search:
     get:
       parameters:

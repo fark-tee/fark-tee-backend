@@ -43,8 +43,6 @@ github.com/danielgtaylor/huma/v2 v2.39.0/go.mod h1:pGstQdMhQnP9ZBnrqPRb9goqOWs1H
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc h1:U9qPSI2PIWSS1VwoXQT9A3Wy9MM3WgvqSxFWenqJduM=
 github.com/davecgh/go-spew v1.1.2-0.20180830191138-d8f796af33cc/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
-github.com/fark-tee/go-kit v0.0.0-20260814090239-ad67f9c42e0d h1:mTABerYxwk1d65SQOqOAUMgiP5iubmzFupCQoWT1ISo=
-github.com/fark-tee/go-kit v0.0.0-20260814090239-ad67f9c42e0d/go.mod h1:C1hnLFsqedmYeRhreX7i68cJiBG3N6B3tJenhjmJhsE=
 github.com/fxamacker/cbor/v2 v2.9.2 h1:X4Ksno9+x3cz0TZv69ec1hxP/+tymuR8PXQJyDwfh78=
 github.com/fxamacker/cbor/v2 v2.9.2/go.mod h1:vM4b+DJCtHn+zz7h3FFp/hDAI9WNWCsZj23V5ytsSxQ=
 github.com/gabriel-vasile/mimetype v1.4.13 h1:46nXokslUBsAJE/wMsp5gtO500a4F3Nkz9Ufpk2AcUM=

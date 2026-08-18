@@ -9,6 +9,9 @@ import (
 
 type Handler interface {
 	Search(ctx context.Context, req *dto.SearchUsersRequest) (*dto.UsersResponse, error)
+	GetMe(ctx context.Context, req *dto.GetMeRequest) (*dto.UserResponse, error)
+	UpdateMe(ctx context.Context, req *dto.UpdateMeRequest) (*dto.UserResponse, error)
+	UploadProfileImage(ctx context.Context, req *dto.UploadProfileImageRequest) (*dto.UserResponse, error)
 }
 
 type handlerImpl struct {

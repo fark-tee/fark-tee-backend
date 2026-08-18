@@ -9,9 +9,9 @@ import (
 	"time"
 
 	"github.com/fark-tee/go-kit/apperror"
-	"github.com/fark-tee/go-kit/idx"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/story"
 )
@@ -21,7 +21,7 @@ func (s *serviceImpl) Create(ctx context.Context, actorID, partyID string, image
 		return entity.Story{}, err
 	}
 
-	id := idx.NewUUID()
+	id := mongoid.New()
 
 	imageURL, err := s.uploader.UploadPublic(ctx, "stories/"+id+filepath.Ext(filename), image, size, contentType)
 	if err != nil {

@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/fark-tee/go-kit/apperror"
-	"github.com/fark-tee/go-kit/idx"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
@@ -21,7 +21,7 @@ func (s *serviceImpl) Create(ctx context.Context, actorID, name, destinationName
 	}
 
 	created, err := s.partyRepo.Create(ctx, entity.Party{
-		ID:              idx.NewUUID(),
+		ID:              mongoid.New(),
 		Name:            name,
 		DestinationName: destinationName,
 		DestinationLat:  destinationLat,
@@ -35,11 +35,12 @@ func (s *serviceImpl) Create(ctx context.Context, actorID, name, destinationName
 	}
 
 	if _, err := s.memberRepo.Create(ctx, entity.PartyMember{
-		ID:              idx.NewUUID(),
-		PartyID:         created.ID,
-		UserID:          actor.ID,
-		UserDisplayName: actor.DisplayName,
-		Status:          entity.PartyMemberStatusAccepted,
+		ID:               mongoid.New(),
+		PartyID:          created.ID,
+		UserID:           actor.ID,
+		UserDisplayName:  actor.DisplayName,
+		UserProfileImage: actor.ProfileImageURL,
+		Status:           entity.PartyMemberStatusAccepted,
 	}); err != nil {
 		return entity.Party{}, err
 	}
@@ -73,11 +74,12 @@ func (s *serviceImpl) Invite(ctx context.Context, actorID, partyID, targetUserID
 	}
 
 	return s.memberRepo.Create(ctx, entity.PartyMember{
-		ID:              idx.NewUUID(),
-		PartyID:         partyID,
-		UserID:          target.ID,
-		UserDisplayName: target.DisplayName,
-		Status:          entity.PartyMemberStatusPending,
+		ID:               mongoid.New(),
+		PartyID:          partyID,
+		UserID:           target.ID,
+		UserDisplayName:  target.DisplayName,
+		UserProfileImage: target.ProfileImageURL,
+		Status:           entity.PartyMemberStatusPending,
 	})
 }
 
@@ -117,6 +119,80 @@ func (s *serviceImpl) MyInvites(ctx context.Context, actorID string) ([]Invite, 
 	}
 
 	return invites, nil
+}
+
+func (s *serviceImpl) MyParties(ctx context.Context, actorID string) ([]entity.Party, error) {
+	members, err := s.memberRepo.FindAcceptedByUserID(ctx, actorID)
+	if err != nil {
+		return nil, err
+	}
+
+	if len(members) == 0 {
+		return []entity.Party{}, nil
+	}
+
+	partyIDs := make([]string, 0, len(members))
+	for _, member := range members {
+		partyIDs = append(partyIDs, member.PartyID)
+	}
+
+	parties, err := s.partyRepo.FindByIDs(ctx, partyIDs)
+	if err != nil {
+		return nil, err
+	}
+
+	partiesByID := make(map[string]entity.Party, len(parties))
+	for _, p := range parties {
+		partiesByID[p.ID] = p
+	}
+
+	result := make([]entity.Party, 0, len(members))
+	for _, member := range members {
+		p, ok := partiesByID[member.PartyID]
+		if !ok {
+			continue
+		}
+
+		result = append(result, p)
+	}
+
+	return result, nil
+}
+
+// requireMembership verifies that actorID is a member of partyID, returning
+// a PARTY_NOT_FOUND error (rather than leaking whether the party exists) if
+// not.
+func (s *serviceImpl) requireMembership(ctx context.Context, actorID, partyID string) error {
+	if _, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, actorID); err != nil {
+		if errors.Is(err, partymember.ErrNotFound) {
+			return apperror.NewNotFoundError("PARTY_NOT_FOUND", "party not found", err)
+		}
+
+		return err
+	}
+
+	return nil
+}
+
+func (s *serviceImpl) Get(ctx context.Context, actorID, partyID string) (entity.Party, error) {
+	p, err := s.partyRepo.FindByID(ctx, partyID)
+	if err != nil {
+		return entity.Party{}, toAppError(err)
+	}
+
+	if err := s.requireMembership(ctx, actorID, partyID); err != nil {
+		return entity.Party{}, err
+	}
+
+	return p, nil
+}
+
+func (s *serviceImpl) ListMembers(ctx context.Context, actorID, partyID string) ([]entity.PartyMember, error) {
+	if err := s.requireMembership(ctx, actorID, partyID); err != nil {
+		return nil, err
+	}
+
+	return s.memberRepo.FindByPartyID(ctx, partyID)
 }
 
 func (s *serviceImpl) AcceptInvite(ctx context.Context, actorID, partyID string) (entity.PartyMember, error) {

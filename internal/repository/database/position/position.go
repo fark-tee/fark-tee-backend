@@ -11,7 +11,10 @@ import (
 )
 
 func (r *repositoryImpl) Create(ctx context.Context, position entity.Position) (entity.Position, error) {
-	doc := fromEntity(position)
+	doc, err := fromEntity(position)
+	if err != nil {
+		return entity.Position{}, err
+	}
 
 	if _, err := r.collection.InsertOne(ctx, doc); err != nil {
 		return entity.Position{}, err

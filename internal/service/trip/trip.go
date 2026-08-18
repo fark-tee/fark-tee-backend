@@ -6,9 +6,9 @@ import (
 	"time"
 
 	"github.com/fark-tee/go-kit/apperror"
-	"github.com/fark-tee/go-kit/idx"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
@@ -25,7 +25,7 @@ func (s *serviceImpl) StartTrip(ctx context.Context, actorID, partyID string, di
 	}
 
 	createdTrip, err := s.tripRepo.Create(ctx, entity.Trip{
-		ID:        idx.NewUUID(),
+		ID:        mongoid.New(),
 		PartyID:   partyID,
 		UserID:    actorID,
 		Direction: direction,
@@ -36,7 +36,7 @@ func (s *serviceImpl) StartTrip(ctx context.Context, actorID, partyID string, di
 	}
 
 	createdPosition, err := s.positionRepo.Create(ctx, entity.Position{
-		ID:         idx.NewUUID(),
+		ID:         mongoid.New(),
 		TripID:     createdTrip.ID,
 		PartyID:    partyID,
 		UserID:     actorID,
@@ -66,7 +66,7 @@ func (s *serviceImpl) UpdatePosition(ctx context.Context, actorID, partyID strin
 	}
 
 	return s.positionRepo.Create(ctx, entity.Position{
-		ID:         idx.NewUUID(),
+		ID:         mongoid.New(),
 		TripID:     currentTrip.ID,
 		PartyID:    partyID,
 		UserID:     actorID,

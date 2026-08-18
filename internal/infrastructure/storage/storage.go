@@ -5,10 +5,13 @@ import (
 	"io"
 	"strings"
 
+	"github.com/aws/aws-sdk-go-v2/aws"
 	awsconfig "github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/credentials"
 	"github.com/aws/aws-sdk-go-v2/service/s3"
 	"github.com/aws/aws-sdk-go-v2/service/s3/types"
+	"github.com/aws/smithy-go/middleware"
+	smithyhttp "github.com/aws/smithy-go/transport/http"
 
 	"github.com/fark-tee/fark-tee-backend/internal/config"
 )
@@ -35,6 +38,11 @@ func NewUploader(ctx context.Context, cfg *config.Config) (*Uploader, error) {
 	client := s3.NewFromConfig(awsCfg, func(o *s3.Options) {
 		o.BaseEndpoint = &endpoint
 		o.UsePathStyle = true
+		// MinIO (and most other S3-compatible services) don't support the SDK's
+		// default trailing-checksum upload format, which breaks SigV4 signing
+		// and causes SignatureDoesNotMatch on PutObject.
+		o.RequestChecksumCalculation = aws.RequestChecksumCalculationWhenRequired
+		o.APIOptions = append(o.APIOptions, removeSignedAcceptEncoding)
 	})
 
 	return &Uploader{
@@ -42,6 +50,24 @@ func NewUploader(ctx context.Context, cfg *config.Config) (*Uploader, error) {
 		bucket:        cfg.Storage.Bucket,
 		publicURLBase: strings.TrimRight(endpoint, "/") + "/" + cfg.Storage.Bucket,
 	}, nil
+}
+
+// removeSignedAcceptEncoding strips the Accept-Encoding header the SDK sets
+// (and signs) to suppress transparent gzip handling. Some reverse proxies in
+// front of S3-compatible endpoints (e.g. Cloudflare) rewrite that header in
+// transit, which invalidates the SigV4 signature and causes
+// SignatureDoesNotMatch on PutObject. Removing it here, right after the SDK's
+// own DisableAcceptEncodingGzip step and before signing, keeps it out of the
+// signed header set entirely.
+func removeSignedAcceptEncoding(stack *middleware.Stack) error {
+	return stack.Finalize.Insert(middleware.FinalizeMiddlewareFunc("RemoveSignedAcceptEncoding", func(
+		ctx context.Context, in middleware.FinalizeInput, next middleware.FinalizeHandler,
+	) (middleware.FinalizeOutput, middleware.Metadata, error) {
+		if req, ok := in.Request.(*smithyhttp.Request); ok {
+			req.Header.Del("Accept-Encoding")
+		}
+		return next.HandleFinalize(ctx, in)
+	}), "DisableAcceptEncodingGzip", middleware.After)
 }
 
 // UploadPublic uploads data under key, marks the object publicly readable,

@@ -242,6 +242,74 @@ func (_c *MockHandler_DeclineInvite_Call) RunAndReturn(run func(ctx context.Cont
 	return _c
 }
 
+// Get provides a mock function for the type MockHandler
+func (_mock *MockHandler) Get(ctx context.Context, req *dto.GetPartyRequest) (*dto.PartyResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
+	var r0 *dto.PartyResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.GetPartyRequest) (*dto.PartyResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.GetPartyRequest) *dto.PartyResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.PartyResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.GetPartyRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type MockHandler_Get_Call struct {
+	*mock.Call
+}
+
+// Get is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.GetPartyRequest
+func (_e *MockHandler_Expecter) Get(ctx any, req any) *MockHandler_Get_Call {
+	return &MockHandler_Get_Call{Call: _e.mock.On("Get", ctx, req)}
+}
+
+func (_c *MockHandler_Get_Call) Run(run func(ctx context.Context, req *dto.GetPartyRequest)) *MockHandler_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.GetPartyRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.GetPartyRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_Get_Call) Return(partyResponse *dto.PartyResponse, err error) *MockHandler_Get_Call {
+	_c.Call.Return(partyResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_Get_Call) RunAndReturn(run func(ctx context.Context, req *dto.GetPartyRequest) (*dto.PartyResponse, error)) *MockHandler_Get_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Invite provides a mock function for the type MockHandler
 func (_mock *MockHandler) Invite(ctx context.Context, req *dto.InviteToPartyRequest) (*dto.PartyMemberResponse, error) {
 	ret := _mock.Called(ctx, req)
@@ -310,6 +378,74 @@ func (_c *MockHandler_Invite_Call) RunAndReturn(run func(ctx context.Context, re
 	return _c
 }
 
+// ListMembers provides a mock function for the type MockHandler
+func (_mock *MockHandler) ListMembers(ctx context.Context, req *dto.ListPartyMembersRequest) (*dto.PartyMembersResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListMembers")
+	}
+
+	var r0 *dto.PartyMembersResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.ListPartyMembersRequest) (*dto.PartyMembersResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.ListPartyMembersRequest) *dto.PartyMembersResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.PartyMembersResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.ListPartyMembersRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_ListMembers_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListMembers'
+type MockHandler_ListMembers_Call struct {
+	*mock.Call
+}
+
+// ListMembers is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.ListPartyMembersRequest
+func (_e *MockHandler_Expecter) ListMembers(ctx any, req any) *MockHandler_ListMembers_Call {
+	return &MockHandler_ListMembers_Call{Call: _e.mock.On("ListMembers", ctx, req)}
+}
+
+func (_c *MockHandler_ListMembers_Call) Run(run func(ctx context.Context, req *dto.ListPartyMembersRequest)) *MockHandler_ListMembers_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.ListPartyMembersRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.ListPartyMembersRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_ListMembers_Call) Return(partyMembersResponse *dto.PartyMembersResponse, err error) *MockHandler_ListMembers_Call {
+	_c.Call.Return(partyMembersResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_ListMembers_Call) RunAndReturn(run func(ctx context.Context, req *dto.ListPartyMembersRequest) (*dto.PartyMembersResponse, error)) *MockHandler_ListMembers_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // MyInvites provides a mock function for the type MockHandler
 func (_mock *MockHandler) MyInvites(ctx context.Context, req *dto.MyInvitesRequest) (*dto.PartyInvitesResponse, error) {
 	ret := _mock.Called(ctx, req)
@@ -374,6 +510,74 @@ func (_c *MockHandler_MyInvites_Call) Return(partyInvitesResponse *dto.PartyInvi
 }
 
 func (_c *MockHandler_MyInvites_Call) RunAndReturn(run func(ctx context.Context, req *dto.MyInvitesRequest) (*dto.PartyInvitesResponse, error)) *MockHandler_MyInvites_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// MyParties provides a mock function for the type MockHandler
+func (_mock *MockHandler) MyParties(ctx context.Context, req *dto.MyPartiesRequest) (*dto.PartiesResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for MyParties")
+	}
+
+	var r0 *dto.PartiesResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.MyPartiesRequest) (*dto.PartiesResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.MyPartiesRequest) *dto.PartiesResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.PartiesResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.MyPartiesRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_MyParties_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MyParties'
+type MockHandler_MyParties_Call struct {
+	*mock.Call
+}
+
+// MyParties is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.MyPartiesRequest
+func (_e *MockHandler_Expecter) MyParties(ctx any, req any) *MockHandler_MyParties_Call {
+	return &MockHandler_MyParties_Call{Call: _e.mock.On("MyParties", ctx, req)}
+}
+
+func (_c *MockHandler_MyParties_Call) Run(run func(ctx context.Context, req *dto.MyPartiesRequest)) *MockHandler_MyParties_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.MyPartiesRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.MyPartiesRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_MyParties_Call) Return(partiesResponse *dto.PartiesResponse, err error) *MockHandler_MyParties_Call {
+	_c.Call.Return(partiesResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_MyParties_Call) RunAndReturn(run func(ctx context.Context, req *dto.MyPartiesRequest) (*dto.PartiesResponse, error)) *MockHandler_MyParties_Call {
 	_c.Call.Return(run)
 	return _c
 }

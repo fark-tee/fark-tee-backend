@@ -23,6 +23,15 @@ type Service interface {
 	// party's owner may invite.
 	Invite(ctx context.Context, actorID, partyID, targetUserID string) (entity.PartyMember, error)
 	MyInvites(ctx context.Context, actorID string) ([]Invite, error)
+	MyParties(ctx context.Context, actorID string) ([]entity.Party, error)
+	// Get returns the party identified by partyID, provided actorID is a
+	// member of it. If actorID is not a member, a not-found error is
+	// returned so as not to leak the existence of parties the actor isn't
+	// in.
+	Get(ctx context.Context, actorID, partyID string) (entity.Party, error)
+	// ListMembers returns every member of partyID, provided actorID is a
+	// member of it.
+	ListMembers(ctx context.Context, actorID, partyID string) ([]entity.PartyMember, error)
 	AcceptInvite(ctx context.Context, actorID, partyID string) (entity.PartyMember, error)
 	DeclineInvite(ctx context.Context, actorID, partyID string) error
 	// RemoveMember removes targetUserID from partyID. Only the party's

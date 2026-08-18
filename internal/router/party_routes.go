@@ -36,6 +36,27 @@ func registerPartyRoutes(api huma.API, handlers *handler.Handlers) {
 	}, humax.Wrap200(handlers.Party.MyInvites))
 
 	huma.Register(api, huma.Operation{
+		Method:   http.MethodGet,
+		Path:     "/me/parties",
+		Summary:  "List the current user's parties",
+		Security: security,
+	}, humax.Wrap200(handlers.Party.MyParties))
+
+	huma.Register(api, huma.Operation{
+		Method:   http.MethodGet,
+		Path:     "/parties/{partyId}",
+		Summary:  "Get a party by ID (members only)",
+		Security: security,
+	}, humax.Wrap200(handlers.Party.Get))
+
+	huma.Register(api, huma.Operation{
+		Method:   http.MethodGet,
+		Path:     "/parties/{partyId}/members",
+		Summary:  "List a party's members",
+		Security: security,
+	}, humax.Wrap200(handlers.Party.ListMembers))
+
+	huma.Register(api, huma.Operation{
 		Method:   http.MethodPost,
 		Path:     "/parties/{partyId}/members/accept",
 		Summary:  "Accept a pending party invite",

@@ -7,9 +7,9 @@ import (
 	"strings"
 
 	"github.com/fark-tee/go-kit/apperror"
-	"github.com/fark-tee/go-kit/idx"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 )
 
@@ -45,16 +45,16 @@ func (s *serviceImpl) LoginWithGoogle(ctx context.Context, code, state string) (
 	}
 
 	loggedInUser, err := s.userRepo.FindByGoogleUserID(ctx, profile.GoogleUserID)
+	isNewUser := false
 	if err != nil {
 		if !errors.Is(err, user.ErrNotFound) {
 			return GoogleLoginResult{}, err
 		}
 
+		isNewUser = true
 		loggedInUser, err = s.userRepo.Create(ctx, entity.User{
-			ID:              idx.NewUUID(),
-			DisplayName:     profile.Name,
-			ProfileImageURL: profile.ProfileImageURL,
-			GoogleUserID:    profile.GoogleUserID,
+			ID:           mongoid.New(),
+			GoogleUserID: profile.GoogleUserID,
 		})
 		if err != nil {
 			return GoogleLoginResult{}, err
@@ -67,10 +67,13 @@ func (s *serviceImpl) LoginWithGoogle(ctx context.Context, code, state string) (
 	}
 
 	return GoogleLoginResult{
-		User:         loggedInUser,
-		AccessToken:  accessToken,
-		RefreshToken: refreshToken,
-		RedirectURI:  redirectURI,
+		User:                  loggedInUser,
+		AccessToken:           accessToken,
+		RefreshToken:          refreshToken,
+		RedirectURI:           redirectURI,
+		IsNewUser:             isNewUser,
+		GoogleDisplayName:     profile.Name,
+		GoogleProfileImageURL: profile.ProfileImageURL,
 	}, nil
 }
 

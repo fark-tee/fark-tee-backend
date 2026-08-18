@@ -6,6 +6,7 @@ package mock_user
 
 import (
 	"context"
+	"io"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
 	mock "github.com/stretchr/testify/mock"
@@ -36,6 +37,72 @@ type MockService_Expecter struct {
 
 func (_m *MockService) EXPECT() *MockService_Expecter {
 	return &MockService_Expecter{mock: &_m.Mock}
+}
+
+// GetByID provides a mock function for the type MockService
+func (_mock *MockService) GetByID(ctx context.Context, id string) (entity.User, error) {
+	ret := _mock.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetByID")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
+		r0 = returnFunc(ctx, id)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_GetByID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetByID'
+type MockService_GetByID_Call struct {
+	*mock.Call
+}
+
+// GetByID is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+func (_e *MockService_Expecter) GetByID(ctx any, id any) *MockService_GetByID_Call {
+	return &MockService_GetByID_Call{Call: _e.mock.On("GetByID", ctx, id)}
+}
+
+func (_c *MockService_GetByID_Call) Run(run func(ctx context.Context, id string)) *MockService_GetByID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_GetByID_Call) Return(user entity.User, err error) *MockService_GetByID_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockService_GetByID_Call) RunAndReturn(run func(ctx context.Context, id string) (entity.User, error)) *MockService_GetByID_Call {
+	_c.Call.Return(run)
+	return _c
 }
 
 // Search provides a mock function for the type MockService
@@ -102,6 +169,174 @@ func (_c *MockService_Search_Call) Return(users []entity.User, err error) *MockS
 }
 
 func (_c *MockService_Search_Call) RunAndReturn(run func(ctx context.Context, query string) ([]entity.User, error)) *MockService_Search_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateProfile provides a mock function for the type MockService
+func (_mock *MockService) UpdateProfile(ctx context.Context, id string, displayName string, username string) (entity.User, error) {
+	ret := _mock.Called(ctx, id, displayName, username)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateProfile")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id, displayName, username)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) entity.User); ok {
+		r0 = returnFunc(ctx, id, displayName, username)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string) error); ok {
+		r1 = returnFunc(ctx, id, displayName, username)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_UpdateProfile_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateProfile'
+type MockService_UpdateProfile_Call struct {
+	*mock.Call
+}
+
+// UpdateProfile is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+//   - displayName string
+//   - username string
+func (_e *MockService_Expecter) UpdateProfile(ctx any, id any, displayName any, username any) *MockService_UpdateProfile_Call {
+	return &MockService_UpdateProfile_Call{Call: _e.mock.On("UpdateProfile", ctx, id, displayName, username)}
+}
+
+func (_c *MockService_UpdateProfile_Call) Run(run func(ctx context.Context, id string, displayName string, username string)) *MockService_UpdateProfile_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 string
+		if args[3] != nil {
+			arg3 = args[3].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_UpdateProfile_Call) Return(user entity.User, err error) *MockService_UpdateProfile_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockService_UpdateProfile_Call) RunAndReturn(run func(ctx context.Context, id string, displayName string, username string) (entity.User, error)) *MockService_UpdateProfile_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UploadProfileImage provides a mock function for the type MockService
+func (_mock *MockService) UploadProfileImage(ctx context.Context, id string, image io.Reader, size int64, contentType string, filename string) (entity.User, error) {
+	ret := _mock.Called(ctx, id, image, size, contentType, filename)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UploadProfileImage")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, io.Reader, int64, string, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id, image, size, contentType, filename)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, io.Reader, int64, string, string) entity.User); ok {
+		r0 = returnFunc(ctx, id, image, size, contentType, filename)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, io.Reader, int64, string, string) error); ok {
+		r1 = returnFunc(ctx, id, image, size, contentType, filename)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_UploadProfileImage_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UploadProfileImage'
+type MockService_UploadProfileImage_Call struct {
+	*mock.Call
+}
+
+// UploadProfileImage is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+//   - image io.Reader
+//   - size int64
+//   - contentType string
+//   - filename string
+func (_e *MockService_Expecter) UploadProfileImage(ctx any, id any, image any, size any, contentType any, filename any) *MockService_UploadProfileImage_Call {
+	return &MockService_UploadProfileImage_Call{Call: _e.mock.On("UploadProfileImage", ctx, id, image, size, contentType, filename)}
+}
+
+func (_c *MockService_UploadProfileImage_Call) Run(run func(ctx context.Context, id string, image io.Reader, size int64, contentType string, filename string)) *MockService_UploadProfileImage_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 io.Reader
+		if args[2] != nil {
+			arg2 = args[2].(io.Reader)
+		}
+		var arg3 int64
+		if args[3] != nil {
+			arg3 = args[3].(int64)
+		}
+		var arg4 string
+		if args[4] != nil {
+			arg4 = args[4].(string)
+		}
+		var arg5 string
+		if args[5] != nil {
+			arg5 = args[5].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+			arg4,
+			arg5,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_UploadProfileImage_Call) Return(user entity.User, err error) *MockService_UploadProfileImage_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockService_UploadProfileImage_Call) RunAndReturn(run func(ctx context.Context, id string, image io.Reader, size int64, contentType string, filename string) (entity.User, error)) *MockService_UploadProfileImage_Call {
 	_c.Call.Return(run)
 	return _c
 }

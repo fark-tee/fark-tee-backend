@@ -17,6 +17,8 @@ type Repository interface {
 	Create(ctx context.Context, member entity.PartyMember) (entity.PartyMember, error)
 	FindByPartyIDAndUserID(ctx context.Context, partyID, userID string) (entity.PartyMember, error)
 	FindPendingByUserID(ctx context.Context, userID string) ([]entity.PartyMember, error)
+	FindAcceptedByUserID(ctx context.Context, userID string) ([]entity.PartyMember, error)
+	FindByPartyID(ctx context.Context, partyID string) ([]entity.PartyMember, error)
 	UpdateStatus(ctx context.Context, id string, status entity.PartyMemberStatus) (entity.PartyMember, error)
 	Delete(ctx context.Context, id string) error
 }

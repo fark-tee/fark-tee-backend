@@ -24,11 +24,12 @@ type CreatePartyRequest struct {
 }
 
 type PartyMemberResponse struct {
-	ID              string `json:"id"`
-	PartyID         string `json:"partyId"`
-	UserID          string `json:"userId"`
-	UserDisplayName string `json:"userDisplayName"`
-	Status          string `json:"status"`
+	ID               string `json:"id"`
+	PartyID          string `json:"partyId"`
+	UserID           string `json:"userId"`
+	UserDisplayName  string `json:"userDisplayName"`
+	UserProfileImage string `json:"userProfileImage"`
+	Status           string `json:"status"`
 }
 
 type InviteToPartyRequest struct {
@@ -48,6 +49,24 @@ type PartyInvitesResponse struct {
 }
 
 type MyInvitesRequest struct{}
+
+type PartiesResponse struct {
+	Parties []PartyResponse `json:"parties"`
+}
+
+type MyPartiesRequest struct{}
+
+type GetPartyRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+}
+
+type PartyMembersResponse struct {
+	Members []PartyMemberResponse `json:"members"`
+}
+
+type ListPartyMembersRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+}
 
 type AcceptInviteRequest struct {
 	PartyID string `path:"partyId" required:"true"`

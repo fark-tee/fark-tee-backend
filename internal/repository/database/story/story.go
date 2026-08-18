@@ -5,13 +5,17 @@ import (
 	"errors"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/mongoid"
 	"go.mongodb.org/mongo-driver/v2/bson"
 	"go.mongodb.org/mongo-driver/v2/mongo"
 	"go.mongodb.org/mongo-driver/v2/mongo/options"
 )
 
 func (r *repositoryImpl) Create(ctx context.Context, story entity.Story) (entity.Story, error) {
-	doc := fromEntity(story)
+	doc, err := fromEntity(story)
+	if err != nil {
+		return entity.Story{}, err
+	}
 
 	if _, err := r.collection.InsertOne(ctx, doc); err != nil {
 		return entity.Story{}, err
@@ -23,7 +27,12 @@ func (r *repositoryImpl) Create(ctx context.Context, story entity.Story) (entity
 func (r *repositoryImpl) FindByID(ctx context.Context, id string) (entity.Story, error) {
 	var doc model
 
-	err := r.collection.FindOne(ctx, bson.M{"_id": id}).Decode(&doc)
+	objID, err := mongoid.ToObjectID(id)
+	if err != nil {
+		return entity.Story{}, ErrNotFound
+	}
+
+	err = r.collection.FindOne(ctx, bson.M{"_id": objID}).Decode(&doc)
 	if err != nil {
 		if errors.Is(err, mongo.ErrNoDocuments) {
 			return entity.Story{}, ErrNotFound
@@ -59,7 +68,12 @@ func (r *repositoryImpl) FindByPartyIDAndUserID(ctx context.Context, partyID, us
 }
 
 func (r *repositoryImpl) Delete(ctx context.Context, id string) error {
-	result, err := r.collection.DeleteOne(ctx, bson.M{"_id": id})
+	objID, err := mongoid.ToObjectID(id)
+	if err != nil {
+		return ErrNotFound
+	}
+
+	result, err := r.collection.DeleteOne(ctx, bson.M{"_id": objID})
 	if err != nil {
 		return err
 	}

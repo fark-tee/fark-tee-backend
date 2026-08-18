@@ -271,6 +271,78 @@ func (_c *MockService_DeclineInvite_Call) RunAndReturn(run func(ctx context.Cont
 	return _c
 }
 
+// Get provides a mock function for the type MockService
+func (_mock *MockService) Get(ctx context.Context, actorID string, partyID string) (entity.Party, error) {
+	ret := _mock.Called(ctx, actorID, partyID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Get")
+	}
+
+	var r0 entity.Party
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) (entity.Party, error)); ok {
+		return returnFunc(ctx, actorID, partyID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) entity.Party); ok {
+		r0 = returnFunc(ctx, actorID, partyID)
+	} else {
+		r0 = ret.Get(0).(entity.Party)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = returnFunc(ctx, actorID, partyID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_Get_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Get'
+type MockService_Get_Call struct {
+	*mock.Call
+}
+
+// Get is a helper method to define mock.On call
+//   - ctx context.Context
+//   - actorID string
+//   - partyID string
+func (_e *MockService_Expecter) Get(ctx any, actorID any, partyID any) *MockService_Get_Call {
+	return &MockService_Get_Call{Call: _e.mock.On("Get", ctx, actorID, partyID)}
+}
+
+func (_c *MockService_Get_Call) Run(run func(ctx context.Context, actorID string, partyID string)) *MockService_Get_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_Get_Call) Return(party entity.Party, err error) *MockService_Get_Call {
+	_c.Call.Return(party, err)
+	return _c
+}
+
+func (_c *MockService_Get_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string) (entity.Party, error)) *MockService_Get_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Invite provides a mock function for the type MockService
 func (_mock *MockService) Invite(ctx context.Context, actorID string, partyID string, targetUserID string) (entity.PartyMember, error) {
 	ret := _mock.Called(ctx, actorID, partyID, targetUserID)
@@ -349,6 +421,80 @@ func (_c *MockService_Invite_Call) RunAndReturn(run func(ctx context.Context, ac
 	return _c
 }
 
+// ListMembers provides a mock function for the type MockService
+func (_mock *MockService) ListMembers(ctx context.Context, actorID string, partyID string) ([]entity.PartyMember, error) {
+	ret := _mock.Called(ctx, actorID, partyID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for ListMembers")
+	}
+
+	var r0 []entity.PartyMember
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) ([]entity.PartyMember, error)); ok {
+		return returnFunc(ctx, actorID, partyID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) []entity.PartyMember); ok {
+		r0 = returnFunc(ctx, actorID, partyID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.PartyMember)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = returnFunc(ctx, actorID, partyID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_ListMembers_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'ListMembers'
+type MockService_ListMembers_Call struct {
+	*mock.Call
+}
+
+// ListMembers is a helper method to define mock.On call
+//   - ctx context.Context
+//   - actorID string
+//   - partyID string
+func (_e *MockService_Expecter) ListMembers(ctx any, actorID any, partyID any) *MockService_ListMembers_Call {
+	return &MockService_ListMembers_Call{Call: _e.mock.On("ListMembers", ctx, actorID, partyID)}
+}
+
+func (_c *MockService_ListMembers_Call) Run(run func(ctx context.Context, actorID string, partyID string)) *MockService_ListMembers_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_ListMembers_Call) Return(partyMembers []entity.PartyMember, err error) *MockService_ListMembers_Call {
+	_c.Call.Return(partyMembers, err)
+	return _c
+}
+
+func (_c *MockService_ListMembers_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string) ([]entity.PartyMember, error)) *MockService_ListMembers_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // MyInvites provides a mock function for the type MockService
 func (_mock *MockService) MyInvites(ctx context.Context, actorID string) ([]party.Invite, error) {
 	ret := _mock.Called(ctx, actorID)
@@ -413,6 +559,74 @@ func (_c *MockService_MyInvites_Call) Return(invites []party.Invite, err error) 
 }
 
 func (_c *MockService_MyInvites_Call) RunAndReturn(run func(ctx context.Context, actorID string) ([]party.Invite, error)) *MockService_MyInvites_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// MyParties provides a mock function for the type MockService
+func (_mock *MockService) MyParties(ctx context.Context, actorID string) ([]entity.Party, error) {
+	ret := _mock.Called(ctx, actorID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for MyParties")
+	}
+
+	var r0 []entity.Party
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) ([]entity.Party, error)); ok {
+		return returnFunc(ctx, actorID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) []entity.Party); ok {
+		r0 = returnFunc(ctx, actorID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.Party)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, actorID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_MyParties_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'MyParties'
+type MockService_MyParties_Call struct {
+	*mock.Call
+}
+
+// MyParties is a helper method to define mock.On call
+//   - ctx context.Context
+//   - actorID string
+func (_e *MockService_Expecter) MyParties(ctx any, actorID any) *MockService_MyParties_Call {
+	return &MockService_MyParties_Call{Call: _e.mock.On("MyParties", ctx, actorID)}
+}
+
+func (_c *MockService_MyParties_Call) Run(run func(ctx context.Context, actorID string)) *MockService_MyParties_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_MyParties_Call) Return(partys []entity.Party, err error) *MockService_MyParties_Call {
+	_c.Call.Return(partys, err)
+	return _c
+}
+
+func (_c *MockService_MyParties_Call) RunAndReturn(run func(ctx context.Context, actorID string) ([]entity.Party, error)) *MockService_MyParties_Call {
 	_c.Call.Return(run)
 	return _c
 }

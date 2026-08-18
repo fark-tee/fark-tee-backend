@@ -8,9 +8,10 @@ const (
 )
 
 type PartyMember struct {
-	ID              string
-	PartyID         string
-	UserID          string
-	UserDisplayName string
-	Status          PartyMemberStatus
+	ID               string
+	PartyID          string
+	UserID           string
+	UserDisplayName  string
+	UserProfileImage string
+	Status           PartyMemberStatus
 }

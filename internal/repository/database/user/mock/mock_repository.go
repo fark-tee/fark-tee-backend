@@ -236,6 +236,72 @@ func (_c *MockRepository_FindByID_Call) RunAndReturn(run func(ctx context.Contex
 	return _c
 }
 
+// FindByUsername provides a mock function for the type MockRepository
+func (_mock *MockRepository) FindByUsername(ctx context.Context, username string) (entity.User, error) {
+	ret := _mock.Called(ctx, username)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindByUsername")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, error)); ok {
+		return returnFunc(ctx, username)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
+		r0 = returnFunc(ctx, username)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, username)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_FindByUsername_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByUsername'
+type MockRepository_FindByUsername_Call struct {
+	*mock.Call
+}
+
+// FindByUsername is a helper method to define mock.On call
+//   - ctx context.Context
+//   - username string
+func (_e *MockRepository_Expecter) FindByUsername(ctx any, username any) *MockRepository_FindByUsername_Call {
+	return &MockRepository_FindByUsername_Call{Call: _e.mock.On("FindByUsername", ctx, username)}
+}
+
+func (_c *MockRepository_FindByUsername_Call) Run(run func(ctx context.Context, username string)) *MockRepository_FindByUsername_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_FindByUsername_Call) Return(user entity.User, err error) *MockRepository_FindByUsername_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockRepository_FindByUsername_Call) RunAndReturn(run func(ctx context.Context, username string) (entity.User, error)) *MockRepository_FindByUsername_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Search provides a mock function for the type MockRepository
 func (_mock *MockRepository) Search(ctx context.Context, query string) ([]entity.User, error) {
 	ret := _mock.Called(ctx, query)
@@ -300,6 +366,156 @@ func (_c *MockRepository_Search_Call) Return(users []entity.User, err error) *Mo
 }
 
 func (_c *MockRepository_Search_Call) RunAndReturn(run func(ctx context.Context, query string) ([]entity.User, error)) *MockRepository_Search_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateProfile provides a mock function for the type MockRepository
+func (_mock *MockRepository) UpdateProfile(ctx context.Context, id string, displayName string, username string) (entity.User, error) {
+	ret := _mock.Called(ctx, id, displayName, username)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateProfile")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id, displayName, username)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) entity.User); ok {
+		r0 = returnFunc(ctx, id, displayName, username)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string) error); ok {
+		r1 = returnFunc(ctx, id, displayName, username)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_UpdateProfile_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateProfile'
+type MockRepository_UpdateProfile_Call struct {
+	*mock.Call
+}
+
+// UpdateProfile is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+//   - displayName string
+//   - username string
+func (_e *MockRepository_Expecter) UpdateProfile(ctx any, id any, displayName any, username any) *MockRepository_UpdateProfile_Call {
+	return &MockRepository_UpdateProfile_Call{Call: _e.mock.On("UpdateProfile", ctx, id, displayName, username)}
+}
+
+func (_c *MockRepository_UpdateProfile_Call) Run(run func(ctx context.Context, id string, displayName string, username string)) *MockRepository_UpdateProfile_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 string
+		if args[3] != nil {
+			arg3 = args[3].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_UpdateProfile_Call) Return(user entity.User, err error) *MockRepository_UpdateProfile_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockRepository_UpdateProfile_Call) RunAndReturn(run func(ctx context.Context, id string, displayName string, username string) (entity.User, error)) *MockRepository_UpdateProfile_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateProfileImage provides a mock function for the type MockRepository
+func (_mock *MockRepository) UpdateProfileImage(ctx context.Context, id string, profileImageURL string) (entity.User, error) {
+	ret := _mock.Called(ctx, id, profileImageURL)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateProfileImage")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id, profileImageURL)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string) entity.User); ok {
+		r0 = returnFunc(ctx, id, profileImageURL)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string) error); ok {
+		r1 = returnFunc(ctx, id, profileImageURL)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_UpdateProfileImage_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateProfileImage'
+type MockRepository_UpdateProfileImage_Call struct {
+	*mock.Call
+}
+
+// UpdateProfileImage is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+//   - profileImageURL string
+func (_e *MockRepository_Expecter) UpdateProfileImage(ctx any, id any, profileImageURL any) *MockRepository_UpdateProfileImage_Call {
+	return &MockRepository_UpdateProfileImage_Call{Call: _e.mock.On("UpdateProfileImage", ctx, id, profileImageURL)}
+}
+
+func (_c *MockRepository_UpdateProfileImage_Call) Run(run func(ctx context.Context, id string, profileImageURL string)) *MockRepository_UpdateProfileImage_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_UpdateProfileImage_Call) Return(user entity.User, err error) *MockRepository_UpdateProfileImage_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockRepository_UpdateProfileImage_Call) RunAndReturn(run func(ctx context.Context, id string, profileImageURL string) (entity.User, error)) *MockRepository_UpdateProfileImage_Call {
 	_c.Call.Return(run)
 	return _c
 }

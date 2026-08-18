@@ -38,6 +38,74 @@ func (_m *MockHandler) EXPECT() *MockHandler_Expecter {
 	return &MockHandler_Expecter{mock: &_m.Mock}
 }
 
+// GetMe provides a mock function for the type MockHandler
+func (_mock *MockHandler) GetMe(ctx context.Context, req *dto.GetMeRequest) (*dto.UserResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMe")
+	}
+
+	var r0 *dto.UserResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.GetMeRequest) (*dto.UserResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.GetMeRequest) *dto.UserResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.UserResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.GetMeRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_GetMe_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMe'
+type MockHandler_GetMe_Call struct {
+	*mock.Call
+}
+
+// GetMe is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.GetMeRequest
+func (_e *MockHandler_Expecter) GetMe(ctx any, req any) *MockHandler_GetMe_Call {
+	return &MockHandler_GetMe_Call{Call: _e.mock.On("GetMe", ctx, req)}
+}
+
+func (_c *MockHandler_GetMe_Call) Run(run func(ctx context.Context, req *dto.GetMeRequest)) *MockHandler_GetMe_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.GetMeRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.GetMeRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_GetMe_Call) Return(userResponse *dto.UserResponse, err error) *MockHandler_GetMe_Call {
+	_c.Call.Return(userResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_GetMe_Call) RunAndReturn(run func(ctx context.Context, req *dto.GetMeRequest) (*dto.UserResponse, error)) *MockHandler_GetMe_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Search provides a mock function for the type MockHandler
 func (_mock *MockHandler) Search(ctx context.Context, req *dto.SearchUsersRequest) (*dto.UsersResponse, error) {
 	ret := _mock.Called(ctx, req)
@@ -102,6 +170,142 @@ func (_c *MockHandler_Search_Call) Return(usersResponse *dto.UsersResponse, err 
 }
 
 func (_c *MockHandler_Search_Call) RunAndReturn(run func(ctx context.Context, req *dto.SearchUsersRequest) (*dto.UsersResponse, error)) *MockHandler_Search_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UpdateMe provides a mock function for the type MockHandler
+func (_mock *MockHandler) UpdateMe(ctx context.Context, req *dto.UpdateMeRequest) (*dto.UserResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateMe")
+	}
+
+	var r0 *dto.UserResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.UpdateMeRequest) (*dto.UserResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.UpdateMeRequest) *dto.UserResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.UserResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.UpdateMeRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_UpdateMe_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateMe'
+type MockHandler_UpdateMe_Call struct {
+	*mock.Call
+}
+
+// UpdateMe is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.UpdateMeRequest
+func (_e *MockHandler_Expecter) UpdateMe(ctx any, req any) *MockHandler_UpdateMe_Call {
+	return &MockHandler_UpdateMe_Call{Call: _e.mock.On("UpdateMe", ctx, req)}
+}
+
+func (_c *MockHandler_UpdateMe_Call) Run(run func(ctx context.Context, req *dto.UpdateMeRequest)) *MockHandler_UpdateMe_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.UpdateMeRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.UpdateMeRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_UpdateMe_Call) Return(userResponse *dto.UserResponse, err error) *MockHandler_UpdateMe_Call {
+	_c.Call.Return(userResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_UpdateMe_Call) RunAndReturn(run func(ctx context.Context, req *dto.UpdateMeRequest) (*dto.UserResponse, error)) *MockHandler_UpdateMe_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// UploadProfileImage provides a mock function for the type MockHandler
+func (_mock *MockHandler) UploadProfileImage(ctx context.Context, req *dto.UploadProfileImageRequest) (*dto.UserResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UploadProfileImage")
+	}
+
+	var r0 *dto.UserResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.UploadProfileImageRequest) (*dto.UserResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.UploadProfileImageRequest) *dto.UserResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.UserResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.UploadProfileImageRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_UploadProfileImage_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UploadProfileImage'
+type MockHandler_UploadProfileImage_Call struct {
+	*mock.Call
+}
+
+// UploadProfileImage is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.UploadProfileImageRequest
+func (_e *MockHandler_Expecter) UploadProfileImage(ctx any, req any) *MockHandler_UploadProfileImage_Call {
+	return &MockHandler_UploadProfileImage_Call{Call: _e.mock.On("UploadProfileImage", ctx, req)}
+}
+
+func (_c *MockHandler_UploadProfileImage_Call) Run(run func(ctx context.Context, req *dto.UploadProfileImageRequest)) *MockHandler_UploadProfileImage_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.UploadProfileImageRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.UploadProfileImageRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_UploadProfileImage_Call) Return(userResponse *dto.UserResponse, err error) *MockHandler_UploadProfileImage_Call {
+	_c.Call.Return(userResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_UploadProfileImage_Call) RunAndReturn(run func(ctx context.Context, req *dto.UploadProfileImageRequest) (*dto.UserResponse, error)) *MockHandler_UploadProfileImage_Call {
 	_c.Call.Return(run)
 	return _c
 }

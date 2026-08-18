@@ -68,6 +68,62 @@ func (h *handlerImpl) MyInvites(ctx context.Context, _ *dto.MyInvitesRequest) (*
 	return resp, nil
 }
 
+func (h *handlerImpl) MyParties(ctx context.Context, _ *dto.MyPartiesRequest) (*dto.PartiesResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	parties, err := h.service.MyParties(ctx, actorID)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &dto.PartiesResponse{
+		Parties: make([]dto.PartyResponse, 0, len(parties)),
+	}
+	for _, p := range parties {
+		resp.Parties = append(resp.Parties, *toPartyResponse(p))
+	}
+
+	return resp, nil
+}
+
+func (h *handlerImpl) Get(ctx context.Context, req *dto.GetPartyRequest) (*dto.PartyResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	p, err := h.service.Get(ctx, actorID, req.PartyID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toPartyResponse(p), nil
+}
+
+func (h *handlerImpl) ListMembers(ctx context.Context, req *dto.ListPartyMembersRequest) (*dto.PartyMembersResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	members, err := h.service.ListMembers(ctx, actorID, req.PartyID)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &dto.PartyMembersResponse{
+		Members: make([]dto.PartyMemberResponse, 0, len(members)),
+	}
+	for _, m := range members {
+		resp.Members = append(resp.Members, *toPartyMemberResponse(m))
+	}
+
+	return resp, nil
+}
+
 func (h *handlerImpl) AcceptInvite(ctx context.Context, req *dto.AcceptInviteRequest) (*dto.PartyMemberResponse, error) {
 	actorID, err := authmw.RequireUserID(ctx)
 	if err != nil {
@@ -123,10 +179,11 @@ func toPartyResponse(p entity.Party) *dto.PartyResponse {
 
 func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
 	return &dto.PartyMemberResponse{
-		ID:              m.ID,
-		PartyID:         m.PartyID,
-		UserID:          m.UserID,
-		UserDisplayName: m.UserDisplayName,
-		Status:          string(m.Status),
+		ID:               m.ID,
+		PartyID:          m.PartyID,
+		UserID:           m.UserID,
+		UserDisplayName:  m.UserDisplayName,
+		UserProfileImage: m.UserProfileImage,
+		Status:           string(m.Status),
 	}
 }

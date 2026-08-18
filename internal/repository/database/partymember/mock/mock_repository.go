@@ -161,6 +161,142 @@ func (_c *MockRepository_Delete_Call) RunAndReturn(run func(ctx context.Context,
 	return _c
 }
 
+// FindAcceptedByUserID provides a mock function for the type MockRepository
+func (_mock *MockRepository) FindAcceptedByUserID(ctx context.Context, userID string) ([]entity.PartyMember, error) {
+	ret := _mock.Called(ctx, userID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindAcceptedByUserID")
+	}
+
+	var r0 []entity.PartyMember
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) ([]entity.PartyMember, error)); ok {
+		return returnFunc(ctx, userID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) []entity.PartyMember); ok {
+		r0 = returnFunc(ctx, userID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.PartyMember)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, userID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_FindAcceptedByUserID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindAcceptedByUserID'
+type MockRepository_FindAcceptedByUserID_Call struct {
+	*mock.Call
+}
+
+// FindAcceptedByUserID is a helper method to define mock.On call
+//   - ctx context.Context
+//   - userID string
+func (_e *MockRepository_Expecter) FindAcceptedByUserID(ctx any, userID any) *MockRepository_FindAcceptedByUserID_Call {
+	return &MockRepository_FindAcceptedByUserID_Call{Call: _e.mock.On("FindAcceptedByUserID", ctx, userID)}
+}
+
+func (_c *MockRepository_FindAcceptedByUserID_Call) Run(run func(ctx context.Context, userID string)) *MockRepository_FindAcceptedByUserID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_FindAcceptedByUserID_Call) Return(partyMembers []entity.PartyMember, err error) *MockRepository_FindAcceptedByUserID_Call {
+	_c.Call.Return(partyMembers, err)
+	return _c
+}
+
+func (_c *MockRepository_FindAcceptedByUserID_Call) RunAndReturn(run func(ctx context.Context, userID string) ([]entity.PartyMember, error)) *MockRepository_FindAcceptedByUserID_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// FindByPartyID provides a mock function for the type MockRepository
+func (_mock *MockRepository) FindByPartyID(ctx context.Context, partyID string) ([]entity.PartyMember, error) {
+	ret := _mock.Called(ctx, partyID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for FindByPartyID")
+	}
+
+	var r0 []entity.PartyMember
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) ([]entity.PartyMember, error)); ok {
+		return returnFunc(ctx, partyID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) []entity.PartyMember); ok {
+		r0 = returnFunc(ctx, partyID)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).([]entity.PartyMember)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, partyID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_FindByPartyID_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'FindByPartyID'
+type MockRepository_FindByPartyID_Call struct {
+	*mock.Call
+}
+
+// FindByPartyID is a helper method to define mock.On call
+//   - ctx context.Context
+//   - partyID string
+func (_e *MockRepository_Expecter) FindByPartyID(ctx any, partyID any) *MockRepository_FindByPartyID_Call {
+	return &MockRepository_FindByPartyID_Call{Call: _e.mock.On("FindByPartyID", ctx, partyID)}
+}
+
+func (_c *MockRepository_FindByPartyID_Call) Run(run func(ctx context.Context, partyID string)) *MockRepository_FindByPartyID_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_FindByPartyID_Call) Return(partyMembers []entity.PartyMember, err error) *MockRepository_FindByPartyID_Call {
+	_c.Call.Return(partyMembers, err)
+	return _c
+}
+
+func (_c *MockRepository_FindByPartyID_Call) RunAndReturn(run func(ctx context.Context, partyID string) ([]entity.PartyMember, error)) *MockRepository_FindByPartyID_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // FindByPartyIDAndUserID provides a mock function for the type MockRepository
 func (_mock *MockRepository) FindByPartyIDAndUserID(ctx context.Context, partyID string, userID string) (entity.PartyMember, error) {
 	ret := _mock.Called(ctx, partyID, userID)

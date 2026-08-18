@@ -17,9 +17,17 @@ type Repository interface {
 	Create(ctx context.Context, user entity.User) (entity.User, error)
 	FindByID(ctx context.Context, id string) (entity.User, error)
 	FindByGoogleUserID(ctx context.Context, googleUserID string) (entity.User, error)
+	// FindByUsername looks up a user by username, case-insensitively.
+	FindByUsername(ctx context.Context, username string) (entity.User, error)
 	// Search returns users whose display name, ID, or Google user ID match
 	// query, capped at searchResultLimit results.
 	Search(ctx context.Context, query string) ([]entity.User, error)
+	// UpdateProfile sets id's display name and username and returns the
+	// updated user.
+	UpdateProfile(ctx context.Context, id, displayName, username string) (entity.User, error)
+	// UpdateProfileImage sets id's profile image URL and returns the updated
+	// user.
+	UpdateProfileImage(ctx context.Context, id, profileImageURL string) (entity.User, error)
 }
 
 type repositoryImpl struct {
@@ -33,6 +41,21 @@ func New(ctx context.Context, db *mongo.Database) (Repository, error) {
 	_, err := collection.Indexes().CreateOne(ctx, mongo.IndexModel{
 		Keys:    bson.D{{Key: "google_user_id", Value: 1}},
 		Options: options.Index().SetUnique(true),
+	})
+	if err != nil {
+		return nil, err
+	}
+
+	// Partial: only enforced once a user actually has a username, so
+	// existing users created before this field existed (empty string) don't
+	// collide with each other. $ne isn't supported in partial filter
+	// expressions (it compiles to $not), so $gt "" is used instead — any
+	// non-empty string is greater than "".
+	_, err = collection.Indexes().CreateOne(ctx, mongo.IndexModel{
+		Keys: bson.D{{Key: "username", Value: 1}},
+		Options: options.Index().
+			SetUnique(true).
+			SetPartialFilterExpression(bson.M{"username": bson.M{"$exists": true, "$gt": ""}}),
 	})
 	if err != nil {
 		return nil, err

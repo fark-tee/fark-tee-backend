@@ -15,6 +15,7 @@ import (
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story3 "github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	trip3 "github.com/fark-tee/fark-tee-backend/internal/handler/trip"
+	upload2 "github.com/fark-tee/fark-tee-backend/internal/handler/upload"
 	user3 "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
@@ -35,6 +36,7 @@ import (
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
 	trip2 "github.com/fark-tee/fark-tee-backend/internal/service/trip"
+	"github.com/fark-tee/fark-tee-backend/internal/service/upload"
 	user2 "github.com/fark-tee/fark-tee-backend/internal/service/user"
 )
 
@@ -113,9 +115,11 @@ func Initialize() (*server.Server, func(), error) {
 	}
 	tripService := trip2.New(partyRepository, partymemberRepository, tripRepository, positionRepository)
 	tripHandler := trip3.New(tripService)
-	userService := user2.New(repository)
+	uploadService := upload.New(uploader)
+	uploadHandler := upload2.New(uploadService)
+	userService := user2.New(repository, uploader)
 	userHandler := user3.New(userService)
-	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, userHandler)
+	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, uploadHandler, userHandler)
 	middleware := authmw.New(manager)
 	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {
