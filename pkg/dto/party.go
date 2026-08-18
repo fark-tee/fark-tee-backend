@@ -85,3 +85,10 @@ type RemovePartyMemberRequest struct {
 }
 
 type RemovePartyMemberResponse struct{}
+
+type NudgePartyMemberRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+	UserID  string `path:"userId" required:"true"`
+}
+
+type NudgePartyMemberResponse struct{}

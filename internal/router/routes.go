@@ -37,4 +37,5 @@ func RegisterRoutes(api huma.API, handlers *handler.Handlers, authMW *authmw.Mid
 	registerPartyRoutes(protected, handlers)
 	registerStoryRoutes(protected, handlers)
 	registerTripRoutes(protected, handlers)
+	registerDeviceTokenRoutes(protected, handlers)
 }

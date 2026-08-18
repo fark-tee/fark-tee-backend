@@ -164,6 +164,19 @@ func (h *handlerImpl) RemoveMember(ctx context.Context, req *dto.RemovePartyMemb
 	return &dto.RemovePartyMemberResponse{}, nil
 }
 
+func (h *handlerImpl) Nudge(ctx context.Context, req *dto.NudgePartyMemberRequest) (*dto.NudgePartyMemberResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.service.Nudge(ctx, actorID, req.PartyID, req.UserID); err != nil {
+		return nil, err
+	}
+
+	return &dto.NudgePartyMemberResponse{}, nil
+}
+
 func toPartyResponse(p entity.Party) *dto.PartyResponse {
 	return &dto.PartyResponse{
 		ID:              p.ID,

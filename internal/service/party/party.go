@@ -3,6 +3,7 @@ package party
 import (
 	"context"
 	"errors"
+	"log/slog"
 	"time"
 
 	"github.com/fark-tee/go-kit/apperror"
@@ -243,6 +244,51 @@ func (s *serviceImpl) RemoveMember(ctx context.Context, actorID, partyID, target
 	}
 
 	return s.memberRepo.Delete(ctx, member.ID)
+}
+
+func (s *serviceImpl) Nudge(ctx context.Context, actorID, partyID, targetUserID string) error {
+	if targetUserID == actorID {
+		return apperror.NewBadRequestError("CANNOT_NUDGE_SELF", "cannot nudge yourself")
+	}
+
+	if _, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, actorID); err != nil {
+		if errors.Is(err, partymember.ErrNotFound) {
+			return apperror.NewForbiddenError("NOT_PARTY_MEMBER", "you are not a member of this party")
+		}
+
+		return err
+	}
+
+	if _, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, targetUserID); err != nil {
+		return toAppError(err)
+	}
+
+	actor, err := s.userRepo.FindByID(ctx, actorID)
+	if err != nil {
+		return toAppError(err)
+	}
+
+	tokens, err := s.deviceTokenRepo.FindByUserID(ctx, targetUserID)
+	if err != nil {
+		return err
+	}
+
+	if len(tokens) == 0 {
+		// No devices to nudge - purely social, so this is a no-op rather
+		// than an error.
+		return nil
+	}
+
+	for _, t := range tokens {
+		if err := s.fcmClient.SendNudge(ctx, t.Token, partyID, actor.ID, actor.DisplayName); err != nil {
+			slog.Warn("failed to send nudge notification",
+				slog.String("targetUserId", targetUserID),
+				slog.String("partyId", partyID),
+				slog.Any("error", err))
+		}
+	}
+
+	return nil
 }
 
 func toAppError(err error) error {

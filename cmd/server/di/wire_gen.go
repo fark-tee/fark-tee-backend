@@ -10,6 +10,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/cmd/server/server"
 	"github.com/fark-tee/fark-tee-backend/internal/config"
 	"github.com/fark-tee/fark-tee-backend/internal/handler"
+	devicetoken3 "github.com/fark-tee/fark-tee-backend/internal/handler/devicetoken"
 	googleoauth2 "github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	party3 "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
@@ -19,11 +20,13 @@ import (
 	user3 "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
+	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/fcm"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/googleoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
 	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/devicetoken"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
@@ -32,6 +35,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	"github.com/fark-tee/fark-tee-backend/internal/service/auth"
+	devicetoken2 "github.com/fark-tee/fark-tee-backend/internal/service/devicetoken"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
@@ -85,7 +89,19 @@ func Initialize() (*server.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	partyService := party2.New(partyRepository, partymemberRepository, repository)
+	devicetokenRepository, err := devicetoken.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	fcmClient, err := fcm.New(contextContext, configConfig)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	partyService := party2.New(partyRepository, partymemberRepository, repository, devicetokenRepository, fcmClient)
 	partyHandler := party3.New(partyService)
 	storyRepository, err := story.New(contextContext, mongoDatabase)
 	if err != nil {
@@ -119,7 +135,9 @@ func Initialize() (*server.Server, func(), error) {
 	uploadHandler := upload2.New(uploadService)
 	userService := user2.New(repository, uploader)
 	userHandler := user3.New(userService)
-	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, uploadHandler, userHandler)
+	devicetokenService := devicetoken2.New(devicetokenRepository)
+	devicetokenHandler := devicetoken3.New(devicetokenService)
+	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, uploadHandler, userHandler, devicetokenHandler)
 	middleware := authmw.New(manager)
 	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {

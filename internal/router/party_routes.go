@@ -78,4 +78,12 @@ func registerPartyRoutes(api huma.API, handlers *handler.Handlers) {
 		Security:      security,
 		DefaultStatus: http.StatusNoContent,
 	}, handlers.Party.RemoveMember)
+
+	huma.Register(api, huma.Operation{
+		Method:        http.MethodPost,
+		Path:          "/parties/{partyId}/members/{userId}/nudge",
+		Summary:       "Nudge a party member to hurry up (push notification, best-effort)",
+		Security:      security,
+		DefaultStatus: http.StatusNoContent,
+	}, handlers.Party.Nudge)
 }

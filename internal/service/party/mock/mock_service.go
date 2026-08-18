@@ -631,6 +631,75 @@ func (_c *MockService_MyParties_Call) RunAndReturn(run func(ctx context.Context,
 	return _c
 }
 
+// Nudge provides a mock function for the type MockService
+func (_mock *MockService) Nudge(ctx context.Context, actorID string, partyID string, targetUserID string) error {
+	ret := _mock.Called(ctx, actorID, partyID, targetUserID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Nudge")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) error); ok {
+		r0 = returnFunc(ctx, actorID, partyID, targetUserID)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// MockService_Nudge_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Nudge'
+type MockService_Nudge_Call struct {
+	*mock.Call
+}
+
+// Nudge is a helper method to define mock.On call
+//   - ctx context.Context
+//   - actorID string
+//   - partyID string
+//   - targetUserID string
+func (_e *MockService_Expecter) Nudge(ctx any, actorID any, partyID any, targetUserID any) *MockService_Nudge_Call {
+	return &MockService_Nudge_Call{Call: _e.mock.On("Nudge", ctx, actorID, partyID, targetUserID)}
+}
+
+func (_c *MockService_Nudge_Call) Run(run func(ctx context.Context, actorID string, partyID string, targetUserID string)) *MockService_Nudge_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 string
+		if args[3] != nil {
+			arg3 = args[3].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_Nudge_Call) Return(err error) *MockService_Nudge_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *MockService_Nudge_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, targetUserID string) error) *MockService_Nudge_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // RemoveMember provides a mock function for the type MockService
 func (_mock *MockService) RemoveMember(ctx context.Context, actorID string, partyID string, targetUserID string) error {
 	ret := _mock.Called(ctx, actorID, partyID, targetUserID)

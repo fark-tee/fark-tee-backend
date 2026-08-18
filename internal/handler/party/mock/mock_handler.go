@@ -582,6 +582,74 @@ func (_c *MockHandler_MyParties_Call) RunAndReturn(run func(ctx context.Context,
 	return _c
 }
 
+// Nudge provides a mock function for the type MockHandler
+func (_mock *MockHandler) Nudge(ctx context.Context, req *dto.NudgePartyMemberRequest) (*dto.NudgePartyMemberResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for Nudge")
+	}
+
+	var r0 *dto.NudgePartyMemberResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.NudgePartyMemberRequest) (*dto.NudgePartyMemberResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.NudgePartyMemberRequest) *dto.NudgePartyMemberResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.NudgePartyMemberResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.NudgePartyMemberRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_Nudge_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'Nudge'
+type MockHandler_Nudge_Call struct {
+	*mock.Call
+}
+
+// Nudge is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.NudgePartyMemberRequest
+func (_e *MockHandler_Expecter) Nudge(ctx any, req any) *MockHandler_Nudge_Call {
+	return &MockHandler_Nudge_Call{Call: _e.mock.On("Nudge", ctx, req)}
+}
+
+func (_c *MockHandler_Nudge_Call) Run(run func(ctx context.Context, req *dto.NudgePartyMemberRequest)) *MockHandler_Nudge_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.NudgePartyMemberRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.NudgePartyMemberRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_Nudge_Call) Return(nudgePartyMemberResponse *dto.NudgePartyMemberResponse, err error) *MockHandler_Nudge_Call {
+	_c.Call.Return(nudgePartyMemberResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_Nudge_Call) RunAndReturn(run func(ctx context.Context, req *dto.NudgePartyMemberRequest) (*dto.NudgePartyMemberResponse, error)) *MockHandler_Nudge_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // RemoveMember provides a mock function for the type MockHandler
 func (_mock *MockHandler) RemoveMember(ctx context.Context, req *dto.RemovePartyMemberRequest) (*dto.RemovePartyMemberResponse, error) {
 	ret := _mock.Called(ctx, req)

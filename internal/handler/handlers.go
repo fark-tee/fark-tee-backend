@@ -1,6 +1,7 @@
 package handler
 
 import (
+	"github.com/fark-tee/fark-tee-backend/internal/handler/devicetoken"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
@@ -18,6 +19,7 @@ type Handlers struct {
 	Trip          trip.Handler
 	Upload        upload.Handler
 	User          user.Handler
+	DeviceToken   devicetoken.Handler
 }
 
 // @WireSet("Handler")
@@ -29,6 +31,7 @@ func NewHandlers(
 	tripHandler trip.Handler,
 	uploadHandler upload.Handler,
 	userHandler user.Handler,
+	deviceTokenHandler devicetoken.Handler,
 ) *Handlers {
 	return &Handlers{
 		GoogleOAuth:   googleOAuthHandler,
@@ -38,5 +41,6 @@ func NewHandlers(
 		Trip:          tripHandler,
 		Upload:        uploadHandler,
 		User:          userHandler,
+		DeviceToken:   deviceTokenHandler,
 	}
 }

@@ -5,6 +5,7 @@ package di
 import (
 	config "github.com/fark-tee/fark-tee-backend/internal/config"
 	handler "github.com/fark-tee/fark-tee-backend/internal/handler"
+	devicetoken "github.com/fark-tee/fark-tee-backend/internal/handler/devicetoken"
 	googleoauth "github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	party "github.com/fark-tee/fark-tee-backend/internal/handler/party"
 	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
@@ -14,11 +15,13 @@ import (
 	user "github.com/fark-tee/fark-tee-backend/internal/handler/user"
 	context "github.com/fark-tee/fark-tee-backend/internal/infrastructure/context"
 	database "github.com/fark-tee/fark-tee-backend/internal/infrastructure/database"
+	fcm "github.com/fark-tee/fark-tee-backend/internal/infrastructure/fcm"
 	googleoauth2 "github.com/fark-tee/fark-tee-backend/internal/infrastructure/googleoauth"
 	logger "github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
 	storage "github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	token "github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
 	authmw "github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
+	devicetoken3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/devicetoken"
 	party3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	partymember "github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	position "github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
@@ -27,6 +30,7 @@ import (
 	trip3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
 	user3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 	auth "github.com/fark-tee/fark-tee-backend/internal/service/auth"
+	devicetoken2 "github.com/fark-tee/fark-tee-backend/internal/service/devicetoken"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
@@ -43,6 +47,7 @@ var ConfigSet = wire.NewSet(
 
 var HandlerSet = wire.NewSet(
 	handler.NewHandlers,
+	devicetoken.New,
 	googleoauth.New,
 	party.New,
 	savedlocation.New,
@@ -56,6 +61,7 @@ var InfrastructureSet = wire.NewSet(
 	context.NewContext,
 	database.NewMongoClient,
 	database.NewMongoDatabase,
+	fcm.New,
 	googleoauth2.NewVerifier,
 	logger.NewLogger,
 	storage.NewUploader,
@@ -64,6 +70,7 @@ var InfrastructureSet = wire.NewSet(
 )
 
 var RepositorySet = wire.NewSet(
+	devicetoken3.New,
 	party3.New,
 	partymember.New,
 	position.New,
@@ -75,6 +82,7 @@ var RepositorySet = wire.NewSet(
 
 var ServiceSet = wire.NewSet(
 	auth.New,
+	devicetoken2.New,
 	party2.New,
 	savedlocation2.New,
 	story2.New,
