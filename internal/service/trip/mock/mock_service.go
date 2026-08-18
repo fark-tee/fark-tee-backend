@@ -369,3 +369,81 @@ func (_c *MockService_UpdatePosition_Call) RunAndReturn(run func(ctx context.Con
 	_c.Call.Return(run)
 	return _c
 }
+
+// UpdateTripStatus provides a mock function for the type MockService
+func (_mock *MockService) UpdateTripStatus(ctx context.Context, actorID string, partyID string, status entity.TripStatus) (entity.PartyMember, error) {
+	ret := _mock.Called(ctx, actorID, partyID, status)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateTripStatus")
+	}
+
+	var r0 entity.PartyMember
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, entity.TripStatus) (entity.PartyMember, error)); ok {
+		return returnFunc(ctx, actorID, partyID, status)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, entity.TripStatus) entity.PartyMember); ok {
+		r0 = returnFunc(ctx, actorID, partyID, status)
+	} else {
+		r0 = ret.Get(0).(entity.PartyMember)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, entity.TripStatus) error); ok {
+		r1 = returnFunc(ctx, actorID, partyID, status)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_UpdateTripStatus_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateTripStatus'
+type MockService_UpdateTripStatus_Call struct {
+	*mock.Call
+}
+
+// UpdateTripStatus is a helper method to define mock.On call
+//   - ctx context.Context
+//   - actorID string
+//   - partyID string
+//   - status entity.TripStatus
+func (_e *MockService_Expecter) UpdateTripStatus(ctx any, actorID any, partyID any, status any) *MockService_UpdateTripStatus_Call {
+	return &MockService_UpdateTripStatus_Call{Call: _e.mock.On("UpdateTripStatus", ctx, actorID, partyID, status)}
+}
+
+func (_c *MockService_UpdateTripStatus_Call) Run(run func(ctx context.Context, actorID string, partyID string, status entity.TripStatus)) *MockService_UpdateTripStatus_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 entity.TripStatus
+		if args[3] != nil {
+			arg3 = args[3].(entity.TripStatus)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_UpdateTripStatus_Call) Return(partyMember entity.PartyMember, err error) *MockService_UpdateTripStatus_Call {
+	_c.Call.Return(partyMember, err)
+	return _c
+}
+
+func (_c *MockService_UpdateTripStatus_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, status entity.TripStatus) (entity.PartyMember, error)) *MockService_UpdateTripStatus_Call {
+	_c.Call.Return(run)
+	return _c
+}

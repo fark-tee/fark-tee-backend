@@ -41,6 +41,7 @@ func (s *serviceImpl) Create(ctx context.Context, actorID, name, destinationName
 		UserDisplayName:  actor.DisplayName,
 		UserProfileImage: actor.ProfileImageURL,
 		Status:           entity.PartyMemberStatusAccepted,
+		TripStatus:       entity.TripStatusPendingDeparture,
 	}); err != nil {
 		return entity.Party{}, err
 	}
@@ -80,6 +81,7 @@ func (s *serviceImpl) Invite(ctx context.Context, actorID, partyID, targetUserID
 		UserDisplayName:  target.DisplayName,
 		UserProfileImage: target.ProfileImageURL,
 		Status:           entity.PartyMemberStatusPending,
+		TripStatus:       entity.TripStatusPendingDeparture,
 	})
 }
 

@@ -23,6 +23,9 @@ type Service interface {
 	// GetPartyPositions returns the latest recorded position of every
 	// party member that has recorded one.
 	GetPartyPositions(ctx context.Context, actorID, partyID string) ([]entity.Position, error)
+	// UpdateTripStatus advances actorID's trip status within partyID.
+	// Trip status only ever moves forward.
+	UpdateTripStatus(ctx context.Context, actorID, partyID string, status entity.TripStatus) (entity.PartyMember, error)
 }
 
 type serviceImpl struct {

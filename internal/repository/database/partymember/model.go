@@ -15,6 +15,7 @@ type model struct {
 	UserDisplayName  string        `bson:"user_display_name"`
 	UserProfileImage string        `bson:"user_profile_image"`
 	Status           string        `bson:"status"`
+	TripStatus       string        `bson:"trip_status"`
 }
 
 func fromEntity(m entity.PartyMember) (model, error) {
@@ -30,6 +31,7 @@ func fromEntity(m entity.PartyMember) (model, error) {
 		UserDisplayName:  m.UserDisplayName,
 		UserProfileImage: m.UserProfileImage,
 		Status:           string(m.Status),
+		TripStatus:       string(m.TripStatus),
 	}, nil
 }
 
@@ -41,5 +43,6 @@ func (m model) toEntity() entity.PartyMember {
 		UserDisplayName:  m.UserDisplayName,
 		UserProfileImage: m.UserProfileImage,
 		Status:           entity.PartyMemberStatus(m.Status),
+		TripStatus:       entity.TripStatus(m.TripStatus),
 	}
 }

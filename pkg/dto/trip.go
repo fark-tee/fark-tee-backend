@@ -54,3 +54,10 @@ type GetMemberPositionRequest struct {
 type GetPartyPositionsRequest struct {
 	PartyID string `path:"partyId" required:"true"`
 }
+
+type UpdateTripStatusRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+	Body    struct {
+		Status string `json:"status" enum:"PENDING_DEPARTURE,DEPARTED,ARRIVED,RETURNING,RETURNED" required:"true"`
+	}
+}

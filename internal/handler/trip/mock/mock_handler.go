@@ -309,3 +309,71 @@ func (_c *MockHandler_UpdatePosition_Call) RunAndReturn(run func(ctx context.Con
 	_c.Call.Return(run)
 	return _c
 }
+
+// UpdateTripStatus provides a mock function for the type MockHandler
+func (_mock *MockHandler) UpdateTripStatus(ctx context.Context, req *dto.UpdateTripStatusRequest) (*dto.PartyMemberResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for UpdateTripStatus")
+	}
+
+	var r0 *dto.PartyMemberResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.UpdateTripStatusRequest) (*dto.PartyMemberResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.UpdateTripStatusRequest) *dto.PartyMemberResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.PartyMemberResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.UpdateTripStatusRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_UpdateTripStatus_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'UpdateTripStatus'
+type MockHandler_UpdateTripStatus_Call struct {
+	*mock.Call
+}
+
+// UpdateTripStatus is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.UpdateTripStatusRequest
+func (_e *MockHandler_Expecter) UpdateTripStatus(ctx any, req any) *MockHandler_UpdateTripStatus_Call {
+	return &MockHandler_UpdateTripStatus_Call{Call: _e.mock.On("UpdateTripStatus", ctx, req)}
+}
+
+func (_c *MockHandler_UpdateTripStatus_Call) Run(run func(ctx context.Context, req *dto.UpdateTripStatusRequest)) *MockHandler_UpdateTripStatus_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.UpdateTripStatusRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.UpdateTripStatusRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_UpdateTripStatus_Call) Return(partyMemberResponse *dto.PartyMemberResponse, err error) *MockHandler_UpdateTripStatus_Call {
+	_c.Call.Return(partyMemberResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_UpdateTripStatus_Call) RunAndReturn(run func(ctx context.Context, req *dto.UpdateTripStatusRequest) (*dto.PartyMemberResponse, error)) *MockHandler_UpdateTripStatus_Call {
+	_c.Call.Return(run)
+	return _c
+}

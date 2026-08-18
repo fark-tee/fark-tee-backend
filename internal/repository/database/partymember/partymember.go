@@ -127,6 +127,31 @@ func (r *repositoryImpl) UpdateStatus(ctx context.Context, id string, status ent
 	return doc.toEntity(), nil
 }
 
+func (r *repositoryImpl) UpdateTripStatus(ctx context.Context, id string, tripStatus entity.TripStatus) (entity.PartyMember, error) {
+	var doc model
+
+	objID, err := mongoid.ToObjectID(id)
+	if err != nil {
+		return entity.PartyMember{}, ErrNotFound
+	}
+
+	err = r.collection.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": objID},
+		bson.M{"$set": bson.M{"trip_status": string(tripStatus)}},
+		options.FindOneAndUpdate().SetReturnDocument(options.After),
+	).Decode(&doc)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return entity.PartyMember{}, ErrNotFound
+		}
+
+		return entity.PartyMember{}, err
+	}
+
+	return doc.toEntity(), nil
+}
+
 func (r *repositoryImpl) Delete(ctx context.Context, id string) error {
 	objID, err := mongoid.ToObjectID(id)
 	if err != nil {

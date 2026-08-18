@@ -110,6 +110,8 @@ components:
           type: string
         status:
           type: string
+        tripStatus:
+          type: string
         userDisplayName:
           type: string
         userId:
@@ -123,6 +125,7 @@ components:
         - userDisplayName
         - userProfileImage
         - status
+        - tripStatus
       type: object
     PartyMembersResponse:
       additionalProperties: false
@@ -372,6 +375,20 @@ components:
       required:
         - lat
         - lng
+      type: object
+    UpdateTripStatusRequestBody:
+      additionalProperties: false
+      properties:
+        status:
+          enum:
+            - PENDING_DEPARTURE
+            - DEPARTED
+            - ARRIVED
+            - RETURNING
+            - RETURNED
+          type: string
+      required:
+        - status
       type: object
     UpdateSavedLocationRequestBody:
       additionalProperties: false
@@ -1001,6 +1018,36 @@ paths:
       security:
         - bearerAuth: []
       summary: Delete a story
+  /v1/parties/{partyId}/trip-status:
+    patch:
+      parameters:
+        - in: path
+          name: partyId
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/UpdateTripStatusRequestBody"
+        required: true
+      responses:
+        "200":
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PartyMemberResponse"
+          description: OK
+        default:
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+          description: Error
+      security:
+        - bearerAuth: []
+      summary: Advance the current user's trip status (forward-only)
   /v1/parties/{partyId}/trips:
     post:
       parameters:

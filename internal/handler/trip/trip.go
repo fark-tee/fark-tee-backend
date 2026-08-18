@@ -81,6 +81,32 @@ func (h *handlerImpl) GetPartyPositions(ctx context.Context, req *dto.GetPartyPo
 	return resp, nil
 }
 
+func (h *handlerImpl) UpdateTripStatus(ctx context.Context, req *dto.UpdateTripStatusRequest) (*dto.PartyMemberResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	member, err := h.service.UpdateTripStatus(ctx, actorID, req.PartyID, entity.TripStatus(req.Body.Status))
+	if err != nil {
+		return nil, err
+	}
+
+	return toPartyMemberResponse(member), nil
+}
+
+func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
+	return &dto.PartyMemberResponse{
+		ID:               m.ID,
+		PartyID:          m.PartyID,
+		UserID:           m.UserID,
+		UserDisplayName:  m.UserDisplayName,
+		UserProfileImage: m.UserProfileImage,
+		Status:           string(m.Status),
+		TripStatus:       string(m.TripStatus),
+	}
+}
+
 func toTripResponse(t entity.Trip) *dto.TripResponse {
 	return &dto.TripResponse{
 		ID:        t.ID,

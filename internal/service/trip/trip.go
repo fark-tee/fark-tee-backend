@@ -97,23 +97,52 @@ func (s *serviceImpl) GetPartyPositions(ctx context.Context, actorID, partyID st
 	return s.positionRepo.FindLatestByPartyID(ctx, partyID)
 }
 
-// requireMember returns a forbidden error unless userID is an accepted
-// member of partyID.
-func (s *serviceImpl) requireMember(ctx context.Context, partyID, userID string) error {
+// requireAcceptedMember returns the caller's own party member row, or a
+// forbidden error unless userID is an accepted member of partyID.
+func (s *serviceImpl) requireAcceptedMember(ctx context.Context, partyID, userID string) (entity.PartyMember, error) {
 	member, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, userID)
 	if err != nil {
 		if errors.Is(err, partymember.ErrNotFound) {
-			return apperror.NewForbiddenError("NOT_PARTY_MEMBER", "you are not a member of this party")
+			return entity.PartyMember{}, apperror.NewForbiddenError("NOT_PARTY_MEMBER", "you are not a member of this party")
 		}
 
-		return toAppError(err)
+		return entity.PartyMember{}, toAppError(err)
 	}
 
 	if member.Status != entity.PartyMemberStatusAccepted {
-		return apperror.NewForbiddenError("NOT_PARTY_MEMBER", "you are not an accepted member of this party")
+		return entity.PartyMember{}, apperror.NewForbiddenError("NOT_PARTY_MEMBER", "you are not an accepted member of this party")
 	}
 
-	return nil
+	return member, nil
+}
+
+// requireMember returns a forbidden error unless userID is an accepted
+// member of partyID.
+func (s *serviceImpl) requireMember(ctx context.Context, partyID, userID string) error {
+	_, err := s.requireAcceptedMember(ctx, partyID, userID)
+	return err
+}
+
+// UpdateTripStatus advances actorID's trip status within partyID. Trip
+// status only ever moves forward (e.g. PENDING_DEPARTURE -> ARRIVED is
+// allowed, skipping DEPARTED, but ARRIVED -> DEPARTED is not).
+func (s *serviceImpl) UpdateTripStatus(ctx context.Context, actorID, partyID string, status entity.TripStatus) (entity.PartyMember, error) {
+	newOrder, ok := entity.TripStatusOrder(status)
+	if !ok {
+		return entity.PartyMember{}, apperror.NewBadRequestError("INVALID_TRIP_STATUS", "invalid trip status")
+	}
+
+	member, err := s.requireAcceptedMember(ctx, partyID, actorID)
+	if err != nil {
+		return entity.PartyMember{}, err
+	}
+
+	currentOrder, _ := entity.TripStatusOrder(member.TripStatus)
+	if newOrder <= currentOrder {
+		return entity.PartyMember{}, apperror.NewConflictError("INVALID_TRIP_STATUS_TRANSITION", "trip status can only move forward")
+	}
+
+	return s.memberRepo.UpdateTripStatus(ctx, member.ID, status)
 }
 
 func toAppError(err error) error {

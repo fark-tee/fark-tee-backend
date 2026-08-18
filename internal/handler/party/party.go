@@ -185,5 +185,6 @@ func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
 		UserDisplayName:  m.UserDisplayName,
 		UserProfileImage: m.UserProfileImage,
 		Status:           string(m.Status),
+		TripStatus:       string(m.TripStatus),
 	}
 }

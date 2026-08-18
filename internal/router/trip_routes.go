@@ -41,4 +41,11 @@ func registerTripRoutes(api huma.API, handlers *handler.Handlers) {
 		Summary:  "Get the latest recorded position of a party member",
 		Security: security,
 	}, humax.Wrap200(handlers.Trip.GetMemberPosition))
+
+	huma.Register(api, huma.Operation{
+		Method:   http.MethodPatch,
+		Path:     "/parties/{partyId}/trip-status",
+		Summary:  "Advance the current user's trip status (forward-only)",
+		Security: security,
+	}, humax.Wrap200(handlers.Trip.UpdateTripStatus))
 }

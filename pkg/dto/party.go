@@ -30,6 +30,7 @@ type PartyMemberResponse struct {
 	UserDisplayName  string `json:"userDisplayName"`
 	UserProfileImage string `json:"userProfileImage"`
 	Status           string `json:"status"`
+	TripStatus       string `json:"tripStatus"`
 }
 
 type InviteToPartyRequest struct {
