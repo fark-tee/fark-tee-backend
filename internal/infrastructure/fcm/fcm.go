@@ -31,6 +31,12 @@ type Client interface {
 	// recipient's full-screen alert can offer a tap-to-call action. Sent to
 	// every other accepted party member except fromUserID.
 	SendCheckInEmergencyAlert(ctx context.Context, token, meetupID, fromUserID, fromDisplayName, emergencyContactName, emergencyContactPhone string) error
+
+	// SendPartyInvite notifies token that fromDisplayName invited the
+	// recipient to join meetupID (titled meetupName). Unlike the alerts
+	// above this isn't time-critical, so the client shows a normal
+	// (non-full-screen) notification rather than waking the device.
+	SendPartyInvite(ctx context.Context, token, meetupID, meetupName, fromUserID, fromDisplayName string) error
 }
 
 type clientImpl struct {
@@ -119,6 +125,45 @@ func (c *clientImpl) SendCheckInEmergencyAlert(ctx context.Context, token, meetu
 					Alert: &messaging.ApsAlert{
 						Title: fromDisplayName + " ตอบว่าไม่โอเค!",
 						Body:  "แตะเพื่อดูเบอร์ติดต่อฉุกเฉิน",
+					},
+					Sound:            "default",
+					ContentAvailable: true,
+				},
+			},
+		},
+	}
+
+	_, err := c.messaging.Send(ctx, message)
+
+	return err
+}
+
+func (c *clientImpl) SendPartyInvite(ctx context.Context, token, meetupID, meetupName, fromUserID, fromDisplayName string) error {
+	if c.messaging == nil {
+		slog.Warn("FCM not configured, skipping party invite notification", slog.String("token", token))
+
+		return nil
+	}
+
+	message := &messaging.Message{
+		Token: token,
+		Data: map[string]string{
+			"type":            "party_invite",
+			"meetupId":        meetupID,
+			"meetupName":      meetupName,
+			"fromUserId":      fromUserID,
+			"fromDisplayName": fromDisplayName,
+		},
+		Android: &messaging.AndroidConfig{
+			Priority: "high",
+		},
+		APNS: &messaging.APNSConfig{
+			Headers: map[string]string{"apns-priority": "10"},
+			Payload: &messaging.APNSPayload{
+				Aps: &messaging.Aps{
+					Alert: &messaging.ApsAlert{
+						Title: "คำเชิญตี้ใหม่!",
+						Body:  fromDisplayName + " เชิญคุณไปที่ " + meetupName,
 					},
 					Sound:            "default",
 					ContentAvailable: true,

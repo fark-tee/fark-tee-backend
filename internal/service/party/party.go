@@ -75,7 +75,7 @@ func (s *serviceImpl) Invite(ctx context.Context, actorID, partyID, targetUserID
 		return entity.PartyMember{}, err
 	}
 
-	return s.memberRepo.Create(ctx, entity.PartyMember{
+	created, err := s.memberRepo.Create(ctx, entity.PartyMember{
 		ID:               mongoid.New(),
 		PartyID:          partyID,
 		UserID:           target.ID,
@@ -84,6 +84,37 @@ func (s *serviceImpl) Invite(ctx context.Context, actorID, partyID, targetUserID
 		Status:           entity.PartyMemberStatusPending,
 		TripStatus:       entity.TripStatusPendingDeparture,
 	})
+	if err != nil {
+		return entity.PartyMember{}, err
+	}
+
+	s.notifyPartyInvite(ctx, p, target.ID)
+
+	return created, nil
+}
+
+// notifyPartyInvite best-effort pushes a "you've been invited" notification
+// to every device targetUserID has registered. Matches Nudge/RequestCheckIn:
+// missing devices, a dead token, or FCM being unconfigured are logged and
+// swallowed rather than surfaced as an error, since the invite itself is
+// already persisted regardless of whether the push lands.
+func (s *serviceImpl) notifyPartyInvite(ctx context.Context, p entity.Party, targetUserID string) {
+	tokens, err := s.deviceTokenRepo.FindByUserID(ctx, targetUserID)
+	if err != nil {
+		slog.Warn("failed to load device tokens for party invite notification",
+			slog.String("targetUserId", targetUserID), slog.String("partyId", p.ID), slog.Any("error", err))
+
+		return
+	}
+
+	for _, t := range tokens {
+		if err := s.fcmClient.SendPartyInvite(ctx, t.Token, p.ID, p.Name, p.CreatedByID, p.CreatedByName); err != nil {
+			slog.Warn("failed to send party invite notification",
+				slog.String("targetUserId", targetUserID),
+				slog.String("partyId", p.ID),
+				slog.Any("error", err))
+		}
+	}
 }
 
 func (s *serviceImpl) MyInvites(ctx context.Context, actorID string) ([]Invite, error) {

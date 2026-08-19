@@ -273,3 +273,84 @@ func (_c *MockClient_SendNudge_Call) RunAndReturn(run func(ctx context.Context, 
 	_c.Call.Return(run)
 	return _c
 }
+
+// SendPartyInvite provides a mock function for the type MockClient
+func (_mock *MockClient) SendPartyInvite(ctx context.Context, token string, meetupID string, meetupName string, fromUserID string, fromDisplayName string) error {
+	ret := _mock.Called(ctx, token, meetupID, meetupName, fromUserID, fromDisplayName)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SendPartyInvite")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, string, string) error); ok {
+		r0 = returnFunc(ctx, token, meetupID, meetupName, fromUserID, fromDisplayName)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// MockClient_SendPartyInvite_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SendPartyInvite'
+type MockClient_SendPartyInvite_Call struct {
+	*mock.Call
+}
+
+// SendPartyInvite is a helper method to define mock.On call
+//   - ctx context.Context
+//   - token string
+//   - meetupID string
+//   - meetupName string
+//   - fromUserID string
+//   - fromDisplayName string
+func (_e *MockClient_Expecter) SendPartyInvite(ctx any, token any, meetupID any, meetupName any, fromUserID any, fromDisplayName any) *MockClient_SendPartyInvite_Call {
+	return &MockClient_SendPartyInvite_Call{Call: _e.mock.On("SendPartyInvite", ctx, token, meetupID, meetupName, fromUserID, fromDisplayName)}
+}
+
+func (_c *MockClient_SendPartyInvite_Call) Run(run func(ctx context.Context, token string, meetupID string, meetupName string, fromUserID string, fromDisplayName string)) *MockClient_SendPartyInvite_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 string
+		if args[3] != nil {
+			arg3 = args[3].(string)
+		}
+		var arg4 string
+		if args[4] != nil {
+			arg4 = args[4].(string)
+		}
+		var arg5 string
+		if args[5] != nil {
+			arg5 = args[5].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+			arg4,
+			arg5,
+		)
+	})
+	return _c
+}
+
+func (_c *MockClient_SendPartyInvite_Call) Return(err error) *MockClient_SendPartyInvite_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *MockClient_SendPartyInvite_Call) RunAndReturn(run func(ctx context.Context, token string, meetupID string, meetupName string, fromUserID string, fromDisplayName string) error) *MockClient_SendPartyInvite_Call {
+	_c.Call.Return(run)
+	return _c
+}

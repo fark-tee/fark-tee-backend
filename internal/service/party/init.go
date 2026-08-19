@@ -22,7 +22,9 @@ type Invite struct {
 type Service interface {
 	Create(ctx context.Context, actorID, name, destinationName string, destinationLat, destinationLng float64, targetTime time.Time) (entity.Party, error)
 	// Invite adds targetUserID to partyID as a pending member. Only the
-	// party's owner may invite.
+	// party's owner may invite. Also best-effort pushes an invite
+	// notification to the target's devices - a delivery failure never
+	// fails the invite itself.
 	Invite(ctx context.Context, actorID, partyID, targetUserID string) (entity.PartyMember, error)
 	MyInvites(ctx context.Context, actorID string) ([]Invite, error)
 	MyParties(ctx context.Context, actorID string) ([]entity.Party, error)
