@@ -18,6 +18,8 @@ type Handler interface {
 	DeclineInvite(ctx context.Context, req *dto.DeclineInviteRequest) (*dto.DeclineInviteResponse, error)
 	RemoveMember(ctx context.Context, req *dto.RemovePartyMemberRequest) (*dto.RemovePartyMemberResponse, error)
 	Nudge(ctx context.Context, req *dto.NudgePartyMemberRequest) (*dto.NudgePartyMemberResponse, error)
+	RequestCheckIn(ctx context.Context, req *dto.RequestCheckInRequest) (*dto.RequestCheckInResponse, error)
+	RespondCheckIn(ctx context.Context, req *dto.RespondCheckInRequest) (*dto.PartyMemberResponse, error)
 }
 
 type handlerImpl struct {

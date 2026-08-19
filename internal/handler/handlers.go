@@ -4,6 +4,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/handler/devicetoken"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/party"
+	"github.com/fark-tee/fark-tee-backend/internal/handler/review"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	"github.com/fark-tee/fark-tee-backend/internal/handler/trip"
@@ -20,6 +21,7 @@ type Handlers struct {
 	Upload        upload.Handler
 	User          user.Handler
 	DeviceToken   devicetoken.Handler
+	Review        review.Handler
 }
 
 // @WireSet("Handler")
@@ -32,6 +34,7 @@ func NewHandlers(
 	uploadHandler upload.Handler,
 	userHandler user.Handler,
 	deviceTokenHandler devicetoken.Handler,
+	reviewHandler review.Handler,
 ) *Handlers {
 	return &Handlers{
 		GoogleOAuth:   googleOAuthHandler,
@@ -42,5 +45,6 @@ func NewHandlers(
 		Upload:        uploadHandler,
 		User:          userHandler,
 		DeviceToken:   deviceTokenHandler,
+		Review:        reviewHandler,
 	}
 }

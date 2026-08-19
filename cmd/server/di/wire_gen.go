@@ -13,6 +13,7 @@ import (
 	devicetoken3 "github.com/fark-tee/fark-tee-backend/internal/handler/devicetoken"
 	googleoauth2 "github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	party3 "github.com/fark-tee/fark-tee-backend/internal/handler/party"
+	review3 "github.com/fark-tee/fark-tee-backend/internal/handler/review"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story3 "github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	trip3 "github.com/fark-tee/fark-tee-backend/internal/handler/trip"
@@ -31,6 +32,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/review"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/story"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
@@ -38,6 +40,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/service/auth"
 	devicetoken2 "github.com/fark-tee/fark-tee-backend/internal/service/devicetoken"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
+	review2 "github.com/fark-tee/fark-tee-backend/internal/service/review"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
 	trip2 "github.com/fark-tee/fark-tee-backend/internal/service/trip"
@@ -139,7 +142,15 @@ func Initialize() (*server.Server, func(), error) {
 	userHandler := user3.New(userService)
 	devicetokenService := devicetoken2.New(devicetokenRepository)
 	devicetokenHandler := devicetoken3.New(devicetokenService)
-	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, uploadHandler, userHandler, devicetokenHandler)
+	reviewRepository, err := review.New(contextContext, mongoDatabase)
+	if err != nil {
+		cleanup2()
+		cleanup()
+		return nil, nil, err
+	}
+	reviewService := review2.New(reviewRepository, partymemberRepository, repository)
+	reviewHandler := review3.New(reviewService)
+	handlers := handler.NewHandlers(googleoauthHandler, savedlocationHandler, partyHandler, storyHandler, tripHandler, uploadHandler, userHandler, devicetokenHandler, reviewHandler)
 	middleware := authmw.New(manager)
 	serverServer := server.New(configConfig, handlers, middleware)
 	return serverServer, func() {

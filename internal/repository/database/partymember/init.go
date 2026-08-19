@@ -21,6 +21,7 @@ type Repository interface {
 	FindByPartyID(ctx context.Context, partyID string) ([]entity.PartyMember, error)
 	UpdateStatus(ctx context.Context, id string, status entity.PartyMemberStatus) (entity.PartyMember, error)
 	UpdateTripStatus(ctx context.Context, id string, tripStatus entity.TripStatus) (entity.PartyMember, error)
+	UpdateCheckIn(ctx context.Context, id string, status entity.CheckInStatus, requestedByUserID string) (entity.PartyMember, error)
 	Delete(ctx context.Context, id string) error
 }
 

@@ -717,3 +717,139 @@ func (_c *MockHandler_RemoveMember_Call) RunAndReturn(run func(ctx context.Conte
 	_c.Call.Return(run)
 	return _c
 }
+
+// RequestCheckIn provides a mock function for the type MockHandler
+func (_mock *MockHandler) RequestCheckIn(ctx context.Context, req *dto.RequestCheckInRequest) (*dto.RequestCheckInResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RequestCheckIn")
+	}
+
+	var r0 *dto.RequestCheckInResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.RequestCheckInRequest) (*dto.RequestCheckInResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.RequestCheckInRequest) *dto.RequestCheckInResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.RequestCheckInResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.RequestCheckInRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_RequestCheckIn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RequestCheckIn'
+type MockHandler_RequestCheckIn_Call struct {
+	*mock.Call
+}
+
+// RequestCheckIn is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.RequestCheckInRequest
+func (_e *MockHandler_Expecter) RequestCheckIn(ctx any, req any) *MockHandler_RequestCheckIn_Call {
+	return &MockHandler_RequestCheckIn_Call{Call: _e.mock.On("RequestCheckIn", ctx, req)}
+}
+
+func (_c *MockHandler_RequestCheckIn_Call) Run(run func(ctx context.Context, req *dto.RequestCheckInRequest)) *MockHandler_RequestCheckIn_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.RequestCheckInRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.RequestCheckInRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_RequestCheckIn_Call) Return(requestCheckInResponse *dto.RequestCheckInResponse, err error) *MockHandler_RequestCheckIn_Call {
+	_c.Call.Return(requestCheckInResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_RequestCheckIn_Call) RunAndReturn(run func(ctx context.Context, req *dto.RequestCheckInRequest) (*dto.RequestCheckInResponse, error)) *MockHandler_RequestCheckIn_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// RespondCheckIn provides a mock function for the type MockHandler
+func (_mock *MockHandler) RespondCheckIn(ctx context.Context, req *dto.RespondCheckInRequest) (*dto.PartyMemberResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for RespondCheckIn")
+	}
+
+	var r0 *dto.PartyMemberResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.RespondCheckInRequest) (*dto.PartyMemberResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.RespondCheckInRequest) *dto.PartyMemberResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.PartyMemberResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.RespondCheckInRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_RespondCheckIn_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'RespondCheckIn'
+type MockHandler_RespondCheckIn_Call struct {
+	*mock.Call
+}
+
+// RespondCheckIn is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.RespondCheckInRequest
+func (_e *MockHandler_Expecter) RespondCheckIn(ctx any, req any) *MockHandler_RespondCheckIn_Call {
+	return &MockHandler_RespondCheckIn_Call{Call: _e.mock.On("RespondCheckIn", ctx, req)}
+}
+
+func (_c *MockHandler_RespondCheckIn_Call) Run(run func(ctx context.Context, req *dto.RespondCheckInRequest)) *MockHandler_RespondCheckIn_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.RespondCheckInRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.RespondCheckInRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_RespondCheckIn_Call) Return(partyMemberResponse *dto.PartyMemberResponse, err error) *MockHandler_RespondCheckIn_Call {
+	_c.Call.Return(partyMemberResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_RespondCheckIn_Call) RunAndReturn(run func(ctx context.Context, req *dto.RespondCheckInRequest) (*dto.PartyMemberResponse, error)) *MockHandler_RespondCheckIn_Call {
+	_c.Call.Return(run)
+	return _c
+}

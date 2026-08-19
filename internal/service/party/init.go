@@ -45,6 +45,15 @@ type Service interface {
 	// dead token, FCM being unconfigured) is not surfaced as an error to the
 	// caller.
 	Nudge(ctx context.Context, actorID, partyID, targetUserID string) error
+	// RequestCheckIn asks targetUserID - who must currently be RETURNING
+	// (heading home) - to confirm they're okay. Unlike Nudge this persists a
+	// PENDING check-in status on the target's member row (so it survives a
+	// missed/failed push and surfaces on the asker's next poll), in addition
+	// to sending the same best-effort push notification.
+	RequestCheckIn(ctx context.Context, actorID, partyID, targetUserID string) error
+	// RespondCheckIn records actorID's answer to their own pending check-in
+	// request. status must be entity.CheckInStatusOK or CheckInStatusNotOK.
+	RespondCheckIn(ctx context.Context, actorID, partyID string, status entity.CheckInStatus) (entity.PartyMember, error)
 }
 
 type serviceImpl struct {

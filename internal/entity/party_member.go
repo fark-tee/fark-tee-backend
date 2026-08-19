@@ -35,6 +35,19 @@ func TripStatusOrder(s TripStatus) (int, bool) {
 	return order, ok
 }
 
+// CheckInStatus tracks the "are you okay?" safety check a party member can
+// ask of another member who is RETURNING (heading home). Unlike TripStatus
+// it isn't forward-only: a fresh request always resets it back to PENDING,
+// and PENDING moves to exactly one of OK/NOT_OK when the target responds.
+type CheckInStatus string
+
+const (
+	CheckInStatusNone    CheckInStatus = "NONE"
+	CheckInStatusPending CheckInStatus = "PENDING"
+	CheckInStatusOK      CheckInStatus = "OK"
+	CheckInStatusNotOK   CheckInStatus = "NOT_OK"
+)
+
 type PartyMember struct {
 	ID               string
 	PartyID          string
@@ -43,4 +56,7 @@ type PartyMember struct {
 	UserProfileImage string
 	Status           PartyMemberStatus
 	TripStatus       TripStatus
+
+	CheckInStatus            CheckInStatus
+	CheckInRequestedByUserID string
 }

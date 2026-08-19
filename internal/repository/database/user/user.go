@@ -147,6 +147,47 @@ func (r *repositoryImpl) incrementCount(ctx context.Context, id, field string) (
 	return doc.toEntity(), nil
 }
 
+func (r *repositoryImpl) RecordRating(ctx context.Context, id string, score int) (entity.User, error) {
+	var doc model
+
+	objID, err := mongoid.ToObjectID(id)
+	if err != nil {
+		return entity.User{}, ErrNotFound
+	}
+
+	// An aggregation-pipeline update computes the new running average from
+	// the document's own current fields in a single atomic operation,
+	// avoiding a separate read-then-write race between concurrent reviews.
+	update := mongo.Pipeline{
+		bson.D{{Key: "$set", Value: bson.D{
+			{Key: "rating", Value: bson.D{{Key: "$divide", Value: bson.A{
+				bson.D{{Key: "$add", Value: bson.A{
+					bson.D{{Key: "$multiply", Value: bson.A{"$rating", "$rating_count"}}},
+					score,
+				}}},
+				bson.D{{Key: "$add", Value: bson.A{"$rating_count", 1}}},
+			}}}},
+			{Key: "rating_count", Value: bson.D{{Key: "$add", Value: bson.A{"$rating_count", 1}}}},
+		}}},
+	}
+
+	err = r.collection.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": objID},
+		update,
+		options.FindOneAndUpdate().SetReturnDocument(options.After),
+	).Decode(&doc)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return entity.User{}, ErrNotFound
+		}
+
+		return entity.User{}, err
+	}
+
+	return doc.toEntity(), nil
+}
+
 func (r *repositoryImpl) FindByUsername(ctx context.Context, username string) (entity.User, error) {
 	var doc model
 

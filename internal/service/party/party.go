@@ -291,6 +291,71 @@ func (s *serviceImpl) Nudge(ctx context.Context, actorID, partyID, targetUserID 
 	return nil
 }
 
+func (s *serviceImpl) RequestCheckIn(ctx context.Context, actorID, partyID, targetUserID string) error {
+	if targetUserID == actorID {
+		return apperror.NewBadRequestError("CANNOT_CHECK_IN_SELF", "cannot request a check-in from yourself")
+	}
+
+	if _, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, actorID); err != nil {
+		if errors.Is(err, partymember.ErrNotFound) {
+			return apperror.NewForbiddenError("NOT_PARTY_MEMBER", "you are not a member of this party")
+		}
+
+		return err
+	}
+
+	target, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, targetUserID)
+	if err != nil {
+		return toAppError(err)
+	}
+
+	if target.TripStatus != entity.TripStatusReturning {
+		return apperror.NewConflictError("MEMBER_NOT_HEADING_HOME", "this member is not currently heading home")
+	}
+
+	actor, err := s.userRepo.FindByID(ctx, actorID)
+	if err != nil {
+		return toAppError(err)
+	}
+
+	if _, err := s.memberRepo.UpdateCheckIn(ctx, target.ID, entity.CheckInStatusPending, actorID); err != nil {
+		return err
+	}
+
+	tokens, err := s.deviceTokenRepo.FindByUserID(ctx, targetUserID)
+	if err != nil {
+		return err
+	}
+
+	for _, t := range tokens {
+		if err := s.fcmClient.SendCheckInRequest(ctx, t.Token, partyID, actor.ID, actor.DisplayName); err != nil {
+			slog.Warn("failed to send check-in request notification",
+				slog.String("targetUserId", targetUserID),
+				slog.String("partyId", partyID),
+				slog.Any("error", err))
+		}
+	}
+
+	return nil
+}
+
+func (s *serviceImpl) RespondCheckIn(ctx context.Context, actorID, partyID string, status entity.CheckInStatus) (entity.PartyMember, error) {
+	if status != entity.CheckInStatusOK && status != entity.CheckInStatusNotOK {
+		return entity.PartyMember{}, apperror.NewBadRequestError("INVALID_CHECK_IN_STATUS", "status must be OK or NOT_OK")
+	}
+
+	member, err := s.memberRepo.FindByPartyIDAndUserID(ctx, partyID, actorID)
+	if err != nil {
+		return entity.PartyMember{}, toAppError(err)
+	}
+
+	if member.CheckInStatus != entity.CheckInStatusPending {
+		return entity.PartyMember{}, apperror.NewConflictError("NO_PENDING_CHECK_IN", "there is no pending check-in to respond to")
+	}
+
+	return s.memberRepo.UpdateCheckIn(ctx, member.ID, status, member.CheckInRequestedByUserID)
+}
+
 func toAppError(err error) error {
 	switch {
 	case errors.Is(err, party.ErrNotFound):

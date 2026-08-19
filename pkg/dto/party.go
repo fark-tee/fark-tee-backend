@@ -31,6 +31,9 @@ type PartyMemberResponse struct {
 	UserProfileImage string `json:"userProfileImage"`
 	Status           string `json:"status"`
 	TripStatus       string `json:"tripStatus"`
+
+	CheckInStatus            string `json:"checkInStatus"`
+	CheckInRequestedByUserID string `json:"checkInRequestedByUserId,omitempty"`
 }
 
 type InviteToPartyRequest struct {
@@ -92,3 +95,17 @@ type NudgePartyMemberRequest struct {
 }
 
 type NudgePartyMemberResponse struct{}
+
+type RequestCheckInRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+	UserID  string `path:"userId" required:"true"`
+}
+
+type RequestCheckInResponse struct{}
+
+type RespondCheckInRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+	Body    struct {
+		Status string `json:"status" enum:"OK,NOT_OK" required:"true"`
+	}
+}

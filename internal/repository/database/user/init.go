@@ -34,6 +34,9 @@ type Repository interface {
 	// IncrementLateCount increments id's late arrival count and returns the
 	// updated user.
 	IncrementLateCount(ctx context.Context, id string) (entity.User, error)
+	// RecordRating folds score into id's running average rating, incrementing
+	// its rating count, and returns the updated user.
+	RecordRating(ctx context.Context, id string, score int) (entity.User, error)
 }
 
 type repositoryImpl struct {

@@ -8,6 +8,7 @@ import (
 	devicetoken "github.com/fark-tee/fark-tee-backend/internal/handler/devicetoken"
 	googleoauth "github.com/fark-tee/fark-tee-backend/internal/handler/googleoauth"
 	party "github.com/fark-tee/fark-tee-backend/internal/handler/party"
+	review "github.com/fark-tee/fark-tee-backend/internal/handler/review"
 	savedlocation "github.com/fark-tee/fark-tee-backend/internal/handler/savedlocation"
 	story "github.com/fark-tee/fark-tee-backend/internal/handler/story"
 	trip "github.com/fark-tee/fark-tee-backend/internal/handler/trip"
@@ -26,6 +27,7 @@ import (
 	party3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	partymember "github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	position "github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
+	review3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/review"
 	savedlocation3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/savedlocation"
 	story3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/story"
 	trip3 "github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
@@ -33,6 +35,7 @@ import (
 	auth "github.com/fark-tee/fark-tee-backend/internal/service/auth"
 	devicetoken2 "github.com/fark-tee/fark-tee-backend/internal/service/devicetoken"
 	party2 "github.com/fark-tee/fark-tee-backend/internal/service/party"
+	review2 "github.com/fark-tee/fark-tee-backend/internal/service/review"
 	savedlocation2 "github.com/fark-tee/fark-tee-backend/internal/service/savedlocation"
 	story2 "github.com/fark-tee/fark-tee-backend/internal/service/story"
 	trip2 "github.com/fark-tee/fark-tee-backend/internal/service/trip"
@@ -51,6 +54,7 @@ var HandlerSet = wire.NewSet(
 	devicetoken.New,
 	googleoauth.New,
 	party.New,
+	review.New,
 	savedlocation.New,
 	story.New,
 	trip.New,
@@ -76,6 +80,7 @@ var RepositorySet = wire.NewSet(
 	party3.New,
 	partymember.New,
 	position.New,
+	review3.New,
 	savedlocation3.New,
 	story3.New,
 	trip3.New,
@@ -86,6 +91,7 @@ var ServiceSet = wire.NewSet(
 	auth.New,
 	devicetoken2.New,
 	party2.New,
+	review2.New,
 	savedlocation2.New,
 	story2.New,
 	trip2.New,

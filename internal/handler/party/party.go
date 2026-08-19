@@ -177,6 +177,33 @@ func (h *handlerImpl) Nudge(ctx context.Context, req *dto.NudgePartyMemberReques
 	return &dto.NudgePartyMemberResponse{}, nil
 }
 
+func (h *handlerImpl) RequestCheckIn(ctx context.Context, req *dto.RequestCheckInRequest) (*dto.RequestCheckInResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if err := h.service.RequestCheckIn(ctx, actorID, req.PartyID, req.UserID); err != nil {
+		return nil, err
+	}
+
+	return &dto.RequestCheckInResponse{}, nil
+}
+
+func (h *handlerImpl) RespondCheckIn(ctx context.Context, req *dto.RespondCheckInRequest) (*dto.PartyMemberResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	member, err := h.service.RespondCheckIn(ctx, actorID, req.PartyID, entity.CheckInStatus(req.Body.Status))
+	if err != nil {
+		return nil, err
+	}
+
+	return toPartyMemberResponse(member), nil
+}
+
 func toPartyResponse(p entity.Party) *dto.PartyResponse {
 	return &dto.PartyResponse{
 		ID:              p.ID,
@@ -191,13 +218,20 @@ func toPartyResponse(p entity.Party) *dto.PartyResponse {
 }
 
 func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
+	checkInStatus := m.CheckInStatus
+	if checkInStatus == "" {
+		checkInStatus = entity.CheckInStatusNone
+	}
+
 	return &dto.PartyMemberResponse{
-		ID:               m.ID,
-		PartyID:          m.PartyID,
-		UserID:           m.UserID,
-		UserDisplayName:  m.UserDisplayName,
-		UserProfileImage: m.UserProfileImage,
-		Status:           string(m.Status),
-		TripStatus:       string(m.TripStatus),
+		ID:                       m.ID,
+		PartyID:                  m.PartyID,
+		UserID:                   m.UserID,
+		UserDisplayName:          m.UserDisplayName,
+		UserProfileImage:         m.UserProfileImage,
+		Status:                   string(m.Status),
+		TripStatus:               string(m.TripStatus),
+		CheckInStatus:            string(checkInStatus),
+		CheckInRequestedByUserID: m.CheckInRequestedByUserID,
 	}
 }

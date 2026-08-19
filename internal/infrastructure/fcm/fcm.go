@@ -19,6 +19,12 @@ type Client interface {
 	// notification; iOS gets a normal displayable alert, since a terminated
 	// iOS app can't be woken the same way.
 	SendNudge(ctx context.Context, token, meetupID, fromUserID, fromDisplayName string) error
+
+	// SendCheckInRequest notifies token that fromDisplayName wants to know
+	// whether the recipient (currently heading home) is okay, so the client
+	// can show a full-screen prompt with "okay"/"not okay" actions. Same
+	// delivery shape as SendNudge.
+	SendCheckInRequest(ctx context.Context, token, meetupID, fromUserID, fromDisplayName string) error
 }
 
 type clientImpl struct {
@@ -67,6 +73,44 @@ func (c *clientImpl) SendNudge(ctx context.Context, token, meetupID, fromUserID,
 					Alert: &messaging.ApsAlert{
 						Title: "รีบมาได้แล้ว!",
 						Body:  fromDisplayName + " ตามคุณแล้ว!!",
+					},
+					Sound:            "default",
+					ContentAvailable: true,
+				},
+			},
+		},
+	}
+
+	_, err := c.messaging.Send(ctx, message)
+
+	return err
+}
+
+func (c *clientImpl) SendCheckInRequest(ctx context.Context, token, meetupID, fromUserID, fromDisplayName string) error {
+	if c.messaging == nil {
+		slog.Warn("FCM not configured, skipping check-in request notification", slog.String("token", token))
+
+		return nil
+	}
+
+	message := &messaging.Message{
+		Token: token,
+		Data: map[string]string{
+			"type":            "checkin_request",
+			"meetupId":        meetupID,
+			"fromUserId":      fromUserID,
+			"fromDisplayName": fromDisplayName,
+		},
+		Android: &messaging.AndroidConfig{
+			Priority: "high",
+		},
+		APNS: &messaging.APNSConfig{
+			Headers: map[string]string{"apns-priority": "10"},
+			Payload: &messaging.APNSPayload{
+				Aps: &messaging.Aps{
+					Alert: &messaging.ApsAlert{
+						Title: "โอเคนะคะ?",
+						Body:  fromDisplayName + " อยากรู้ว่าคุณโอเคไหม",
 					},
 					Sound:            "default",
 					ContentAvailable: true,

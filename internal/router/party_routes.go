@@ -86,4 +86,19 @@ func registerPartyRoutes(api huma.API, handlers *handler.Handlers) {
 		Security:      security,
 		DefaultStatus: http.StatusNoContent,
 	}, handlers.Party.Nudge)
+
+	huma.Register(api, huma.Operation{
+		Method:        http.MethodPost,
+		Path:          "/parties/{partyId}/members/{userId}/check-in",
+		Summary:       "Ask a party member heading home to confirm they're okay",
+		Security:      security,
+		DefaultStatus: http.StatusNoContent,
+	}, handlers.Party.RequestCheckIn)
+
+	huma.Register(api, huma.Operation{
+		Method:   http.MethodPatch,
+		Path:     "/parties/{partyId}/check-in",
+		Summary:  "Respond to the current user's own pending check-in request",
+		Security: security,
+	}, humax.Wrap200(handlers.Party.RespondCheckIn))
 }
