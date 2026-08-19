@@ -28,6 +28,12 @@ type Repository interface {
 	// UpdateProfileImage sets id's profile image URL and returns the updated
 	// user.
 	UpdateProfileImage(ctx context.Context, id, profileImageURL string) (entity.User, error)
+	// IncrementOnTimeCount increments id's on-time arrival count and returns
+	// the updated user.
+	IncrementOnTimeCount(ctx context.Context, id string) (entity.User, error)
+	// IncrementLateCount increments id's late arrival count and returns the
+	// updated user.
+	IncrementLateCount(ctx context.Context, id string) (entity.User, error)
 }
 
 type repositoryImpl struct {

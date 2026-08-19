@@ -114,6 +114,39 @@ func (r *repositoryImpl) UpdateProfileImage(ctx context.Context, id, profileImag
 	return doc.toEntity(), nil
 }
 
+func (r *repositoryImpl) IncrementOnTimeCount(ctx context.Context, id string) (entity.User, error) {
+	return r.incrementCount(ctx, id, "on_time_count")
+}
+
+func (r *repositoryImpl) IncrementLateCount(ctx context.Context, id string) (entity.User, error) {
+	return r.incrementCount(ctx, id, "late_count")
+}
+
+func (r *repositoryImpl) incrementCount(ctx context.Context, id, field string) (entity.User, error) {
+	var doc model
+
+	objID, err := mongoid.ToObjectID(id)
+	if err != nil {
+		return entity.User{}, ErrNotFound
+	}
+
+	err = r.collection.FindOneAndUpdate(
+		ctx,
+		bson.M{"_id": objID},
+		bson.M{"$inc": bson.M{field: 1}},
+		options.FindOneAndUpdate().SetReturnDocument(options.After),
+	).Decode(&doc)
+	if err != nil {
+		if errors.Is(err, mongo.ErrNoDocuments) {
+			return entity.User{}, ErrNotFound
+		}
+
+		return entity.User{}, err
+	}
+
+	return doc.toEntity(), nil
+}
+
 func (r *repositoryImpl) FindByUsername(ctx context.Context, username string) (entity.User, error) {
 	var doc model
 

@@ -9,6 +9,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
+	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 )
 
 type Service interface {
@@ -35,16 +36,18 @@ type serviceImpl struct {
 	memberRepo   partymember.Repository
 	tripRepo     trip.Repository
 	positionRepo position.Repository
+	userRepo     user.Repository
 	osrmClient   *osrm.Client
 }
 
 // @WireSet("Service")
-func New(partyRepo party.Repository, memberRepo partymember.Repository, tripRepo trip.Repository, positionRepo position.Repository, osrmClient *osrm.Client) Service {
+func New(partyRepo party.Repository, memberRepo partymember.Repository, tripRepo trip.Repository, positionRepo position.Repository, userRepo user.Repository, osrmClient *osrm.Client) Service {
 	return &serviceImpl{
 		partyRepo:    partyRepo,
 		memberRepo:   memberRepo,
 		tripRepo:     tripRepo,
 		positionRepo: positionRepo,
+		userRepo:     userRepo,
 		osrmClient:   osrmClient,
 	}
 }

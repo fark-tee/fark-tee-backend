@@ -171,7 +171,36 @@ func (s *serviceImpl) UpdateTripStatus(ctx context.Context, actorID, partyID str
 		return entity.PartyMember{}, apperror.NewConflictError("INVALID_TRIP_STATUS_TRANSITION", "trip status can only move forward")
 	}
 
-	return s.memberRepo.UpdateTripStatus(ctx, member.ID, status)
+	updatedMember, err := s.memberRepo.UpdateTripStatus(ctx, member.ID, status)
+	if err != nil {
+		return entity.PartyMember{}, err
+	}
+
+	if status == entity.TripStatusArrived {
+		if err := s.recordArrivalPunctuality(ctx, actorID, partyID); err != nil {
+			return entity.PartyMember{}, err
+		}
+	}
+
+	return updatedMember, nil
+}
+
+// recordArrivalPunctuality compares the moment actorID reaches the party's
+// target position against the party's TargetTime and increments their
+// on-time or late count in the users collection accordingly.
+func (s *serviceImpl) recordArrivalPunctuality(ctx context.Context, actorID, partyID string) error {
+	p, err := s.partyRepo.FindByID(ctx, partyID)
+	if err != nil {
+		return toAppError(err)
+	}
+
+	if time.Now().After(p.TargetTime) {
+		_, err = s.userRepo.IncrementLateCount(ctx, actorID)
+	} else {
+		_, err = s.userRepo.IncrementOnTimeCount(ctx, actorID)
+	}
+
+	return err
 }
 
 func toAppError(err error) error {

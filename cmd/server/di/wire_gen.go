@@ -131,7 +131,7 @@ func Initialize() (*server.Server, func(), error) {
 		return nil, nil, err
 	}
 	osrmClient := osrm.NewClient(configConfig)
-	tripService := trip2.New(partyRepository, partymemberRepository, tripRepository, positionRepository, osrmClient)
+	tripService := trip2.New(partyRepository, partymemberRepository, tripRepository, positionRepository, repository, osrmClient)
 	tripHandler := trip3.New(tripService)
 	uploadService := upload.New(uploader)
 	uploadHandler := upload2.New(uploadService)

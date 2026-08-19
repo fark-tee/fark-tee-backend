@@ -302,6 +302,138 @@ func (_c *MockRepository_FindByUsername_Call) RunAndReturn(run func(ctx context.
 	return _c
 }
 
+// IncrementLateCount provides a mock function for the type MockRepository
+func (_mock *MockRepository) IncrementLateCount(ctx context.Context, id string) (entity.User, error) {
+	ret := _mock.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IncrementLateCount")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
+		r0 = returnFunc(ctx, id)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_IncrementLateCount_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'IncrementLateCount'
+type MockRepository_IncrementLateCount_Call struct {
+	*mock.Call
+}
+
+// IncrementLateCount is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+func (_e *MockRepository_Expecter) IncrementLateCount(ctx any, id any) *MockRepository_IncrementLateCount_Call {
+	return &MockRepository_IncrementLateCount_Call{Call: _e.mock.On("IncrementLateCount", ctx, id)}
+}
+
+func (_c *MockRepository_IncrementLateCount_Call) Run(run func(ctx context.Context, id string)) *MockRepository_IncrementLateCount_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_IncrementLateCount_Call) Return(user entity.User, err error) *MockRepository_IncrementLateCount_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockRepository_IncrementLateCount_Call) RunAndReturn(run func(ctx context.Context, id string) (entity.User, error)) *MockRepository_IncrementLateCount_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
+// IncrementOnTimeCount provides a mock function for the type MockRepository
+func (_mock *MockRepository) IncrementOnTimeCount(ctx context.Context, id string) (entity.User, error) {
+	ret := _mock.Called(ctx, id)
+
+	if len(ret) == 0 {
+		panic("no return value specified for IncrementOnTimeCount")
+	}
+
+	var r0 entity.User
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string) entity.User); ok {
+		r0 = returnFunc(ctx, id)
+	} else {
+		r0 = ret.Get(0).(entity.User)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string) error); ok {
+		r1 = returnFunc(ctx, id)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockRepository_IncrementOnTimeCount_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'IncrementOnTimeCount'
+type MockRepository_IncrementOnTimeCount_Call struct {
+	*mock.Call
+}
+
+// IncrementOnTimeCount is a helper method to define mock.On call
+//   - ctx context.Context
+//   - id string
+func (_e *MockRepository_Expecter) IncrementOnTimeCount(ctx any, id any) *MockRepository_IncrementOnTimeCount_Call {
+	return &MockRepository_IncrementOnTimeCount_Call{Call: _e.mock.On("IncrementOnTimeCount", ctx, id)}
+}
+
+func (_c *MockRepository_IncrementOnTimeCount_Call) Run(run func(ctx context.Context, id string)) *MockRepository_IncrementOnTimeCount_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockRepository_IncrementOnTimeCount_Call) Return(user entity.User, err error) *MockRepository_IncrementOnTimeCount_Call {
+	_c.Call.Return(user, err)
+	return _c
+}
+
+func (_c *MockRepository_IncrementOnTimeCount_Call) RunAndReturn(run func(ctx context.Context, id string) (entity.User, error)) *MockRepository_IncrementOnTimeCount_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // Search provides a mock function for the type MockRepository
 func (_mock *MockRepository) Search(ctx context.Context, query string) ([]entity.User, error) {
 	ret := _mock.Called(ctx, query)
