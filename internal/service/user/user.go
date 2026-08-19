@@ -27,7 +27,7 @@ func (s *serviceImpl) GetByID(ctx context.Context, id string) (entity.User, erro
 	return u, nil
 }
 
-func (s *serviceImpl) UpdateProfile(ctx context.Context, id, displayName, username string) (entity.User, error) {
+func (s *serviceImpl) UpdateProfile(ctx context.Context, id, displayName, username, emergencyContactName, emergencyContactPhone string) (entity.User, error) {
 	existing, err := s.repo.FindByUsername(ctx, username)
 	if err == nil && existing.ID != id {
 		return entity.User{}, apperror.NewConflictError("USERNAME_TAKEN", "username is already taken")
@@ -35,7 +35,7 @@ func (s *serviceImpl) UpdateProfile(ctx context.Context, id, displayName, userna
 		return entity.User{}, err
 	}
 
-	u, err := s.repo.UpdateProfile(ctx, id, displayName, username)
+	u, err := s.repo.UpdateProfile(ctx, id, displayName, username, emergencyContactName, emergencyContactPhone)
 	if err != nil {
 		return entity.User{}, toAppError(err)
 	}

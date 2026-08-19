@@ -25,6 +25,12 @@ type Client interface {
 	// can show a full-screen prompt with "okay"/"not okay" actions. Same
 	// delivery shape as SendNudge.
 	SendCheckInRequest(ctx context.Context, token, meetupID, fromUserID, fromDisplayName string) error
+
+	// SendCheckInEmergencyAlert notifies token that fromDisplayName answered
+	// "not okay" to a check-in, carrying their emergency contact so the
+	// recipient's full-screen alert can offer a tap-to-call action. Sent to
+	// every other accepted party member except fromUserID.
+	SendCheckInEmergencyAlert(ctx context.Context, token, meetupID, fromUserID, fromDisplayName, emergencyContactName, emergencyContactPhone string) error
 }
 
 type clientImpl struct {
@@ -73,6 +79,46 @@ func (c *clientImpl) SendNudge(ctx context.Context, token, meetupID, fromUserID,
 					Alert: &messaging.ApsAlert{
 						Title: "รีบมาได้แล้ว!",
 						Body:  fromDisplayName + " ตามคุณแล้ว!!",
+					},
+					Sound:            "default",
+					ContentAvailable: true,
+				},
+			},
+		},
+	}
+
+	_, err := c.messaging.Send(ctx, message)
+
+	return err
+}
+
+func (c *clientImpl) SendCheckInEmergencyAlert(ctx context.Context, token, meetupID, fromUserID, fromDisplayName, emergencyContactName, emergencyContactPhone string) error {
+	if c.messaging == nil {
+		slog.Warn("FCM not configured, skipping check-in emergency alert", slog.String("token", token))
+
+		return nil
+	}
+
+	message := &messaging.Message{
+		Token: token,
+		Data: map[string]string{
+			"type":                  "checkin_emergency",
+			"meetupId":              meetupID,
+			"fromUserId":            fromUserID,
+			"fromDisplayName":       fromDisplayName,
+			"emergencyContactName":  emergencyContactName,
+			"emergencyContactPhone": emergencyContactPhone,
+		},
+		Android: &messaging.AndroidConfig{
+			Priority: "high",
+		},
+		APNS: &messaging.APNSConfig{
+			Headers: map[string]string{"apns-priority": "10"},
+			Payload: &messaging.APNSPayload{
+				Aps: &messaging.Aps{
+					Alert: &messaging.ApsAlert{
+						Title: fromDisplayName + " ตอบว่าไม่โอเค!",
+						Body:  "แตะเพื่อดูเบอร์ติดต่อฉุกเฉิน",
 					},
 					Sound:            "default",
 					ContentAvailable: true,

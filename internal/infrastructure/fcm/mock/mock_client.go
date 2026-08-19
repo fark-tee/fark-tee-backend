@@ -37,6 +37,93 @@ func (_m *MockClient) EXPECT() *MockClient_Expecter {
 	return &MockClient_Expecter{mock: &_m.Mock}
 }
 
+// SendCheckInEmergencyAlert provides a mock function for the type MockClient
+func (_mock *MockClient) SendCheckInEmergencyAlert(ctx context.Context, token string, meetupID string, fromUserID string, fromDisplayName string, emergencyContactName string, emergencyContactPhone string) error {
+	ret := _mock.Called(ctx, token, meetupID, fromUserID, fromDisplayName, emergencyContactName, emergencyContactPhone)
+
+	if len(ret) == 0 {
+		panic("no return value specified for SendCheckInEmergencyAlert")
+	}
+
+	var r0 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, string, string, string) error); ok {
+		r0 = returnFunc(ctx, token, meetupID, fromUserID, fromDisplayName, emergencyContactName, emergencyContactPhone)
+	} else {
+		r0 = ret.Error(0)
+	}
+	return r0
+}
+
+// MockClient_SendCheckInEmergencyAlert_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'SendCheckInEmergencyAlert'
+type MockClient_SendCheckInEmergencyAlert_Call struct {
+	*mock.Call
+}
+
+// SendCheckInEmergencyAlert is a helper method to define mock.On call
+//   - ctx context.Context
+//   - token string
+//   - meetupID string
+//   - fromUserID string
+//   - fromDisplayName string
+//   - emergencyContactName string
+//   - emergencyContactPhone string
+func (_e *MockClient_Expecter) SendCheckInEmergencyAlert(ctx any, token any, meetupID any, fromUserID any, fromDisplayName any, emergencyContactName any, emergencyContactPhone any) *MockClient_SendCheckInEmergencyAlert_Call {
+	return &MockClient_SendCheckInEmergencyAlert_Call{Call: _e.mock.On("SendCheckInEmergencyAlert", ctx, token, meetupID, fromUserID, fromDisplayName, emergencyContactName, emergencyContactPhone)}
+}
+
+func (_c *MockClient_SendCheckInEmergencyAlert_Call) Run(run func(ctx context.Context, token string, meetupID string, fromUserID string, fromDisplayName string, emergencyContactName string, emergencyContactPhone string)) *MockClient_SendCheckInEmergencyAlert_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 string
+		if args[3] != nil {
+			arg3 = args[3].(string)
+		}
+		var arg4 string
+		if args[4] != nil {
+			arg4 = args[4].(string)
+		}
+		var arg5 string
+		if args[5] != nil {
+			arg5 = args[5].(string)
+		}
+		var arg6 string
+		if args[6] != nil {
+			arg6 = args[6].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+			arg4,
+			arg5,
+			arg6,
+		)
+	})
+	return _c
+}
+
+func (_c *MockClient_SendCheckInEmergencyAlert_Call) Return(err error) *MockClient_SendCheckInEmergencyAlert_Call {
+	_c.Call.Return(err)
+	return _c
+}
+
+func (_c *MockClient_SendCheckInEmergencyAlert_Call) RunAndReturn(run func(ctx context.Context, token string, meetupID string, fromUserID string, fromDisplayName string, emergencyContactName string, emergencyContactPhone string) error) *MockClient_SendCheckInEmergencyAlert_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // SendCheckInRequest provides a mock function for the type MockClient
 func (_mock *MockClient) SendCheckInRequest(ctx context.Context, token string, meetupID string, fromUserID string, fromDisplayName string) error {
 	ret := _mock.Called(ctx, token, meetupID, fromUserID, fromDisplayName)

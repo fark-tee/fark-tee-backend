@@ -44,7 +44,14 @@ func (h *handlerImpl) UpdateMe(ctx context.Context, req *dto.UpdateMeRequest) (*
 		return nil, err
 	}
 
-	u, err := h.service.UpdateProfile(ctx, userID, req.Body.DisplayName, req.Body.Username)
+	u, err := h.service.UpdateProfile(
+		ctx,
+		userID,
+		req.Body.DisplayName,
+		req.Body.Username,
+		req.Body.EmergencyContactName,
+		req.Body.EmergencyContactPhone,
+	)
 	if err != nil {
 		return nil, err
 	}
@@ -70,14 +77,16 @@ func (h *handlerImpl) UploadProfileImage(ctx context.Context, req *dto.UploadPro
 
 func toUserResponse(u entity.User) *dto.UserResponse {
 	return &dto.UserResponse{
-		ID:              u.ID,
-		ProfileImageURL: u.ProfileImageURL,
-		DisplayName:     u.DisplayName,
-		Username:        u.Username,
-		GoogleUserID:    u.GoogleUserID,
-		Rating:          u.Rating,
-		RatingCount:     u.RatingCount,
-		OnTimeCount:     u.OnTimeCount,
-		LateCount:       u.LateCount,
+		ID:                    u.ID,
+		ProfileImageURL:       u.ProfileImageURL,
+		DisplayName:           u.DisplayName,
+		Username:              u.Username,
+		GoogleUserID:          u.GoogleUserID,
+		Rating:                u.Rating,
+		RatingCount:           u.RatingCount,
+		OnTimeCount:           u.OnTimeCount,
+		LateCount:             u.LateCount,
+		EmergencyContactName:  u.EmergencyContactName,
+		EmergencyContactPhone: u.EmergencyContactPhone,
 	}
 }

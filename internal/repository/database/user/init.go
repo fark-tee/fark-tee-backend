@@ -22,9 +22,9 @@ type Repository interface {
 	// Search returns users whose display name, ID, or Google user ID match
 	// query, capped at searchResultLimit results.
 	Search(ctx context.Context, query string) ([]entity.User, error)
-	// UpdateProfile sets id's display name and username and returns the
-	// updated user.
-	UpdateProfile(ctx context.Context, id, displayName, username string) (entity.User, error)
+	// UpdateProfile sets id's display name, username, and emergency contact
+	// info, and returns the updated user.
+	UpdateProfile(ctx context.Context, id, displayName, username, emergencyContactName, emergencyContactPhone string) (entity.User, error)
 	// UpdateProfileImage sets id's profile image URL and returns the updated
 	// user.
 	UpdateProfileImage(ctx context.Context, id, profileImageURL string) (entity.User, error)

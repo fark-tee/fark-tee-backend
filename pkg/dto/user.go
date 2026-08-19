@@ -13,6 +13,9 @@ type UserResponse struct {
 	OnTimeCount     int     `json:"onTimeCount"`
 	LateCount       int     `json:"lateCount"`
 	AccessToken     string  `json:"accessToken,omitempty"`
+
+	EmergencyContactName  string `json:"emergencyContactName,omitempty"`
+	EmergencyContactPhone string `json:"emergencyContactPhone,omitempty"`
 }
 
 type UsersResponse struct {
@@ -29,6 +32,11 @@ type UpdateMeRequest struct {
 	Body struct {
 		DisplayName string `json:"displayName" required:"true"`
 		Username    string `json:"username" required:"true" minLength:"3" maxLength:"20" pattern:"^[a-zA-Z0-9_]+$"`
+
+		// EmergencyContactName/Phone are optional - see
+		// entity.User.EmergencyContactName's doc comment for why.
+		EmergencyContactName  string `json:"emergencyContactName,omitempty" maxLength:"100"`
+		EmergencyContactPhone string `json:"emergencyContactPhone,omitempty" maxLength:"20"`
 	}
 }
 

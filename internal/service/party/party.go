@@ -353,7 +353,66 @@ func (s *serviceImpl) RespondCheckIn(ctx context.Context, actorID, partyID strin
 		return entity.PartyMember{}, apperror.NewConflictError("NO_PENDING_CHECK_IN", "there is no pending check-in to respond to")
 	}
 
-	return s.memberRepo.UpdateCheckIn(ctx, member.ID, status, member.CheckInRequestedByUserID)
+	updated, err := s.memberRepo.UpdateCheckIn(ctx, member.ID, status, member.CheckInRequestedByUserID)
+	if err != nil {
+		return entity.PartyMember{}, err
+	}
+
+	if status == entity.CheckInStatusNotOK {
+		s.broadcastCheckInEmergency(ctx, partyID, actorID)
+	}
+
+	return updated, nil
+}
+
+// broadcastCheckInEmergency best-effort pushes a full-screen emergency alert
+// - carrying actorID's emergency contact - to every other accepted member of
+// partyID. Failures (missing devices, FCM unconfigured, a lookup error) are
+// logged and swallowed, matching Nudge/RequestCheckIn: this is a safety-net
+// notification layered on top of the already-persisted NOT_OK status, not
+// something the caller's response should fail over.
+func (s *serviceImpl) broadcastCheckInEmergency(ctx context.Context, partyID, actorID string) {
+	actor, err := s.userRepo.FindByID(ctx, actorID)
+	if err != nil {
+		slog.Warn("failed to load actor for check-in emergency broadcast",
+			slog.String("actorId", actorID), slog.Any("error", err))
+
+		return
+	}
+
+	members, err := s.memberRepo.FindByPartyID(ctx, partyID)
+	if err != nil {
+		slog.Warn("failed to list party members for check-in emergency broadcast",
+			slog.String("partyId", partyID), slog.Any("error", err))
+
+		return
+	}
+
+	for _, m := range members {
+		if m.UserID == actorID || m.Status != entity.PartyMemberStatusAccepted {
+			continue
+		}
+
+		tokens, err := s.deviceTokenRepo.FindByUserID(ctx, m.UserID)
+		if err != nil {
+			slog.Warn("failed to load device tokens for check-in emergency broadcast",
+				slog.String("targetUserId", m.UserID), slog.Any("error", err))
+
+			continue
+		}
+
+		for _, t := range tokens {
+			if err := s.fcmClient.SendCheckInEmergencyAlert(
+				ctx, t.Token, partyID, actor.ID, actor.DisplayName,
+				actor.EmergencyContactName, actor.EmergencyContactPhone,
+			); err != nil {
+				slog.Warn("failed to send check-in emergency alert",
+					slog.String("targetUserId", m.UserID),
+					slog.String("partyId", partyID),
+					slog.Any("error", err))
+			}
+		}
+	}
 }
 
 func toAppError(err error) error {

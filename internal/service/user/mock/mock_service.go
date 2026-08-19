@@ -174,8 +174,8 @@ func (_c *MockService_Search_Call) RunAndReturn(run func(ctx context.Context, qu
 }
 
 // UpdateProfile provides a mock function for the type MockService
-func (_mock *MockService) UpdateProfile(ctx context.Context, id string, displayName string, username string) (entity.User, error) {
-	ret := _mock.Called(ctx, id, displayName, username)
+func (_mock *MockService) UpdateProfile(ctx context.Context, id string, displayName string, username string, emergencyContactName string, emergencyContactPhone string) (entity.User, error) {
+	ret := _mock.Called(ctx, id, displayName, username, emergencyContactName, emergencyContactPhone)
 
 	if len(ret) == 0 {
 		panic("no return value specified for UpdateProfile")
@@ -183,16 +183,16 @@ func (_mock *MockService) UpdateProfile(ctx context.Context, id string, displayN
 
 	var r0 entity.User
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) (entity.User, error)); ok {
-		return returnFunc(ctx, id, displayName, username)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, string, string) (entity.User, error)); ok {
+		return returnFunc(ctx, id, displayName, username, emergencyContactName, emergencyContactPhone)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) entity.User); ok {
-		r0 = returnFunc(ctx, id, displayName, username)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, string, string) entity.User); ok {
+		r0 = returnFunc(ctx, id, displayName, username, emergencyContactName, emergencyContactPhone)
 	} else {
 		r0 = ret.Get(0).(entity.User)
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string) error); ok {
-		r1 = returnFunc(ctx, id, displayName, username)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string, string, string) error); ok {
+		r1 = returnFunc(ctx, id, displayName, username, emergencyContactName, emergencyContactPhone)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -209,11 +209,13 @@ type MockService_UpdateProfile_Call struct {
 //   - id string
 //   - displayName string
 //   - username string
-func (_e *MockService_Expecter) UpdateProfile(ctx any, id any, displayName any, username any) *MockService_UpdateProfile_Call {
-	return &MockService_UpdateProfile_Call{Call: _e.mock.On("UpdateProfile", ctx, id, displayName, username)}
+//   - emergencyContactName string
+//   - emergencyContactPhone string
+func (_e *MockService_Expecter) UpdateProfile(ctx any, id any, displayName any, username any, emergencyContactName any, emergencyContactPhone any) *MockService_UpdateProfile_Call {
+	return &MockService_UpdateProfile_Call{Call: _e.mock.On("UpdateProfile", ctx, id, displayName, username, emergencyContactName, emergencyContactPhone)}
 }
 
-func (_c *MockService_UpdateProfile_Call) Run(run func(ctx context.Context, id string, displayName string, username string)) *MockService_UpdateProfile_Call {
+func (_c *MockService_UpdateProfile_Call) Run(run func(ctx context.Context, id string, displayName string, username string, emergencyContactName string, emergencyContactPhone string)) *MockService_UpdateProfile_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -231,11 +233,21 @@ func (_c *MockService_UpdateProfile_Call) Run(run func(ctx context.Context, id s
 		if args[3] != nil {
 			arg3 = args[3].(string)
 		}
+		var arg4 string
+		if args[4] != nil {
+			arg4 = args[4].(string)
+		}
+		var arg5 string
+		if args[5] != nil {
+			arg5 = args[5].(string)
+		}
 		run(
 			arg0,
 			arg1,
 			arg2,
 			arg3,
+			arg4,
+			arg5,
 		)
 	})
 	return _c
@@ -246,7 +258,7 @@ func (_c *MockService_UpdateProfile_Call) Return(user entity.User, err error) *M
 	return _c
 }
 
-func (_c *MockService_UpdateProfile_Call) RunAndReturn(run func(ctx context.Context, id string, displayName string, username string) (entity.User, error)) *MockService_UpdateProfile_Call {
+func (_c *MockService_UpdateProfile_Call) RunAndReturn(run func(ctx context.Context, id string, displayName string, username string, emergencyContactName string, emergencyContactPhone string) (entity.User, error)) *MockService_UpdateProfile_Call {
 	_c.Call.Return(run)
 	return _c
 }

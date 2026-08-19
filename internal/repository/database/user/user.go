@@ -64,7 +64,7 @@ func (r *repositoryImpl) FindByGoogleUserID(ctx context.Context, googleUserID st
 	return doc.toEntity(), nil
 }
 
-func (r *repositoryImpl) UpdateProfile(ctx context.Context, id, displayName, username string) (entity.User, error) {
+func (r *repositoryImpl) UpdateProfile(ctx context.Context, id, displayName, username, emergencyContactName, emergencyContactPhone string) (entity.User, error) {
 	var doc model
 
 	objID, err := mongoid.ToObjectID(id)
@@ -75,7 +75,12 @@ func (r *repositoryImpl) UpdateProfile(ctx context.Context, id, displayName, use
 	err = r.collection.FindOneAndUpdate(
 		ctx,
 		bson.M{"_id": objID},
-		bson.M{"$set": bson.M{"display_name": displayName, "username": username}},
+		bson.M{"$set": bson.M{
+			"display_name":            displayName,
+			"username":                username,
+			"emergency_contact_name":  emergencyContactName,
+			"emergency_contact_phone": emergencyContactPhone,
+		}},
 		options.FindOneAndUpdate().SetReturnDocument(options.After),
 	).Decode(&doc)
 	if err != nil {
