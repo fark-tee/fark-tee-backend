@@ -13,7 +13,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/review"
 )
 
-func (s *serviceImpl) CreateReview(ctx context.Context, actorID, partyID, targetUserID string, score int, comment string) (entity.Review, error) {
+func (s *serviceImpl) CreateReview(ctx context.Context, actorID, partyID, targetUserID string, score int) (entity.Review, error) {
 	if err := s.requireMember(ctx, partyID, actorID); err != nil {
 		return entity.Review{}, err
 	}
@@ -45,7 +45,6 @@ func (s *serviceImpl) CreateReview(ctx context.Context, actorID, partyID, target
 		ReviewerID:   actorID,
 		TargetUserID: targetUserID,
 		Score:        score,
-		Comment:      comment,
 		CreatedAt:    time.Now(),
 	})
 	if err != nil {

@@ -16,7 +16,6 @@ type model struct {
 	ReviewerID   string        `bson:"reviewer_id"`
 	TargetUserID string        `bson:"target_user_id"`
 	Score        int           `bson:"score"`
-	Comment      string        `bson:"comment"`
 	CreatedAt    time.Time     `bson:"created_at"`
 }
 
@@ -32,7 +31,6 @@ func fromEntity(r entity.Review) (model, error) {
 		ReviewerID:   r.ReviewerID,
 		TargetUserID: r.TargetUserID,
 		Score:        r.Score,
-		Comment:      r.Comment,
 		CreatedAt:    r.CreatedAt,
 	}, nil
 }
@@ -44,7 +42,6 @@ func (m model) toEntity() entity.Review {
 		ReviewerID:   m.ReviewerID,
 		TargetUserID: m.TargetUserID,
 		Score:        m.Score,
-		Comment:      m.Comment,
 		CreatedAt:    m.CreatedAt,
 	}
 }

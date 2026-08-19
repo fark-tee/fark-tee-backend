@@ -10,10 +10,10 @@ import (
 )
 
 type Service interface {
-	// CreateReview lets actorID leave a score (and optional comment) for
-	// targetUserID within partyID, once targetUserID has arrived at the
-	// destination. It updates targetUserID's aggregate rating.
-	CreateReview(ctx context.Context, actorID, partyID, targetUserID string, score int, comment string) (entity.Review, error)
+	// CreateReview lets actorID leave a score for targetUserID within
+	// partyID, once targetUserID has arrived at the destination. It updates
+	// targetUserID's aggregate rating.
+	CreateReview(ctx context.Context, actorID, partyID, targetUserID string, score int) (entity.Review, error)
 	// ListMyReviews returns every review actorID has left within partyID.
 	ListMyReviews(ctx context.Context, actorID, partyID string) ([]entity.Review, error)
 }

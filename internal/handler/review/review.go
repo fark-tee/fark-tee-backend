@@ -14,7 +14,7 @@ func (h *handlerImpl) CreateReview(ctx context.Context, req *dto.CreateReviewReq
 		return nil, err
 	}
 
-	created, err := h.service.CreateReview(ctx, actorID, req.PartyID, req.UserID, req.Body.Score, req.Body.Comment)
+	created, err := h.service.CreateReview(ctx, actorID, req.PartyID, req.UserID, req.Body.Score)
 	if err != nil {
 		return nil, err
 	}
@@ -50,7 +50,6 @@ func toReviewResponse(r entity.Review) *dto.ReviewResponse {
 		ReviewerID:   r.ReviewerID,
 		TargetUserID: r.TargetUserID,
 		Score:        r.Score,
-		Comment:      r.Comment,
 		CreatedAt:    r.CreatedAt,
 	}
 }

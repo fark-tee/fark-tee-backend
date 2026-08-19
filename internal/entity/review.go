@@ -10,6 +10,5 @@ type Review struct {
 	ReviewerID   string
 	TargetUserID string
 	Score        int
-	Comment      string
 	CreatedAt    time.Time
 }

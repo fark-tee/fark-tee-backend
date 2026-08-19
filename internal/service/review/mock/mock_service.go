@@ -39,8 +39,8 @@ func (_m *MockService) EXPECT() *MockService_Expecter {
 }
 
 // CreateReview provides a mock function for the type MockService
-func (_mock *MockService) CreateReview(ctx context.Context, actorID string, partyID string, targetUserID string, score int, comment string) (entity.Review, error) {
-	ret := _mock.Called(ctx, actorID, partyID, targetUserID, score, comment)
+func (_mock *MockService) CreateReview(ctx context.Context, actorID string, partyID string, targetUserID string, score int) (entity.Review, error) {
+	ret := _mock.Called(ctx, actorID, partyID, targetUserID, score)
 
 	if len(ret) == 0 {
 		panic("no return value specified for CreateReview")
@@ -48,16 +48,16 @@ func (_mock *MockService) CreateReview(ctx context.Context, actorID string, part
 
 	var r0 entity.Review
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, int, string) (entity.Review, error)); ok {
-		return returnFunc(ctx, actorID, partyID, targetUserID, score, comment)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, int) (entity.Review, error)); ok {
+		return returnFunc(ctx, actorID, partyID, targetUserID, score)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, int, string) entity.Review); ok {
-		r0 = returnFunc(ctx, actorID, partyID, targetUserID, score, comment)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, int) entity.Review); ok {
+		r0 = returnFunc(ctx, actorID, partyID, targetUserID, score)
 	} else {
 		r0 = ret.Get(0).(entity.Review)
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string, int, string) error); ok {
-		r1 = returnFunc(ctx, actorID, partyID, targetUserID, score, comment)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string, int) error); ok {
+		r1 = returnFunc(ctx, actorID, partyID, targetUserID, score)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -75,12 +75,11 @@ type MockService_CreateReview_Call struct {
 //   - partyID string
 //   - targetUserID string
 //   - score int
-//   - comment string
-func (_e *MockService_Expecter) CreateReview(ctx any, actorID any, partyID any, targetUserID any, score any, comment any) *MockService_CreateReview_Call {
-	return &MockService_CreateReview_Call{Call: _e.mock.On("CreateReview", ctx, actorID, partyID, targetUserID, score, comment)}
+func (_e *MockService_Expecter) CreateReview(ctx any, actorID any, partyID any, targetUserID any, score any) *MockService_CreateReview_Call {
+	return &MockService_CreateReview_Call{Call: _e.mock.On("CreateReview", ctx, actorID, partyID, targetUserID, score)}
 }
 
-func (_c *MockService_CreateReview_Call) Run(run func(ctx context.Context, actorID string, partyID string, targetUserID string, score int, comment string)) *MockService_CreateReview_Call {
+func (_c *MockService_CreateReview_Call) Run(run func(ctx context.Context, actorID string, partyID string, targetUserID string, score int)) *MockService_CreateReview_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -102,17 +101,12 @@ func (_c *MockService_CreateReview_Call) Run(run func(ctx context.Context, actor
 		if args[4] != nil {
 			arg4 = args[4].(int)
 		}
-		var arg5 string
-		if args[5] != nil {
-			arg5 = args[5].(string)
-		}
 		run(
 			arg0,
 			arg1,
 			arg2,
 			arg3,
 			arg4,
-			arg5,
 		)
 	})
 	return _c
@@ -123,7 +117,7 @@ func (_c *MockService_CreateReview_Call) Return(review entity.Review, err error)
 	return _c
 }
 
-func (_c *MockService_CreateReview_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, targetUserID string, score int, comment string) (entity.Review, error)) *MockService_CreateReview_Call {
+func (_c *MockService_CreateReview_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, targetUserID string, score int) (entity.Review, error)) *MockService_CreateReview_Call {
 	_c.Call.Return(run)
 	return _c
 }
