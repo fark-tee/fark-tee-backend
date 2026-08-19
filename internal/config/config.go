@@ -16,6 +16,7 @@ type Config struct {
 	JWT         JWTConfig
 	Storage     StorageConfig
 	Redirect    RedirectConfig
+	OSRM        OSRMConfig
 }
 
 // @WireSet("Config")

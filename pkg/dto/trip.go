@@ -3,21 +3,26 @@ package dto
 import "time"
 
 type TripResponse struct {
-	ID        string    `json:"id"`
-	PartyID   string    `json:"partyId"`
-	UserID    string    `json:"userId"`
-	Direction string    `json:"direction"`
-	StartedAt time.Time `json:"startedAt"`
+	ID              string    `json:"id"`
+	PartyID         string    `json:"partyId"`
+	UserID          string    `json:"userId"`
+	Direction       string    `json:"direction"`
+	DestinationName string    `json:"destinationName"`
+	DestinationLat  float64   `json:"destinationLat"`
+	DestinationLng  float64   `json:"destinationLng"`
+	StartedAt       time.Time `json:"startedAt"`
 }
 
 type PositionResponse struct {
-	ID         string    `json:"id"`
-	TripID     string    `json:"tripId"`
-	PartyID    string    `json:"partyId"`
-	UserID     string    `json:"userId"`
-	Lat        float64   `json:"lat"`
-	Lng        float64   `json:"lng"`
-	RecordedAt time.Time `json:"recordedAt"`
+	ID                       string    `json:"id"`
+	TripID                   string    `json:"tripId"`
+	PartyID                  string    `json:"partyId"`
+	UserID                   string    `json:"userId"`
+	Lat                      float64   `json:"lat"`
+	Lng                      float64   `json:"lng"`
+	RecordedAt               time.Time `json:"recordedAt"`
+	EstimatedDurationSeconds int       `json:"estimatedDurationSeconds"`
+	EstimatedArrivalAt       time.Time `json:"estimatedArrivalAt"`
 }
 
 type PositionsResponse struct {
@@ -32,9 +37,12 @@ type StartTripResponse struct {
 type StartTripRequest struct {
 	PartyID string `path:"partyId" required:"true"`
 	Body    struct {
-		Direction string  `json:"direction" enum:"DEPART,RETURN" required:"true"`
-		Lat       float64 `json:"lat" required:"true"`
-		Lng       float64 `json:"lng" required:"true"`
+		Direction       string  `json:"direction" enum:"DEPART,RETURN" required:"true"`
+		Lat             float64 `json:"lat" required:"true"`
+		Lng             float64 `json:"lng" required:"true"`
+		DestinationName string  `json:"destinationName" required:"true"`
+		DestinationLat  float64 `json:"destinationLat" required:"true"`
+		DestinationLng  float64 `json:"destinationLng" required:"true"`
 	}
 }
 

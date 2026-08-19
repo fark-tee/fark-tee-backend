@@ -23,6 +23,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/fcm"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/googleoauth"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
+	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/osrm"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
 	"github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
@@ -129,7 +130,8 @@ func Initialize() (*server.Server, func(), error) {
 		cleanup()
 		return nil, nil, err
 	}
-	tripService := trip2.New(partyRepository, partymemberRepository, tripRepository, positionRepository)
+	osrmClient := osrm.NewClient(configConfig)
+	tripService := trip2.New(partyRepository, partymemberRepository, tripRepository, positionRepository, osrmClient)
 	tripHandler := trip3.New(tripService)
 	uploadService := upload.New(uploader)
 	uploadHandler := upload2.New(uploadService)

@@ -28,6 +28,20 @@ services:
       timeout: 5s
       retries: 5
 
+  # Self-hosted OSRM routing server (set OSRM_BASE_URL="http://localhost:5001"
+  # to use it). Requires a preprocessed .osrm dataset in ./osrm-data before
+  # this service will start - see osrm-data/README.md. Host port 5001 (not
+  # OSRM's default 5000) to avoid clashing with macOS AirPlay Receiver, which
+  # listens on 5000.
+  osrm:
+    image: ghcr.io/project-osrm/osrm-backend:latest
+    restart: unless-stopped
+    command: osrm-routed --algorithm mld /data/map.osrm
+    ports:
+      - "5001:5000"
+    volumes:
+      - ./osrm-data:/data
+
 volumes:
   mongodb_data:
   s3_data:

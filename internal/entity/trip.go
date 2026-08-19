@@ -10,9 +10,10 @@ const (
 )
 
 type Trip struct {
-	ID        string
-	PartyID   string
-	UserID    string
-	Direction TripDirection
-	StartedAt time.Time
+	ID          string
+	PartyID     string
+	UserID      string
+	Direction   TripDirection
+	Destination Destination
+	StartedAt   time.Time
 }

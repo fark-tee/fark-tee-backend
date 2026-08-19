@@ -4,6 +4,7 @@ import (
 	"context"
 
 	"github.com/fark-tee/fark-tee-backend/internal/entity"
+	"github.com/fark-tee/fark-tee-backend/internal/infrastructure/osrm"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/party"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/partymember"
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/position"
@@ -12,8 +13,9 @@ import (
 
 type Service interface {
 	// StartTrip starts a new depart or return trip for actorID within
-	// partyID and records its first position.
-	StartTrip(ctx context.Context, actorID, partyID string, direction entity.TripDirection, lat, lng float64) (entity.Trip, entity.Position, error)
+	// partyID, heading to destination, and records its first position along
+	// with an OSRM-computed estimated arrival time.
+	StartTrip(ctx context.Context, actorID, partyID string, direction entity.TripDirection, lat, lng float64, destination entity.Destination) (entity.Trip, entity.Position, error)
 	// UpdatePosition records a new position for actorID's current trip
 	// within partyID.
 	UpdatePosition(ctx context.Context, actorID, partyID string, lat, lng float64) (entity.Position, error)
@@ -33,14 +35,16 @@ type serviceImpl struct {
 	memberRepo   partymember.Repository
 	tripRepo     trip.Repository
 	positionRepo position.Repository
+	osrmClient   *osrm.Client
 }
 
 // @WireSet("Service")
-func New(partyRepo party.Repository, memberRepo partymember.Repository, tripRepo trip.Repository, positionRepo position.Repository) Service {
+func New(partyRepo party.Repository, memberRepo partymember.Repository, tripRepo trip.Repository, positionRepo position.Repository, osrmClient *osrm.Client) Service {
 	return &serviceImpl{
 		partyRepo:    partyRepo,
 		memberRepo:   memberRepo,
 		tripRepo:     tripRepo,
 		positionRepo: positionRepo,
+		osrmClient:   osrmClient,
 	}
 }

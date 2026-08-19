@@ -15,7 +15,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/trip"
 )
 
-func (s *serviceImpl) StartTrip(ctx context.Context, actorID, partyID string, direction entity.TripDirection, lat, lng float64) (entity.Trip, entity.Position, error) {
+func (s *serviceImpl) StartTrip(ctx context.Context, actorID, partyID string, direction entity.TripDirection, lat, lng float64, destination entity.Destination) (entity.Trip, entity.Position, error) {
 	if _, err := s.partyRepo.FindByID(ctx, partyID); err != nil {
 		return entity.Trip{}, entity.Position{}, toAppError(err)
 	}
@@ -25,24 +25,32 @@ func (s *serviceImpl) StartTrip(ctx context.Context, actorID, partyID string, di
 	}
 
 	createdTrip, err := s.tripRepo.Create(ctx, entity.Trip{
-		ID:        mongoid.New(),
-		PartyID:   partyID,
-		UserID:    actorID,
-		Direction: direction,
-		StartedAt: time.Now(),
+		ID:          mongoid.New(),
+		PartyID:     partyID,
+		UserID:      actorID,
+		Direction:   direction,
+		Destination: destination,
+		StartedAt:   time.Now(),
 	})
 	if err != nil {
 		return entity.Trip{}, entity.Position{}, err
 	}
 
+	duration, arrivalAt, err := s.estimateArrival(ctx, lat, lng, destination, createdTrip.StartedAt)
+	if err != nil {
+		return entity.Trip{}, entity.Position{}, err
+	}
+
 	createdPosition, err := s.positionRepo.Create(ctx, entity.Position{
-		ID:         mongoid.New(),
-		TripID:     createdTrip.ID,
-		PartyID:    partyID,
-		UserID:     actorID,
-		Lat:        lat,
-		Lng:        lng,
-		RecordedAt: createdTrip.StartedAt,
+		ID:                       mongoid.New(),
+		TripID:                   createdTrip.ID,
+		PartyID:                  partyID,
+		UserID:                   actorID,
+		Lat:                      lat,
+		Lng:                      lng,
+		RecordedAt:               createdTrip.StartedAt,
+		EstimatedDurationSeconds: duration,
+		EstimatedArrivalAt:       arrivalAt,
 	})
 	if err != nil {
 		return entity.Trip{}, entity.Position{}, err
@@ -65,15 +73,36 @@ func (s *serviceImpl) UpdatePosition(ctx context.Context, actorID, partyID strin
 		return entity.Position{}, toAppError(err)
 	}
 
+	recordedAt := time.Now()
+
+	duration, arrivalAt, err := s.estimateArrival(ctx, lat, lng, currentTrip.Destination, recordedAt)
+	if err != nil {
+		return entity.Position{}, err
+	}
+
 	return s.positionRepo.Create(ctx, entity.Position{
-		ID:         mongoid.New(),
-		TripID:     currentTrip.ID,
-		PartyID:    partyID,
-		UserID:     actorID,
-		Lat:        lat,
-		Lng:        lng,
-		RecordedAt: time.Now(),
+		ID:                       mongoid.New(),
+		TripID:                   currentTrip.ID,
+		PartyID:                  partyID,
+		UserID:                   actorID,
+		Lat:                      lat,
+		Lng:                      lng,
+		RecordedAt:               recordedAt,
+		EstimatedDurationSeconds: duration,
+		EstimatedArrivalAt:       arrivalAt,
 	})
+}
+
+// estimateArrival calls OSRM to estimate the travel time from (lat, lng) to
+// destination, returning the duration and the resulting arrival time
+// relative to from.
+func (s *serviceImpl) estimateArrival(ctx context.Context, lat, lng float64, destination entity.Destination, from time.Time) (int, time.Time, error) {
+	route, err := s.osrmClient.Route(ctx, lat, lng, destination.Lat, destination.Lng)
+	if err != nil {
+		return 0, time.Time{}, apperror.NewServiceUnavailableError("ROUTE_ESTIMATION_FAILED", "could not estimate travel time", err)
+	}
+
+	return route.DurationSeconds, from.Add(time.Duration(route.DurationSeconds) * time.Second), nil
 }
 
 func (s *serviceImpl) GetMemberPosition(ctx context.Context, actorID, partyID, targetUserID string) (entity.Position, error) {

@@ -21,6 +21,11 @@ func (h *handlerImpl) StartTrip(ctx context.Context, req *dto.StartTripRequest) 
 		entity.TripDirection(req.Body.Direction),
 		req.Body.Lat,
 		req.Body.Lng,
+		entity.Destination{
+			Name: req.Body.DestinationName,
+			Lat:  req.Body.DestinationLat,
+			Lng:  req.Body.DestinationLng,
+		},
 	)
 	if err != nil {
 		return nil, err
@@ -109,22 +114,27 @@ func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
 
 func toTripResponse(t entity.Trip) *dto.TripResponse {
 	return &dto.TripResponse{
-		ID:        t.ID,
-		PartyID:   t.PartyID,
-		UserID:    t.UserID,
-		Direction: string(t.Direction),
-		StartedAt: t.StartedAt,
+		ID:              t.ID,
+		PartyID:         t.PartyID,
+		UserID:          t.UserID,
+		Direction:       string(t.Direction),
+		DestinationName: t.Destination.Name,
+		DestinationLat:  t.Destination.Lat,
+		DestinationLng:  t.Destination.Lng,
+		StartedAt:       t.StartedAt,
 	}
 }
 
 func toPositionResponse(p entity.Position) *dto.PositionResponse {
 	return &dto.PositionResponse{
-		ID:         p.ID,
-		TripID:     p.TripID,
-		PartyID:    p.PartyID,
-		UserID:     p.UserID,
-		Lat:        p.Lat,
-		Lng:        p.Lng,
-		RecordedAt: p.RecordedAt,
+		ID:                       p.ID,
+		TripID:                   p.TripID,
+		PartyID:                  p.PartyID,
+		UserID:                   p.UserID,
+		Lat:                      p.Lat,
+		Lng:                      p.Lng,
+		RecordedAt:               p.RecordedAt,
+		EstimatedDurationSeconds: p.EstimatedDurationSeconds,
+		EstimatedArrivalAt:       p.EstimatedArrivalAt,
 	}
 }

@@ -1,6 +1,10 @@
 .claude
 bin/
 
+# OSRM map data (downloaded/preprocessed locally, see osrm-data/README.md)
+osrm-data/*
+!osrm-data/README.md
+
 # Binaries for programs and plugins
 *.exe
 *.exe~

@@ -18,6 +18,7 @@ import (
 	fcm "github.com/fark-tee/fark-tee-backend/internal/infrastructure/fcm"
 	googleoauth2 "github.com/fark-tee/fark-tee-backend/internal/infrastructure/googleoauth"
 	logger "github.com/fark-tee/fark-tee-backend/internal/infrastructure/logger"
+	osrm "github.com/fark-tee/fark-tee-backend/internal/infrastructure/osrm"
 	storage "github.com/fark-tee/fark-tee-backend/internal/infrastructure/storage"
 	token "github.com/fark-tee/fark-tee-backend/internal/infrastructure/token"
 	authmw "github.com/fark-tee/fark-tee-backend/internal/middleware/authmw"
@@ -64,6 +65,7 @@ var InfrastructureSet = wire.NewSet(
 	fcm.New,
 	googleoauth2.NewVerifier,
 	logger.NewLogger,
+	osrm.NewClient,
 	storage.NewUploader,
 	token.NewManager,
 	authmw.New,

@@ -191,8 +191,8 @@ func (_c *MockService_GetPartyPositions_Call) RunAndReturn(run func(ctx context.
 }
 
 // StartTrip provides a mock function for the type MockService
-func (_mock *MockService) StartTrip(ctx context.Context, actorID string, partyID string, direction entity.TripDirection, lat float64, lng float64) (entity.Trip, entity.Position, error) {
-	ret := _mock.Called(ctx, actorID, partyID, direction, lat, lng)
+func (_mock *MockService) StartTrip(ctx context.Context, actorID string, partyID string, direction entity.TripDirection, lat float64, lng float64, destination entity.Destination) (entity.Trip, entity.Position, error) {
+	ret := _mock.Called(ctx, actorID, partyID, direction, lat, lng, destination)
 
 	if len(ret) == 0 {
 		panic("no return value specified for StartTrip")
@@ -201,21 +201,21 @@ func (_mock *MockService) StartTrip(ctx context.Context, actorID string, partyID
 	var r0 entity.Trip
 	var r1 entity.Position
 	var r2 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, entity.TripDirection, float64, float64) (entity.Trip, entity.Position, error)); ok {
-		return returnFunc(ctx, actorID, partyID, direction, lat, lng)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, entity.TripDirection, float64, float64, entity.Destination) (entity.Trip, entity.Position, error)); ok {
+		return returnFunc(ctx, actorID, partyID, direction, lat, lng, destination)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, entity.TripDirection, float64, float64) entity.Trip); ok {
-		r0 = returnFunc(ctx, actorID, partyID, direction, lat, lng)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, entity.TripDirection, float64, float64, entity.Destination) entity.Trip); ok {
+		r0 = returnFunc(ctx, actorID, partyID, direction, lat, lng, destination)
 	} else {
 		r0 = ret.Get(0).(entity.Trip)
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, entity.TripDirection, float64, float64) entity.Position); ok {
-		r1 = returnFunc(ctx, actorID, partyID, direction, lat, lng)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, entity.TripDirection, float64, float64, entity.Destination) entity.Position); ok {
+		r1 = returnFunc(ctx, actorID, partyID, direction, lat, lng, destination)
 	} else {
 		r1 = ret.Get(1).(entity.Position)
 	}
-	if returnFunc, ok := ret.Get(2).(func(context.Context, string, string, entity.TripDirection, float64, float64) error); ok {
-		r2 = returnFunc(ctx, actorID, partyID, direction, lat, lng)
+	if returnFunc, ok := ret.Get(2).(func(context.Context, string, string, entity.TripDirection, float64, float64, entity.Destination) error); ok {
+		r2 = returnFunc(ctx, actorID, partyID, direction, lat, lng, destination)
 	} else {
 		r2 = ret.Error(2)
 	}
@@ -234,11 +234,12 @@ type MockService_StartTrip_Call struct {
 //   - direction entity.TripDirection
 //   - lat float64
 //   - lng float64
-func (_e *MockService_Expecter) StartTrip(ctx any, actorID any, partyID any, direction any, lat any, lng any) *MockService_StartTrip_Call {
-	return &MockService_StartTrip_Call{Call: _e.mock.On("StartTrip", ctx, actorID, partyID, direction, lat, lng)}
+//   - destination entity.Destination
+func (_e *MockService_Expecter) StartTrip(ctx any, actorID any, partyID any, direction any, lat any, lng any, destination any) *MockService_StartTrip_Call {
+	return &MockService_StartTrip_Call{Call: _e.mock.On("StartTrip", ctx, actorID, partyID, direction, lat, lng, destination)}
 }
 
-func (_c *MockService_StartTrip_Call) Run(run func(ctx context.Context, actorID string, partyID string, direction entity.TripDirection, lat float64, lng float64)) *MockService_StartTrip_Call {
+func (_c *MockService_StartTrip_Call) Run(run func(ctx context.Context, actorID string, partyID string, direction entity.TripDirection, lat float64, lng float64, destination entity.Destination)) *MockService_StartTrip_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -264,6 +265,10 @@ func (_c *MockService_StartTrip_Call) Run(run func(ctx context.Context, actorID 
 		if args[5] != nil {
 			arg5 = args[5].(float64)
 		}
+		var arg6 entity.Destination
+		if args[6] != nil {
+			arg6 = args[6].(entity.Destination)
+		}
 		run(
 			arg0,
 			arg1,
@@ -271,6 +276,7 @@ func (_c *MockService_StartTrip_Call) Run(run func(ctx context.Context, actorID 
 			arg3,
 			arg4,
 			arg5,
+			arg6,
 		)
 	})
 	return _c
@@ -281,7 +287,7 @@ func (_c *MockService_StartTrip_Call) Return(trip entity.Trip, position entity.P
 	return _c
 }
 
-func (_c *MockService_StartTrip_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, direction entity.TripDirection, lat float64, lng float64) (entity.Trip, entity.Position, error)) *MockService_StartTrip_Call {
+func (_c *MockService_StartTrip_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, direction entity.TripDirection, lat float64, lng float64, destination entity.Destination) (entity.Trip, entity.Position, error)) *MockService_StartTrip_Call {
 	_c.Call.Return(run)
 	return _c
 }
