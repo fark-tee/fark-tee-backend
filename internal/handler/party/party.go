@@ -22,6 +22,7 @@ func (h *handlerImpl) Create(ctx context.Context, req *dto.CreatePartyRequest) (
 		req.Body.DestinationLat,
 		req.Body.DestinationLng,
 		req.Body.TargetTime,
+		req.Body.Note,
 	)
 	if err != nil {
 		return nil, err
@@ -214,6 +215,7 @@ func toPartyResponse(p entity.Party) *dto.PartyResponse {
 		TargetTime:      p.TargetTime,
 		CreatedByID:     p.CreatedByID,
 		CreatedByName:   p.CreatedByName,
+		Note:            p.Note,
 	}
 }
 

@@ -113,8 +113,8 @@ func (_c *MockService_AcceptInvite_Call) RunAndReturn(run func(ctx context.Conte
 }
 
 // Create provides a mock function for the type MockService
-func (_mock *MockService) Create(ctx context.Context, actorID string, name string, destinationName string, destinationLat float64, destinationLng float64, targetTime time.Time) (entity.Party, error) {
-	ret := _mock.Called(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime)
+func (_mock *MockService) Create(ctx context.Context, actorID string, name string, destinationName string, destinationLat float64, destinationLng float64, targetTime time.Time, note string) (entity.Party, error) {
+	ret := _mock.Called(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime, note)
 
 	if len(ret) == 0 {
 		panic("no return value specified for Create")
@@ -122,16 +122,16 @@ func (_mock *MockService) Create(ctx context.Context, actorID string, name strin
 
 	var r0 entity.Party
 	var r1 error
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, float64, float64, time.Time) (entity.Party, error)); ok {
-		return returnFunc(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, float64, float64, time.Time, string) (entity.Party, error)); ok {
+		return returnFunc(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime, note)
 	}
-	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, float64, float64, time.Time) entity.Party); ok {
-		r0 = returnFunc(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime)
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string, float64, float64, time.Time, string) entity.Party); ok {
+		r0 = returnFunc(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime, note)
 	} else {
 		r0 = ret.Get(0).(entity.Party)
 	}
-	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string, float64, float64, time.Time) error); ok {
-		r1 = returnFunc(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime)
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string, float64, float64, time.Time, string) error); ok {
+		r1 = returnFunc(ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime, note)
 	} else {
 		r1 = ret.Error(1)
 	}
@@ -151,11 +151,12 @@ type MockService_Create_Call struct {
 //   - destinationLat float64
 //   - destinationLng float64
 //   - targetTime time.Time
-func (_e *MockService_Expecter) Create(ctx any, actorID any, name any, destinationName any, destinationLat any, destinationLng any, targetTime any) *MockService_Create_Call {
-	return &MockService_Create_Call{Call: _e.mock.On("Create", ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime)}
+//   - note string
+func (_e *MockService_Expecter) Create(ctx any, actorID any, name any, destinationName any, destinationLat any, destinationLng any, targetTime any, note any) *MockService_Create_Call {
+	return &MockService_Create_Call{Call: _e.mock.On("Create", ctx, actorID, name, destinationName, destinationLat, destinationLng, targetTime, note)}
 }
 
-func (_c *MockService_Create_Call) Run(run func(ctx context.Context, actorID string, name string, destinationName string, destinationLat float64, destinationLng float64, targetTime time.Time)) *MockService_Create_Call {
+func (_c *MockService_Create_Call) Run(run func(ctx context.Context, actorID string, name string, destinationName string, destinationLat float64, destinationLng float64, targetTime time.Time, note string)) *MockService_Create_Call {
 	_c.Call.Run(func(args mock.Arguments) {
 		var arg0 context.Context
 		if args[0] != nil {
@@ -185,6 +186,10 @@ func (_c *MockService_Create_Call) Run(run func(ctx context.Context, actorID str
 		if args[6] != nil {
 			arg6 = args[6].(time.Time)
 		}
+		var arg7 string
+		if args[7] != nil {
+			arg7 = args[7].(string)
+		}
 		run(
 			arg0,
 			arg1,
@@ -193,6 +198,7 @@ func (_c *MockService_Create_Call) Run(run func(ctx context.Context, actorID str
 			arg4,
 			arg5,
 			arg6,
+			arg7,
 		)
 	})
 	return _c
@@ -203,7 +209,7 @@ func (_c *MockService_Create_Call) Return(party entity.Party, err error) *MockSe
 	return _c
 }
 
-func (_c *MockService_Create_Call) RunAndReturn(run func(ctx context.Context, actorID string, name string, destinationName string, destinationLat float64, destinationLng float64, targetTime time.Time) (entity.Party, error)) *MockService_Create_Call {
+func (_c *MockService_Create_Call) RunAndReturn(run func(ctx context.Context, actorID string, name string, destinationName string, destinationLat float64, destinationLng float64, targetTime time.Time, note string) (entity.Party, error)) *MockService_Create_Call {
 	_c.Call.Return(run)
 	return _c
 }

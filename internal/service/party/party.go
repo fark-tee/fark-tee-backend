@@ -15,7 +15,7 @@ import (
 	"github.com/fark-tee/fark-tee-backend/internal/repository/database/user"
 )
 
-func (s *serviceImpl) Create(ctx context.Context, actorID, name, destinationName string, destinationLat, destinationLng float64, targetTime time.Time) (entity.Party, error) {
+func (s *serviceImpl) Create(ctx context.Context, actorID, name, destinationName string, destinationLat, destinationLng float64, targetTime time.Time, note string) (entity.Party, error) {
 	actor, err := s.userRepo.FindByID(ctx, actorID)
 	if err != nil {
 		return entity.Party{}, toAppError(err)
@@ -30,6 +30,7 @@ func (s *serviceImpl) Create(ctx context.Context, actorID, name, destinationName
 		TargetTime:      targetTime,
 		CreatedByID:     actor.ID,
 		CreatedByName:   actor.DisplayName,
+		Note:            note,
 	})
 	if err != nil {
 		return entity.Party{}, err

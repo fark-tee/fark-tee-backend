@@ -11,6 +11,7 @@ type PartyResponse struct {
 	TargetTime      time.Time `json:"targetTime"`
 	CreatedByID     string    `json:"createdById"`
 	CreatedByName   string    `json:"createdByName"`
+	Note            string    `json:"note,omitempty"`
 }
 
 type CreatePartyRequest struct {
@@ -20,6 +21,9 @@ type CreatePartyRequest struct {
 		DestinationLat  float64   `json:"destinationLat" required:"true"`
 		DestinationLng  float64   `json:"destinationLng" required:"true"`
 		TargetTime      time.Time `json:"targetTime" required:"true"`
+		// Note is an optional free-text reminder from the creator (e.g.
+		// "bring cash"), shown to every party member.
+		Note string `json:"note,omitempty"`
 	}
 }
 

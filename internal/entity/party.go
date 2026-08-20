@@ -11,4 +11,5 @@ type Party struct {
 	TargetTime      time.Time
 	CreatedByID     string
 	CreatedByName   string
+	Note            string
 }

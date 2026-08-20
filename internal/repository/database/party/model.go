@@ -19,6 +19,7 @@ type model struct {
 	TargetTime      time.Time     `bson:"target_time"`
 	CreatedByID     string        `bson:"created_by_id"`
 	CreatedByName   string        `bson:"created_by_name"`
+	Note            string        `bson:"note,omitempty"`
 }
 
 func fromEntity(p entity.Party) (model, error) {
@@ -36,6 +37,7 @@ func fromEntity(p entity.Party) (model, error) {
 		TargetTime:      p.TargetTime,
 		CreatedByID:     p.CreatedByID,
 		CreatedByName:   p.CreatedByName,
+		Note:            p.Note,
 	}, nil
 }
 
@@ -49,5 +51,6 @@ func (m model) toEntity() entity.Party {
 		TargetTime:      m.TargetTime,
 		CreatedByID:     m.CreatedByID,
 		CreatedByName:   m.CreatedByName,
+		Note:            m.Note,
 	}
 }
