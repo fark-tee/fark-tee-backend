@@ -13,6 +13,7 @@ type Handler interface {
 	GetMemberPosition(ctx context.Context, req *dto.GetMemberPositionRequest) (*dto.PositionResponse, error)
 	GetPartyPositions(ctx context.Context, req *dto.GetPartyPositionsRequest) (*dto.PositionsResponse, error)
 	UpdateTripStatus(ctx context.Context, req *dto.UpdateTripStatusRequest) (*dto.PartyMemberResponse, error)
+	GetMemberTrip(ctx context.Context, req *dto.GetMemberTripRequest) (*dto.TripResponse, error)
 }
 
 type handlerImpl struct {

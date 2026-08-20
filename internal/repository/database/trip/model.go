@@ -19,6 +19,7 @@ type model struct {
 	DestinationLat  float64       `bson:"destination_lat"`
 	DestinationLng  float64       `bson:"destination_lng"`
 	StartedAt       time.Time     `bson:"started_at"`
+	Polyline        string        `bson:"polyline"`
 }
 
 func fromEntity(t entity.Trip) (model, error) {
@@ -36,6 +37,7 @@ func fromEntity(t entity.Trip) (model, error) {
 		DestinationLat:  t.Destination.Lat,
 		DestinationLng:  t.Destination.Lng,
 		StartedAt:       t.StartedAt,
+		Polyline:        t.Polyline,
 	}, nil
 }
 
@@ -51,5 +53,6 @@ func (m model) toEntity() entity.Trip {
 			Lng:  m.DestinationLng,
 		},
 		StartedAt: m.StartedAt,
+		Polyline:  m.Polyline,
 	}
 }

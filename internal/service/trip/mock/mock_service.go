@@ -116,6 +116,84 @@ func (_c *MockService_GetMemberPosition_Call) RunAndReturn(run func(ctx context.
 	return _c
 }
 
+// GetMemberTrip provides a mock function for the type MockService
+func (_mock *MockService) GetMemberTrip(ctx context.Context, actorID string, partyID string, targetUserID string) (entity.Trip, error) {
+	ret := _mock.Called(ctx, actorID, partyID, targetUserID)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMemberTrip")
+	}
+
+	var r0 entity.Trip
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) (entity.Trip, error)); ok {
+		return returnFunc(ctx, actorID, partyID, targetUserID)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, string, string, string) entity.Trip); ok {
+		r0 = returnFunc(ctx, actorID, partyID, targetUserID)
+	} else {
+		r0 = ret.Get(0).(entity.Trip)
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, string, string, string) error); ok {
+		r1 = returnFunc(ctx, actorID, partyID, targetUserID)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockService_GetMemberTrip_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMemberTrip'
+type MockService_GetMemberTrip_Call struct {
+	*mock.Call
+}
+
+// GetMemberTrip is a helper method to define mock.On call
+//   - ctx context.Context
+//   - actorID string
+//   - partyID string
+//   - targetUserID string
+func (_e *MockService_Expecter) GetMemberTrip(ctx any, actorID any, partyID any, targetUserID any) *MockService_GetMemberTrip_Call {
+	return &MockService_GetMemberTrip_Call{Call: _e.mock.On("GetMemberTrip", ctx, actorID, partyID, targetUserID)}
+}
+
+func (_c *MockService_GetMemberTrip_Call) Run(run func(ctx context.Context, actorID string, partyID string, targetUserID string)) *MockService_GetMemberTrip_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 string
+		if args[1] != nil {
+			arg1 = args[1].(string)
+		}
+		var arg2 string
+		if args[2] != nil {
+			arg2 = args[2].(string)
+		}
+		var arg3 string
+		if args[3] != nil {
+			arg3 = args[3].(string)
+		}
+		run(
+			arg0,
+			arg1,
+			arg2,
+			arg3,
+		)
+	})
+	return _c
+}
+
+func (_c *MockService_GetMemberTrip_Call) Return(trip entity.Trip, err error) *MockService_GetMemberTrip_Call {
+	_c.Call.Return(trip, err)
+	return _c
+}
+
+func (_c *MockService_GetMemberTrip_Call) RunAndReturn(run func(ctx context.Context, actorID string, partyID string, targetUserID string) (entity.Trip, error)) *MockService_GetMemberTrip_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetPartyPositions provides a mock function for the type MockService
 func (_mock *MockService) GetPartyPositions(ctx context.Context, actorID string, partyID string) ([]entity.Position, error) {
 	ret := _mock.Called(ctx, actorID, partyID)

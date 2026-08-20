@@ -29,6 +29,9 @@ type Service interface {
 	// UpdateTripStatus advances actorID's trip status within partyID.
 	// Trip status only ever moves forward.
 	UpdateTripStatus(ctx context.Context, actorID, partyID string, status entity.TripStatus) (entity.PartyMember, error)
+	// GetMemberTrip returns targetUserID's latest trip (depart or return)
+	// within partyID, including its OSRM-computed route polyline.
+	GetMemberTrip(ctx context.Context, actorID, partyID, targetUserID string) (entity.Trip, error)
 }
 
 type serviceImpl struct {

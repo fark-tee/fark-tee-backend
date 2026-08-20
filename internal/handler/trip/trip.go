@@ -100,6 +100,20 @@ func (h *handlerImpl) UpdateTripStatus(ctx context.Context, req *dto.UpdateTripS
 	return toPartyMemberResponse(member), nil
 }
 
+func (h *handlerImpl) GetMemberTrip(ctx context.Context, req *dto.GetMemberTripRequest) (*dto.TripResponse, error) {
+	actorID, err := authmw.RequireUserID(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	t, err := h.service.GetMemberTrip(ctx, actorID, req.PartyID, req.UserID)
+	if err != nil {
+		return nil, err
+	}
+
+	return toTripResponse(t), nil
+}
+
 func toPartyMemberResponse(m entity.PartyMember) *dto.PartyMemberResponse {
 	return &dto.PartyMemberResponse{
 		ID:               m.ID,
@@ -122,6 +136,7 @@ func toTripResponse(t entity.Trip) *dto.TripResponse {
 		DestinationLat:  t.Destination.Lat,
 		DestinationLng:  t.Destination.Lng,
 		StartedAt:       t.StartedAt,
+		Polyline:        t.Polyline,
 	}
 }
 

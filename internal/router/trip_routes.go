@@ -48,4 +48,11 @@ func registerTripRoutes(api huma.API, handlers *handler.Handlers) {
 		Summary:  "Advance the current user's trip status (forward-only)",
 		Security: security,
 	}, humax.Wrap200(handlers.Trip.UpdateTripStatus))
+
+	huma.Register(api, huma.Operation{
+		Method:   http.MethodGet,
+		Path:     "/parties/{partyId}/members/{userId}/trip",
+		Summary:  "Get a party member's latest trip, including its OSRM route polyline",
+		Security: security,
+	}, humax.Wrap200(handlers.Trip.GetMemberTrip))
 }

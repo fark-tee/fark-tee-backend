@@ -17,6 +17,11 @@ import (
 type Route struct {
 	DurationSeconds int
 	DistanceMeters  float64
+
+	// Geometry is the route's road-following path, encoded as a Google
+	// polyline (precision 5). Only populated when Route is called with
+	// withGeometry=true.
+	Geometry string
 }
 
 type Client struct {
@@ -34,13 +39,22 @@ func NewClient(cfg *config.Config) *Client {
 
 // Route calls the OSRM /route/v1 endpoint to estimate travel time and
 // distance from (fromLat, fromLng) to (toLat, toLng) using the configured
-// profile (e.g. "driving", "walking", "cycling").
-func (c *Client) Route(ctx context.Context, fromLat, fromLng, toLat, toLng float64) (Route, error) {
+// profile (e.g. "driving", "walking", "cycling"). When withGeometry is true,
+// the returned Route also carries the road-following path as an encoded
+// polyline - callers that only need duration/distance (e.g. a per-tick ETA
+// refresh) should pass false to avoid the extra payload.
+func (c *Client) Route(ctx context.Context, fromLat, fromLng, toLat, toLng float64, withGeometry bool) (Route, error) {
+	overview := "false"
+	if withGeometry {
+		overview = "full"
+	}
+
 	url := fmt.Sprintf(
-		"%s/route/v1/%s/%f,%f;%f,%f?overview=false",
+		"%s/route/v1/%s/%f,%f;%f,%f?overview=%s&geometries=polyline",
 		strings.TrimRight(c.cfg.OSRM.BaseURL, "/"),
 		c.cfg.OSRM.Profile,
 		fromLng, fromLat, toLng, toLat,
+		overview,
 	)
 
 	req, err := http.NewRequestWithContext(ctx, http.MethodGet, url, nil)
@@ -53,6 +67,7 @@ func (c *Client) Route(ctx context.Context, fromLat, fromLng, toLat, toLng float
 		Routes []struct {
 			Duration float64 `json:"duration"`
 			Distance float64 `json:"distance"`
+			Geometry string  `json:"geometry"`
 		} `json:"routes"`
 	}
 
@@ -67,6 +82,7 @@ func (c *Client) Route(ctx context.Context, fromLat, fromLng, toLat, toLng float
 	return Route{
 		DurationSeconds: int(math.Round(body.Routes[0].Duration)),
 		DistanceMeters:  body.Routes[0].Distance,
+		Geometry:        body.Routes[0].Geometry,
 	}, nil
 }
 

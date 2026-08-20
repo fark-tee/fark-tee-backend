@@ -24,19 +24,26 @@ func (s *serviceImpl) StartTrip(ctx context.Context, actorID, partyID string, di
 		return entity.Trip{}, entity.Position{}, err
 	}
 
+	startedAt := time.Now()
+
+	// The route polyline is computed once, here, from the trip's starting
+	// position to its destination - not recomputed on every later position
+	// update (see UpdatePosition, which calls estimateRoute with
+	// withGeometry=false).
+	duration, arrivalAt, polyline, err := s.estimateRoute(ctx, lat, lng, destination, startedAt, true)
+	if err != nil {
+		return entity.Trip{}, entity.Position{}, err
+	}
+
 	createdTrip, err := s.tripRepo.Create(ctx, entity.Trip{
 		ID:          mongoid.New(),
 		PartyID:     partyID,
 		UserID:      actorID,
 		Direction:   direction,
 		Destination: destination,
-		StartedAt:   time.Now(),
+		StartedAt:   startedAt,
+		Polyline:    polyline,
 	})
-	if err != nil {
-		return entity.Trip{}, entity.Position{}, err
-	}
-
-	duration, arrivalAt, err := s.estimateArrival(ctx, lat, lng, destination, createdTrip.StartedAt)
 	if err != nil {
 		return entity.Trip{}, entity.Position{}, err
 	}
@@ -75,7 +82,7 @@ func (s *serviceImpl) UpdatePosition(ctx context.Context, actorID, partyID strin
 
 	recordedAt := time.Now()
 
-	duration, arrivalAt, err := s.estimateArrival(ctx, lat, lng, currentTrip.Destination, recordedAt)
+	duration, arrivalAt, _, err := s.estimateRoute(ctx, lat, lng, currentTrip.Destination, recordedAt, false)
 	if err != nil {
 		return entity.Position{}, err
 	}
@@ -93,16 +100,17 @@ func (s *serviceImpl) UpdatePosition(ctx context.Context, actorID, partyID strin
 	})
 }
 
-// estimateArrival calls OSRM to estimate the travel time from (lat, lng) to
-// destination, returning the duration and the resulting arrival time
-// relative to from.
-func (s *serviceImpl) estimateArrival(ctx context.Context, lat, lng float64, destination entity.Destination, from time.Time) (int, time.Time, error) {
-	route, err := s.osrmClient.Route(ctx, lat, lng, destination.Lat, destination.Lng)
+// estimateRoute calls OSRM to estimate the travel time from (lat, lng) to
+// destination, returning the duration, the resulting arrival time relative
+// to from, and (when withGeometry is true) the route's road-following
+// polyline.
+func (s *serviceImpl) estimateRoute(ctx context.Context, lat, lng float64, destination entity.Destination, from time.Time, withGeometry bool) (int, time.Time, string, error) {
+	route, err := s.osrmClient.Route(ctx, lat, lng, destination.Lat, destination.Lng, withGeometry)
 	if err != nil {
-		return 0, time.Time{}, apperror.NewServiceUnavailableError("ROUTE_ESTIMATION_FAILED", "could not estimate travel time", err)
+		return 0, time.Time{}, "", apperror.NewServiceUnavailableError("ROUTE_ESTIMATION_FAILED", "could not estimate travel time", err)
 	}
 
-	return route.DurationSeconds, from.Add(time.Duration(route.DurationSeconds) * time.Second), nil
+	return route.DurationSeconds, from.Add(time.Duration(route.DurationSeconds) * time.Second), route.Geometry, nil
 }
 
 func (s *serviceImpl) GetMemberPosition(ctx context.Context, actorID, partyID, targetUserID string) (entity.Position, error) {
@@ -124,6 +132,23 @@ func (s *serviceImpl) GetPartyPositions(ctx context.Context, actorID, partyID st
 	}
 
 	return s.positionRepo.FindLatestByPartyID(ctx, partyID)
+}
+
+// GetMemberTrip returns targetUserID's latest trip within partyID. Since a
+// return trip always starts after its party's depart trip, "latest" always
+// reflects whichever leg (DEPART or RETURN) targetUserID currently has in
+// progress.
+func (s *serviceImpl) GetMemberTrip(ctx context.Context, actorID, partyID, targetUserID string) (entity.Trip, error) {
+	if err := s.requireMember(ctx, partyID, actorID); err != nil {
+		return entity.Trip{}, err
+	}
+
+	t, err := s.tripRepo.FindLatestByPartyIDAndUserID(ctx, partyID, targetUserID)
+	if err != nil {
+		return entity.Trip{}, toAppError(err)
+	}
+
+	return t, nil
 }
 
 // requireAcceptedMember returns the caller's own party member row, or a

@@ -106,6 +106,74 @@ func (_c *MockHandler_GetMemberPosition_Call) RunAndReturn(run func(ctx context.
 	return _c
 }
 
+// GetMemberTrip provides a mock function for the type MockHandler
+func (_mock *MockHandler) GetMemberTrip(ctx context.Context, req *dto.GetMemberTripRequest) (*dto.TripResponse, error) {
+	ret := _mock.Called(ctx, req)
+
+	if len(ret) == 0 {
+		panic("no return value specified for GetMemberTrip")
+	}
+
+	var r0 *dto.TripResponse
+	var r1 error
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.GetMemberTripRequest) (*dto.TripResponse, error)); ok {
+		return returnFunc(ctx, req)
+	}
+	if returnFunc, ok := ret.Get(0).(func(context.Context, *dto.GetMemberTripRequest) *dto.TripResponse); ok {
+		r0 = returnFunc(ctx, req)
+	} else {
+		if ret.Get(0) != nil {
+			r0 = ret.Get(0).(*dto.TripResponse)
+		}
+	}
+	if returnFunc, ok := ret.Get(1).(func(context.Context, *dto.GetMemberTripRequest) error); ok {
+		r1 = returnFunc(ctx, req)
+	} else {
+		r1 = ret.Error(1)
+	}
+	return r0, r1
+}
+
+// MockHandler_GetMemberTrip_Call is a *mock.Call that shadows Run/Return methods with type explicit version for method 'GetMemberTrip'
+type MockHandler_GetMemberTrip_Call struct {
+	*mock.Call
+}
+
+// GetMemberTrip is a helper method to define mock.On call
+//   - ctx context.Context
+//   - req *dto.GetMemberTripRequest
+func (_e *MockHandler_Expecter) GetMemberTrip(ctx any, req any) *MockHandler_GetMemberTrip_Call {
+	return &MockHandler_GetMemberTrip_Call{Call: _e.mock.On("GetMemberTrip", ctx, req)}
+}
+
+func (_c *MockHandler_GetMemberTrip_Call) Run(run func(ctx context.Context, req *dto.GetMemberTripRequest)) *MockHandler_GetMemberTrip_Call {
+	_c.Call.Run(func(args mock.Arguments) {
+		var arg0 context.Context
+		if args[0] != nil {
+			arg0 = args[0].(context.Context)
+		}
+		var arg1 *dto.GetMemberTripRequest
+		if args[1] != nil {
+			arg1 = args[1].(*dto.GetMemberTripRequest)
+		}
+		run(
+			arg0,
+			arg1,
+		)
+	})
+	return _c
+}
+
+func (_c *MockHandler_GetMemberTrip_Call) Return(tripResponse *dto.TripResponse, err error) *MockHandler_GetMemberTrip_Call {
+	_c.Call.Return(tripResponse, err)
+	return _c
+}
+
+func (_c *MockHandler_GetMemberTrip_Call) RunAndReturn(run func(ctx context.Context, req *dto.GetMemberTripRequest) (*dto.TripResponse, error)) *MockHandler_GetMemberTrip_Call {
+	_c.Call.Return(run)
+	return _c
+}
+
 // GetPartyPositions provides a mock function for the type MockHandler
 func (_mock *MockHandler) GetPartyPositions(ctx context.Context, req *dto.GetPartyPositionsRequest) (*dto.PositionsResponse, error) {
 	ret := _mock.Called(ctx, req)

@@ -11,6 +11,10 @@ type TripResponse struct {
 	DestinationLat  float64   `json:"destinationLat"`
 	DestinationLng  float64   `json:"destinationLng"`
 	StartedAt       time.Time `json:"startedAt"`
+	// Polyline is the OSRM-computed road route from the trip's starting
+	// position to its destination, encoded as a Google polyline (precision
+	// 5), computed once when the trip started.
+	Polyline string `json:"polyline"`
 }
 
 type PositionResponse struct {
@@ -61,6 +65,11 @@ type GetMemberPositionRequest struct {
 
 type GetPartyPositionsRequest struct {
 	PartyID string `path:"partyId" required:"true"`
+}
+
+type GetMemberTripRequest struct {
+	PartyID string `path:"partyId" required:"true"`
+	UserID  string `path:"userId" required:"true"`
 }
 
 type UpdateTripStatusRequest struct {
