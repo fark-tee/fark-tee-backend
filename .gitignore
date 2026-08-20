@@ -29,3 +29,7 @@ go.work.sum
 .env
 
 tmp
+
+# Firebase service account credentials
+*firebase-adminsdk*.json
+serviceAccountKey.json
